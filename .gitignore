@@ -16,8 +16,11 @@
 
 # Ignore node_modules folder. pushing this to main can cause issues when multiple people have different computers as node_modules contain OS specific downloads
 node_modules/
+__MACOSX
+.DS_Store
+*.zip
 
-# This is the database credentails we can pull in 
+# This is the database credentials we can pull in 
 
 PORT=5432
 DB_HOST=localhost
