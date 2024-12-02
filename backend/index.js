@@ -14,7 +14,7 @@ let path = require('path'); // access to the path
 // // Importing Users model used to run CRUD operations on db table for user table
 // const Users = require("./models/users");
 
-let port = 5001
+const port = process.env.PORT || 5001
 
 app.use(express.urlencoded( {extended: true} )) //determines how html is received from forms. This allows us to grab stuff out of the HTML form
 // This is an object literal. Basically a dictionary
