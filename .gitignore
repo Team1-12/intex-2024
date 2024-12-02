@@ -1,0 +1,26 @@
+# GitIgnore allows you to hide any file in your project from being tracked and uploaded to github
+# a.k.a. any file you place here will not be uploaded to your branch or pushed to main, it stays hidden from everyone else.
+
+# Use Case: In web development, you may need to test changes locally on your computer. 
+# To do this, you can create a .env file with your specific configuration details, 
+# such as database credentials, port numbers, or other personal login information.
+
+# The .env file stores these details as environment variables.
+# This file is then loaded by config.js in /backend, allowing you to use these variables throughout 
+# your project by importing config.js wherever access to environment-specific information 
+# is required. As long as each team member has their own .env file, they can customize their database/port/anything
+# settings locally without affecting others or exposing sensitive information.
+
+# To set-up create a file in /ParentTrap called .env and then place it below like this:
+.env
+
+# Ignore node_modules folder. pushing this to main can cause issues when multiple people have different computers as node_modules contain OS specific downloads
+node_modules/
+
+# This is the database credentails we can pull in 
+
+PORT=5432
+DB_HOST=localhost
+DB_USER=postgres
+DB_PASSWORD=V0lleyball#5
+DB_NAME=
