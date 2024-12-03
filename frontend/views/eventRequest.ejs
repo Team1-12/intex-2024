@@ -38,50 +38,50 @@
         <section>
             <div class="container">
                 <h2>Event Request Form</h2>
-                <form id="eventRequestForm" method="post" action="/submitEventRequest">
+                <form id="eventRequestForm" method="post" action="/EventRequest">
                     <div class="form-row">
                         <div class="row">
                             <div class="form-group col-md-3">
-                                <input class="form-control" type="text" name="name" placeholder="Contact Name *" required />
+                                <input class="form-control" type="text" name="ContactName" id="ContactName" placeholder="Contact Name *" required />
                             </div>
                             <div class="form-group col-md-3">
-                                <input class="form-control" type="text" name="organization" placeholder="Organization/Group Name" required/>
+                                <input class="form-control" type="text" name="Organization" id="Organization" placeholder="Organization/Group Name" required/>
                             </div>
                             <div class="form-group col-md-3">
-                                <input class="form-control" type="email" name="email" placeholder="Contact Email *" required />
+                                <input class="form-control" type="email" name="ContactEmail" id="ContactEmail" placeholder="Contact Email *" required />
                             </div>
                             <div class="form-group col-md-3">
-                                <input class="form-control" type="tel" name="phone" placeholder="Contact Phone *" required />
+                                <input class="form-control" type="tel" name="ContactPhone" id="ContactPhone" placeholder="Contact Phone *" required />
                             </div>
                         </div>
                         <div class="row">
                             <div class="form-group col-md-12">
-                                <input class="form-control" type="text" name="address" placeholder="Street Address *" required />
+                                <input class="form-control" type="text" name="Address" id="Address" placeholder="Street Address *" required />
                             </div>
                         </div>
                         <div class="row">
                             <div class="form-group col-md-3">
-                                <input class="form-control" type="text" name="city" placeholder="City *" required />
+                                <input class="form-control" type="text" name="City" id="City" placeholder="City *" required />
                             </div>
                             <div class="form-group col-md-3">
-                                <input class="form-control" type="text" name="state" placeholder="State *" required />
+                                <input class="form-control" type="text" name="State" id="State" placeholder="State *" required />
                             </div>
                             <div class="form-group col-md-3">
-                                <input class="form-control" type="number" name="zipcode" placeholder="Zip Code *" required />
+                                <input class="form-control" type="number" name="Zip" id="Zip" placeholder="Zip Code *" required />
                             </div>
                         </div>
                         <div class="row">                  
                             <div class="form-group col-md-4">
-                                <input class="form-control" type="number" name="volunteers" placeholder="Number of Volunteers *" min="1" required />
+                                <input class="form-control" type="number" name="ExpectedParticipants" id="ExpectedParticipants" placeholder="Number of Volunteers *" min="1" required />
                             </div>
                             <div class="form-group col-md-4">
-                                <input class="form-control" type="number" name="hours" placeholder="Number of Hours for Event *" min="1" required />
+                                <input class="form-control" type="number" name="ExpectedDuration" id="ExpectedDuration" placeholder="Number of Hours for Event *" min="1" required />
                             </div>
                         </div> 
                     </div>
                     <div class="form-group">
                         <label for="volunteerType">Type of Volunteering *</label>
-                        <select class="form-control" name="volunteerType" id="volunteerType" required>
+                        <select class="form-control" name="EventActivities" id="EventActivities" required>
                             <option value="">Select Type</option>
                             <option value="sewing">Sewing</option>
                             <option value="non-sewing">Non-Sewing</option>
@@ -91,29 +91,29 @@
                     <div class="form-group">
                         <label>Do you want Jen, the founder of the Turtle Shelter Project, to share her story? *</label><br>
                         <div class="form-check form-check-inline">
-                            <input class="form-check-input" type="radio" name="shareStory" id="shareStoryYes" value="yes" required>
-                            <label class="form-check-label" for="shareStoryYes">Yes</label>
+                            <input class="form-check-input" type="radio" name="JenShare" id="JenShareYes" value="yes" required>
+                            <label class="form-check-label" for="JenShareYes">Yes</label>
                         </div>
                         <div class="form-check form-check-inline">
-                            <input class="form-check-input" type="radio" name="shareStory" id="shareStoryNo" value="no">
-                            <label class="form-check-label" for="shareStoryNo">No</label>
+                            <input class="form-check-input" type="radio" name="JenShare" id="JenShareNo" value="no">
+                            <label class="form-check-label" for="JenShareNo">No</label>
                         </div>
                     </div>
                     <div class="form-group">
                         <p>Please select the range of dates below for which your organization is available to volunteer. <br>If only one date is available, insert that date into the first field and leave the second blank.</p>
                         <div class="row">
                             <div class=">form-group col-md-3">
-                                <label for="startDate">First Available Date *</label>
-                                <input class="form-control" type="date" name="startDate" required />
+                                <label for="StartDateRange">First Available Date *</label>
+                                <input class="form-control" type="date" name="StartDateRange" id="StartDateRange" required />
                             </div>
                             <div class=">form-group col-md-3">
-                                <label for="endDate">Last Available Date</label>
-                                <input class="form-control" type="date" name="endDate" />
+                                <label for="EndDateRange">Last Available Date</label>
+                                <input class="form-control" type="date" name="EndDateRange" id="EndDateRange" />
                             </div>
                         </div>
                     </div>
                     <div class="form-group">
-                        <textarea class="form-control" name="eventDetails" placeholder="Other Scheduling/Event Details" ></textarea>
+                        <textarea class="form-control" name="Comments" id="Comments" placeholder="Other Scheduling/Event Details" ></textarea>
                     </div>
                     <button class="btn btn-primary" type="submit">Send Request</button>
                 </form>

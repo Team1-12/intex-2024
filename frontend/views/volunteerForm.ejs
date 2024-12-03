@@ -42,40 +42,40 @@
                     <div class="form-row">
                         <div class="row">
                             <div class="form-group col-md-5">
-                                <input class="form-control" type="text" name="name" placeholder="Volunteer First Name *" required />
+                                <input class="form-control" type="text" id="FirstName"name="FirstName" placeholder="Volunteer First Name *" required />
                             </div>
                             <div class="form-group col-md-5">
-                                <input class="form-control" type="text" name="organization" placeholder="Volunteer Last Name" required/>
+                                <input class="form-control" type="text" id="LastName"name="LastName" placeholder="Volunteer Last Name" required/>
                             </div>
                         </div>
                         <div><h6>Contact Information</h6></div>
                         <div class="row">
                             <div class="form-group col-md-3">
-                                <input class="form-control" type="text" name="city" placeholder="City *" required />
+                                <input class="form-control" type="text" id="City" name="City" placeholder="City *" required />
                             </div>
                             <div class="form-group col-md-3">
-                                <input class="form-control" type="text" name="state" placeholder="State *" required />
+                                <input class="form-control" type="text" id="State" name="State" placeholder="State *" required />
                             </div>
                             <div class="form-group col-md-3">
-                                <input class="form-control" type="email" name="email" placeholder="Volunteer Email *" required />
+                                <input class="form-control" type="email" id="Email" name="Email" placeholder="Volunteer Email *" required />
                             </div>
                             <div class="form-group col-md-3">
-                                <input class="form-control" type="tel" name="phone" placeholder="Volunteer Phone *" required />
+                                <input class="form-control" type="tel" id="Phone" name="Phone" placeholder="Volunteer Phone *" required />
                             </div>
                         </div>
                         <div><h6>Other Information</h6></div>
                         <div class="row">                  
                             <div class="form-group col-md-3">
-                                <input class="form-control" type="number" name="volunteers" placeholder="Hours Willing to Travel for Events *" min="1" required />
+                                <input class="form-control" type="number" name="TravelTime" id="TravelTime" placeholder="Hours Willing to Travel for Events *" min="1" required />
                             </div>
                             <div class="form-group col-md-4">
-                                <input class="form-control" type="number" name="hours" placeholder="Hours Available per Month *" min="1" required />
+                                <input class="form-control" type="number" name="MonthlyHrsWilling" id="MonthlyHrsWilling" placeholder="Hours Available per Month *" min="1" required />
                             </div>
                         </div> 
                     </div>
                     <div class="form-group">
                         <label for="volunteerType">Sewing Experience Level *</label>
-                        <select class="form-control" name="sewingExperienceLevel" id="sewingExperienceLevel" required>
+                        <select class="form-control" name="sewingLevel" id="sewingLevel" required>
                             <option value="N">No Experience</option>
                             <option value="B">Beginner</option>
                             <option value="I">Intermediate</option>
@@ -111,17 +111,17 @@
                     <div class="form-group">
                         <label>If called upon, would you be willing to lead out at an event? *</label><br>
                         <div class="form-check form-check-inline">
-                            <input class="form-check-input" type="radio" name="leadOut" id="leadOutYes" value="yes" required>
+                            <input class="form-check-input" type="radio" name="LeadWilling" id="leadOutYes" value="yes" required>
                             <label class="form-check-label" for="leadOutYes">Yes</label>
                         </div>
                         <div class="form-check form-check-inline">
-                            <input class="form-check-input" type="radio" name="leadOut" id="leadOutNo" value="no">
+                            <input class="form-check-input" type="radio" name="LeadWilling" id="leadOutNo" value="no">
                             <label class="form-check-label" for="leadOutNo">No</label>
                         </div>
                     </div>
                     <div><h6>Additional Details</h6></div>
                     <div class="form-group">
-                        <textarea class="form-control" name="eventDetails" placeholder="Please let us know any addtional details that may be important" ></textarea>
+                        <textarea class="form-control" name="Comment" id="Comment" placeholder="Please let us know any addtional details that may be important" ></textarea>
                     </div>
                     <button class="btn btn-primary" type="submit">Submit Information</button>
                 </form>
