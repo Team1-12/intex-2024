@@ -63,5 +63,65 @@ app.get('/donate', (req, res) => {
 
 });
 
+//Route to How to help page
+app.get('/internalLanding', (req, res) => {
+  res.render('internalLanding'); 
+
+}); 
+
+//Route to How to help page
+app.get('/eventRecords', (req, res) => {
+  res.render('eventRecords'); 
+
+}); 
+
+//Route to How to help page
+app.get('/adminRecords', (req, res) => {
+  res.render('adminRecords'); 
+
+}); 
+
+//Route to display Event records 
+app.get('/eventRecords', (req, res) => {
+  knex.select(
+      'eventid',
+      'eventdate',
+      'starttime',
+      'city',
+      'state',
+      'zip',
+      'contactname',
+      'eventactivities', 
+      'organization'
+    )
+    .from('event')
+    .then(event => {
+      // Render the eventRecords.ejs template and pass the data
+      res.render('eventRecords', { event });
+    })
+    // Memorize or paste in to the end of all 
+    .catch(error => {
+      console.error('Error querying database:', error);
+      res.status(500).send('Internal Server Error');
+    });
+});
+
+// this chunk of code finds the record with the primary key aka id and deletes the record
+app.post('/deleteEventRec/:eventid', (req, res) => {
+
+  const eventid = req.params.eventid;
+
+  knex('event ')
+    .where('eventid', eventid)
+    .del() // Deletes the record with the specified ID
+    .then(() => {
+      res.redirect('/eventRec'); // Redirect to the Event Records Table after deletion
+    })
+    .catch(error => {
+      console.error('Error deleting Event Record:', error);
+      res.status(500).send('Internal Server Error');
+    });
+});   
+
 // app listening
 app.listen(port, () => console.log("Express App has started and server is listening!"));
