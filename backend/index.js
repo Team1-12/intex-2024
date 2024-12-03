@@ -63,5 +63,11 @@ app.get('/donate', (req, res) => {
 
 });
 
+//Route to volunteer form page
+app.get('/volunteerForm', (req, res) => {
+  res.render('volunteerForm'); 
+
+});
+
 // app listening
 app.listen(port, () => console.log("Express App has started and server is listening!"));
