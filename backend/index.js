@@ -27,7 +27,10 @@ app.set("views", path.join(__dirname, "../frontend/views")) //This is telling th
 app.use(express.urlencoded({extended: true})); //allows us to get data out of the request.body
 
 // Serve static files from the 'CSS' directory
-app.use('/CSS', express.static(path.join(__dirname, '../frontend/css')));
+app.use('/css', express.static(path.join(__dirname, '../frontend/css')));
+
+// Serve static files from the 'backend' folder (for JavaScript)
+app.use('/backend', express.static(path.join(__dirname, 'backend')));
 
 // Serve static files from the frontend folder
 app.use(express.static('frontend'));
@@ -35,6 +38,12 @@ app.use(express.static('frontend'));
 // Routes and other middleware
 app.get('/', (req, res) => {
   res.render('index');  // Or your view rendering logic
+});
+
+//Route to got to the event request page
+app.get('/eventRequest', (req, res) => {
+  res.render('eventRequest'); 
+
 });
 
 // app listening
