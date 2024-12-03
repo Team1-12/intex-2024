@@ -74,5 +74,62 @@ app.get('/login', (req, res) => {
 
 });
 
+
+// To post the new volunteer to the database
+app.post('/submitVolunteerForm', (req, res) => {
+
+  // Access each value directly from req.body
+  const FirstName = req.body.FirstName;
+
+  const LastName = req.body.LastName;
+
+  const Phone = req.body.Phone; 
+
+  const Email = req.body.Email;
+
+  const City = req.body.City; 
+
+  const State = req.body.State;
+
+  const HowTheyHeard = req.body.HowTheyHeard;
+
+  const SewingLevel = req.body.SewingLevel;
+
+  const MonthlyHrsWilling = parseInt(req.body.MonthlyHrsWilling); // Convert to integer
+
+  const LeadWilling = req.body.LeadWilling;
+
+  const TravelTime = parseInt(req.body.TravelTime); // Convert to integer
+
+  const Comments = req.body.Comments;
+
+
+  // Insert the Character in the database
+  knex('Volunteers')
+    .insert({
+      FirstName: FirstName,
+      LastName: LastName,
+      Phone: Phone,
+      Email: Email,
+      City: City,
+      State: State,
+      HowTheyHeard: HowTheyHeard,
+      SewingLevel: SewingLevel,
+      MonthlyHrsWilling: MonthlyHrsWilling,
+      LeadWilling: LeadWilling,
+      TravelTime: TravelTime,
+      Comments: Comments,
+    })
+    .then(() => {
+      res.redirect('/'); // Redirect to the list of Characters after saving
+    })
+    .catch(error => {
+      console.error('Error adding Volunteer:', error);
+      res.status(500).send('Internal Server Error');
+    });
+});
+
+
+
 // app listening
 app.listen(port, () => console.log("Express App has started and server is listening!"));
