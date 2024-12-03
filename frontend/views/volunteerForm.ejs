@@ -5,7 +5,7 @@
         <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no" />
         <meta name="description" content="" />
         <meta name="author" content="" />
-        <title>Agency - Start Bootstrap Theme</title>
+        <title>Volunteer Form</title>
         <!-- Favicon-->
         <link rel="icon" type="image/x-icon" href="assets/favicon.ico" />
         <!-- Font Awesome icons (free version)-->
@@ -37,85 +37,93 @@
         </nav>
         <section>
             <div class="container">
-                <h2>Event Request Form</h2>
-                <form id="eventRequestForm" method="post" action="/EventRequest">
+                <h2>Volunteer Form</h2>
+                <form id="eventRequestForm" method="post" action="/submitVolunteerForm">
                     <div class="form-row">
                         <div class="row">
-                            <div class="form-group col-md-3">
-                                <input class="form-control" type="text" name="ContactName" id="ContactName" placeholder="Contact Name *" required />
+                            <div class="form-group col-md-5">
+                                <input class="form-control" type="text" id="FirstName"name="FirstName" placeholder="Volunteer First Name *" required />
                             </div>
-                            <div class="form-group col-md-3">
-                                <input class="form-control" type="text" name="Organization" id="Organization" placeholder="Organization/Group Name" required/>
-                            </div>
-                            <div class="form-group col-md-3">
-                                <input class="form-control" type="email" name="ContactEmail" id="ContactEmail" placeholder="Contact Email *" required />
-                            </div>
-                            <div class="form-group col-md-3">
-                                <input class="form-control" type="tel" name="ContactPhone" id="ContactPhone" placeholder="Contact Phone *" required />
+                            <div class="form-group col-md-5">
+                                <input class="form-control" type="text" id="LastName"name="LastName" placeholder="Volunteer Last Name" required/>
                             </div>
                         </div>
-                        <div class="row">
-                            <div class="form-group col-md-12">
-                                <input class="form-control" type="text" name="Address" id="Address" placeholder="Street Address *" required />
-                            </div>
-                        </div>
+                        <div><h6>Contact Information</h6></div>
                         <div class="row">
                             <div class="form-group col-md-3">
-                                <input class="form-control" type="text" name="City" id="City" placeholder="City *" required />
+                                <input class="form-control" type="text" id="City" name="City" placeholder="City *" required />
                             </div>
                             <div class="form-group col-md-3">
-                                <input class="form-control" type="text" name="State" id="State" placeholder="State *" required />
+                                <input class="form-control" type="text" id="State" name="State" placeholder="State *" required />
                             </div>
                             <div class="form-group col-md-3">
-                                <input class="form-control" type="number" name="Zip" id="Zip" placeholder="Zip Code *" required />
+                                <input class="form-control" type="email" id="Email" name="Email" placeholder="Volunteer Email *" required />
+                            </div>
+                            <div class="form-group col-md-3">
+                                <input class="form-control" type="tel" id="Phone" name="Phone" placeholder="Volunteer Phone *" required />
                             </div>
                         </div>
+                        <div><h6>Other Information</h6></div>
                         <div class="row">                  
-                            <div class="form-group col-md-4">
-                                <input class="form-control" type="number" name="ExpectedParticipants" id="ExpectedParticipants" placeholder="Number of Volunteers *" min="1" required />
+                            <div class="form-group col-md-3">
+                                <input class="form-control" type="number" name="TravelTime" id="TravelTime" placeholder="Hours Willing to Travel for Events *" min="1" required />
                             </div>
                             <div class="form-group col-md-4">
-                                <input class="form-control" type="number" name="ExpectedDuration" id="ExpectedDuration" placeholder="Number of Hours for Event *" min="1" required />
+                                <input class="form-control" type="number" name="MonthlyHrsWilling" id="MonthlyHrsWilling" placeholder="Hours Available per Month *" min="1" required />
                             </div>
                         </div> 
                     </div>
                     <div class="form-group">
-                        <label for="volunteerType">Type of Volunteering *</label>
-                        <select class="form-control" name="EventActivities" id="EventActivities" required>
-                            <option value="">Select Type</option>
-                            <option value="sewing">Sewing</option>
-                            <option value="non-sewing">Non-Sewing</option>
-                            <option value="both">Both</option>
+                        <label for="volunteerType">Sewing Experience Level *</label>
+                        <select class="form-control" name="sewingLevel" id="sewingLevel" required>
+                            <option value="N">No Experience</option>
+                            <option value="B">Beginner</option>
+                            <option value="I">Intermediate</option>
+                            <option value="A">Advanced</option>
                         </select>
                     </div>
                     <div class="form-group">
-                        <label>Do you want Jen, the founder of the Turtle Shelter Project, to share her story? *</label><br>
-                        <div class="form-check form-check-inline">
-                            <input class="form-check-input" type="radio" name="JenShare" id="JenShareYes" value="yes" required>
-                            <label class="form-check-label" for="JenShareYes">Yes</label>
-                        </div>
-                        <div class="form-check form-check-inline">
-                            <input class="form-check-input" type="radio" name="JenShare" id="JenShareNo" value="no">
-                            <label class="form-check-label" for="JenShareNo">No</label>
-                        </div>
+                        <label for="heardFrom">Where did you hear about this opportunity? *</label>
+                        <select class="form-control" name="heardFrom" id="heardFrom" required>
+                            <option value="">Select an option</option>
+                            <option value="social_media">Social Media</option>
+                            <option value="friends">Friends or Family</option>
+                            <option value="website">Website</option>
+                            <option value="other">Other</option>
+                        </select>
                     </div>
+                    <div class="form-group" id="otherInput" style="display: none;">
+                        <label for="otherSource">Please specify</label>
+                        <input class="form-control" type="text" name="otherSource" id="otherSource" placeholder="Specify your source" />
+                    </div>
+                    <script>
+                        document.getElementById('heardFrom').addEventListener('change', function () {
+                            var otherInput = document.getElementById('otherInput');
+                            if (this.value === 'other') {
+                                otherInput.style.display = 'block';
+                                document.getElementById('otherSource').setAttribute('required', 'required');
+                            } else {
+                                otherInput.style.display = 'none';
+                                document.getElementById('otherSource').removeAttribute('required');
+                            }
+                        });
+                    </script>
                     <div class="form-group">
-                        <p>Please select the range of dates below for which your organization is available to volunteer. <br>If only one date is available, insert that date into the first field and leave the second blank.</p>
-                        <div class="row">
-                            <div class=">form-group col-md-3">
-                                <label for="StartDateRange">First Available Date *</label>
-                                <input class="form-control" type="date" name="StartDateRange" id="StartDateRange" required />
-                            </div>
-                            <div class=">form-group col-md-3">
-                                <label for="EndDateRange">Last Available Date</label>
-                                <input class="form-control" type="date" name="EndDateRange" id="EndDateRange" />
-                            </div>
+                        <label>If called upon, would you be willing to lead out at an event? *</label><br>
+                        <div class="form-check form-check-inline">
+                            <input class="form-check-input" type="radio" name="LeadWilling" id="leadOutYes" value="yes" required>
+                            <label class="form-check-label" for="leadOutYes">Yes</label>
+                        </div>
+                        <div class="form-check form-check-inline">
+                            <input class="form-check-input" type="radio" name="LeadWilling" id="leadOutNo" value="no">
+                            <label class="form-check-label" for="leadOutNo">No</label>
                         </div>
                     </div>
+                    <div><h6>Additional Details</h6></div>
                     <div class="form-group">
-                        <textarea class="form-control" name="Comments" id="Comments" placeholder="Other Scheduling/Event Details" ></textarea>
+                        <textarea class="form-control" name="Comment" id="Comment" placeholder="Please let us know any addtional details that may be important" ></textarea>
                     </div>
-                    <button class="btn btn-primary" type="submit">Send Request</button>
+                    <button class="btn btn-primary" type="submit">Submit Information</button>
                 </form>
             </div>
         </section>

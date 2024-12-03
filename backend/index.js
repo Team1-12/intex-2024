@@ -28,10 +28,10 @@ app.use(express.static('frontend'));
 const knex = require("knex") ({
   client : "pg",
   connection : {
-      host : process.env.RDS_HOSTNAME || "localhost",
-      user : process.env.RDS_USERNAME || "postgres",
-      password : process.env.RDS_PASSWORD,
-      database : process.env.RDS_DB_NAME,
+      host : process.env.RDS_HOSTNAME || "awseb-e-xg3qx7rimi-stack-awsebrdsdatabase-d32v4dftp3db.cna8yiecw5c6.us-east-1.rds.amazonaws.com",
+      user : process.env.RDS_USERNAME || "turtle",
+      password : process.env.RDS_PASSWORD || "splishsplash",
+      database : process.env.RDS_DB_NAME || "ebdb",
       port : process.env.RDS_PORT || 5432,
       ssl: process.env.DB_SSL ? {rejectUnauthorized: false} : false
   }
@@ -63,6 +63,17 @@ app.get('/donate', (req, res) => {
 
 });
 
+
+//Route to volunteer form page
+app.get('/volunteerForm', (req, res) => {
+  res.render('volunteerForm'); 
+
+});
+
+app.get('/login', (req, res) => {
+  res.render('login'); 
+
+});
 //Route to How to help page
 app.get('/internalLanding', (req, res) => {
   res.render('internalLanding'); 
@@ -122,6 +133,7 @@ app.post('/deleteEventRec/:eventid', (req, res) => {
       res.status(500).send('Internal Server Error');
     });
 });   
+
 
 // app listening
 app.listen(port, () => console.log("Express App has started and server is listening!"));
