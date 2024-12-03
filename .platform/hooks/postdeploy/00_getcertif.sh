@@ -3,7 +3,7 @@
 # Define domain name
 DOMAIN="Turtle-env.eba-wpe3e7rb.us-east-1.elasticbeanstalk.com"
 
-# Install Certbot and dependencies if not already installed
+# Install Certbot and dependencies
 if ! command -v certbot &>/dev/null; then
     sudo dnf install -y python3 augeas-libs
     sudo python3 -m venv /opt/certbot
@@ -27,7 +27,7 @@ server {
     ssl_certificate_key /etc/letsencrypt/live/$DOMAIN/privkey.pem;
 
     location / {
-        proxy_pass http://localhost:80; # Forward requests to Elastic Beanstalk backend
+        proxy_pass http://localhost:5001; # Forward requests to Elastic Beanstalk backend
         proxy_http_version 1.1;
         proxy_set_header Upgrade \$http_upgrade;
         proxy_set_header Connection 'upgrade';
