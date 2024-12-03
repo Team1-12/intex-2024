@@ -163,5 +163,62 @@ app.post('/deleteEventRec/:eventid', (req, res) => {
 });   
 
 
+
+// To post the new volunteer to the database
+app.post('/submitVolunteerForm', (req, res) => {
+
+  // Access each value directly from req.body
+  const firstname = req.body.FirstName;
+
+  const lastname = req.body.LastName;
+
+  const phone = req.body.Phone; 
+
+  const email = req.body.Email;
+
+  const city = req.body.City; 
+
+  const state = req.body.State;
+
+  const howtheyheard = req.body.HowTheyHeard;
+
+  const sewinglevel = req.body.SewingLevel;
+
+  const monthlyhrswilling = parseInt(req.body.MonthlyHrsWilling); // Convert to integer
+
+  const leadwilling = req.body.LeadWilling;
+
+  const traveltime = parseInt(req.body.TravelTime); // Convert to integer
+
+  const comments = req.body.Comments;
+
+
+  // Insert the Character in the database
+  knex('volunteer')
+    .insert({
+      firstname: firstname,
+      lastname: lastname,
+      phone: phone,
+      email: email,
+      city: city,
+      state: state,
+      howtheyheard: howtheyheard,
+      sewinglevel: sewinglevel,
+      monthlyhrswilling: monthlyhrswilling,
+      leadwilling: leadwilling,
+      traveltime: traveltime,
+      comments: comments,
+    })
+    .then(() => {
+      res.redirect('/'); // Redirect to 
+    })
+    .catch(error => {
+      console.error('Error adding Volunteer:', error);
+      res.status(500).send('Internal Server Error');
+    });
+});
+
+
+
 // app listening
 app.listen(port, () => console.log("Express App has started and server is listening!"));
