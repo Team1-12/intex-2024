@@ -168,49 +168,49 @@ app.post('/deleteEventRec/:eventid', (req, res) => {
 app.post('/submitVolunteerForm', (req, res) => {
 
   // Access each value directly from req.body
-  const FirstName = req.body.FirstName;
+  const firstname = req.body.FirstName;
 
-  const LastName = req.body.LastName;
+  const lastname = req.body.LastName;
 
-  const Phone = req.body.Phone; 
+  const phone = req.body.Phone; 
 
-  const Email = req.body.Email;
+  const email = req.body.Email;
 
-  const City = req.body.City; 
+  const city = req.body.City; 
 
-  const State = req.body.State;
+  const state = req.body.State;
 
-  const HowTheyHeard = req.body.HowTheyHeard;
+  const howtheyheard = req.body.HowTheyHeard;
 
-  const SewingLevel = req.body.SewingLevel;
+  const sewinglevel = req.body.SewingLevel;
 
-  const MonthlyHrsWilling = parseInt(req.body.MonthlyHrsWilling); // Convert to integer
+  const monthlyhrswilling = parseInt(req.body.MonthlyHrsWilling); // Convert to integer
 
-  const LeadWilling = req.body.LeadWilling;
+  const leadwilling = req.body.LeadWilling;
 
-  const TravelTime = parseInt(req.body.TravelTime); // Convert to integer
+  const traveltime = parseInt(req.body.TravelTime); // Convert to integer
 
-  const Comments = req.body.Comments;
+  const comments = req.body.Comments;
 
 
   // Insert the Character in the database
-  knex('Volunteers')
+  knex('volunteer')
     .insert({
-      FirstName: FirstName,
-      LastName: LastName,
-      Phone: Phone,
-      Email: Email,
-      City: City,
-      State: State,
-      HowTheyHeard: HowTheyHeard,
-      SewingLevel: SewingLevel,
-      MonthlyHrsWilling: MonthlyHrsWilling,
-      LeadWilling: LeadWilling,
-      TravelTime: TravelTime,
-      Comments: Comments,
+      firstname: firstname,
+      lastname: lastname,
+      phone: phone,
+      email: email,
+      city: city,
+      state: state,
+      howtheyheard: howtheyheard,
+      sewinglevel: sewinglevel,
+      monthlyhrswilling: monthlyhrswilling,
+      leadwilling: leadwilling,
+      traveltime: traveltime,
+      comments: comments,
     })
     .then(() => {
-      res.redirect('/'); // Redirect to the list of Characters after saving
+      res.redirect('/'); // Redirect to 
     })
     .catch(error => {
       console.error('Error adding Volunteer:', error);
