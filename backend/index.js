@@ -51,7 +51,17 @@ app.get('/eventRequest', (req, res) => {
 
 });
 
+//Route to How to help page
+app.get('/howToHelp', (req, res) => {
+  res.render('howToHelp'); 
 
+}); 
+
+//Route to the donate page
+app.get('/donate', (req, res) => {
+  res.redirect('https://turtleshelterproject.org/checkout/donate?donatePageId=5b6a44c588251b72932df5a0'); 
+
+});
 
 // app listening
 app.listen(port, () => console.log("Express App has started and server is listening!"));
