@@ -135,5 +135,35 @@ app.post('/deleteEventRec/:eventid', (req, res) => {
 });   
 
 
+app.get('/volunteerRecords', (req, res) => {
+  knex('Volunteer')
+    .select(
+      'VolunteerID',
+      'FirstName',
+      'LastName',
+      'Email',
+      'Phone',
+      'City',
+      'State',
+      'Zip',
+      'HowTheyHeard',
+      'SewingLevel',
+      'MonthlyHrsWilling',
+      'LeadWilling',
+      'TravelTime',
+      'Comments'
+    )
+    .then(volunteer => {
+      // Render the volunteerRecords.ejs template and pass the data
+      res.render('volunteerRecords', { volunteer });
+    })
+    // Catch to handle errors
+    .catch(error => {
+      console.error('Error querying database:', error);
+      res.status(500).send('Internal Server Error');
+    });
+});
+
+
 // app listening
 app.listen(port, () => console.log("Express App has started and server is listening!"));
