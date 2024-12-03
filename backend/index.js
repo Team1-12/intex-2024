@@ -108,11 +108,6 @@ app.get('/internalLanding', (req, res) => {
 
 }); 
 
-//Route to How to help page
-app.get('/eventRecords', (req, res) => {
-  res.render('eventRecords'); 
-
-}); 
 
 //Route to How to help page
 app.get('/adminRecords', (req, res) => {
@@ -122,7 +117,8 @@ app.get('/adminRecords', (req, res) => {
 
 //Route to display Event records 
 app.get('/eventRecords', (req, res) => {
-  knex.select(
+  knex('event')
+    .select(
       'eventid',
       'eventdate',
       'starttime',
@@ -133,7 +129,6 @@ app.get('/eventRecords', (req, res) => {
       'eventactivities', 
       'organization'
     )
-    .from('event')
     .then(event => {
       // Render the eventRecords.ejs template and pass the data
       res.render('eventRecords', { event });
@@ -164,22 +159,21 @@ app.post('/deleteEventRec/:eventid', (req, res) => {
 
 
 app.get('/volunteerRecords', (req, res) => {
-  knex('Volunteer')
+  knex('volunteer')
     .select(
-      'VolunteerID',
-      'FirstName',
-      'LastName',
-      'Email',
-      'Phone',
-      'City',
-      'State',
-      'Zip',
-      'HowTheyHeard',
-      'SewingLevel',
-      'MonthlyHrsWilling',
-      'LeadWilling',
-      'TravelTime',
-      'Comments'
+      'volunteerid',
+      'firstname',
+      'lastname',
+      'email',
+      'phone',
+      'city',
+      'state',
+      'howtheyheard',
+      'sewinglevel',
+      'monthlyhrswilling',
+      'leadwilling',
+      'traveltime',
+      'comments'
     )
     .then(volunteer => {
       // Render the volunteerRecords.ejs template and pass the data
