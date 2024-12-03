@@ -94,7 +94,8 @@ app.get('/adminRecords', (req, res) => {
 
 //Route to display Event records 
 app.get('/eventRecords', (req, res) => {
-  knex.select(
+  knex('event')
+      .select(
       'eventid',
       'eventdate',
       'starttime',
@@ -105,7 +106,6 @@ app.get('/eventRecords', (req, res) => {
       'eventactivities', 
       'organization'
     )
-    .from('event')
     .then(event => {
       // Render the eventRecords.ejs template and pass the data
       res.render('eventRecords', { event });
@@ -122,7 +122,7 @@ app.post('/deleteEventRec/:eventid', (req, res) => {
 
   const eventid = req.params.eventid;
 
-  knex('event ')
+  knex('event')
     .where('eventid', eventid)
     .del() // Deletes the record with the specified ID
     .then(() => {
