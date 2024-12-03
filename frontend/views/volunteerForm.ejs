@@ -76,7 +76,7 @@
                     </div>
                     <div class="form-group">
                         <label for="volunteerType">Sewing Experience Level *</label>
-                        <select class="form-control" name="sewingLevel" id="sewingLevel" required>
+                        <select class="form-control" name="SewingLevel" id="SewingLevel" required>
                             <option value="N">No Experience</option>
                             <option value="B">Beginner</option>
                             <option value="I">Intermediate</option>
@@ -85,7 +85,7 @@
                     </div>
                     <div class="form-group">
                         <label for="heardFrom">Where did you hear about this opportunity? *</label>
-                        <select class="form-control" name="heardFrom" id="heardFrom" required>
+                        <select class="form-control" name="HowTheyHeard" id="HowTheyHeard" required>
                             <option value="">Select an option</option>
                             <option value="social_media">Social Media</option>
                             <option value="friends">Friends or Family</option>
@@ -98,7 +98,7 @@
                         <input class="form-control" type="text" name="otherSource" id="otherSource" placeholder="Specify your source" />
                     </div>
                     <script>
-                        document.getElementById('heardFrom').addEventListener('change', function () {
+                        document.getElementById('HowTheyHeard').addEventListener('change', function () {
                             var otherInput = document.getElementById('otherInput');
                             if (this.value === 'other') {
                                 otherInput.style.display = 'block';
@@ -122,7 +122,7 @@
                     </div>
                     <div><h6>Additional Details</h6></div>
                     <div class="form-group">
-                        <textarea class="form-control" name="Comment" id="Comment" placeholder="Please let us know any addtional details that may be important" ></textarea>
+                        <textarea class="form-control" name="Comments" id="Comments" placeholder="Please let us know any addtional details that may be important" ></textarea>
                     </div>
                     <button class="btn btn-primary" type="submit">Submit Information</button>
                 </form>
