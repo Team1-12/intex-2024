@@ -5,33 +5,6 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Login Page</title>
     <link href="css/styles.css" rel="stylesheet" />
-    <style>
-        table {
-          width: 80%;
-          margin: 20px auto;
-          border-collapse: collapse;
-          font-size: 10px; /* Reduce the font size of the table */
-        }
-        label {
-            width: 50%;
-        }
-        th, td {
-          border: 1px solid #ddd;
-          padding: 5px; /* Reduce the padding to decrease row height */
-          text-align: center;
-          line-height: 1.2; /* Adjust line height for smaller rows */
-        }
-        th {
-          background-color: #F2F2F2;
-          font-weight: bold;
-        }
-        button {
-          padding: 4px 8px; /* Adjust button size */
-          margin: 2px;
-          font-size: 12px; /* Adjust button font size */
-          cursor: pointer;
-        }
-      </style>
 </head>
 <body>
 <div class="banner">
@@ -40,6 +13,11 @@
 <br><br><br><br>
 <div class="login-container">
     <h2>Login to see stuff!</h2>
+    <div class="error-message">
+        <% if (typeof error !== 'undefined') { %>
+          <p style="color: red;"><%= error %></p>
+        <% } %>
+    </div>
     <form action="/login" method="POST">
         <div class="form-group">
             <label for="username">Username:</label>
@@ -48,15 +26,23 @@
         <div class="form-group">
             <label for="password">Password:</label>
             <input type="password" id="password" name="password" required>
+            <input type="checkbox" id="show-password" onclick="togglePassword()"> Show Password
         </div>
-        <button class="sign-up-button"  type="submit">Login</button>
+        <button class="sign-up-button" type="submit">Login</button>
     </form>
     <p>Don't have an account? Sign up <a href="/signUp">here</a></p>
 </div>
 
-<footer class ="footer">
+<footer class="footer">
     <p>&copy; 2024 Turtle Shelter Project. All rights reserved.</p>
 </footer>
-   
+
+<script>
+    function togglePassword() {
+        const passwordInput = document.getElementById('password');
+        const passwordType = passwordInput.getAttribute('type');
+        passwordInput.setAttribute('type', passwordType === 'password' ? 'text' : 'password');
+    }
+</script>
 </body>
 </html>

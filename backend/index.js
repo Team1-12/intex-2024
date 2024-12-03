@@ -33,7 +33,7 @@ const knex = require("knex") ({
       password : process.env.RDS_PASSWORD || "splishsplash",
       database : process.env.RDS_DB_NAME || "ebdb",
       port : process.env.RDS_PORT || 5432,
-      ssl: process.env.DB_SSL ? {rejectUnauthorized: false} : false
+      ssl: {rejectUnauthorized: false}
   }
 });
 
@@ -74,6 +74,34 @@ app.get('/login', (req, res) => {
   res.render('login'); 
 
 });
+
+app.post('/login', (req, res) => {
+  const { username, password } = req.body;
+
+  if (!username || !password) {
+    return res.render('login', { error: 'Username and password are required.' });
+  }
+
+  // Query the database to check if the username and password exist
+  knex('admin')
+    .select('*')
+    .where({ username, password }) // Check against plaintext password
+    .first() // Fetch only one record
+    .then(user => {
+      if (user) {
+        // Redirect to internal landing page if login is successful
+        res.redirect('/internalLanding');
+      } else {
+        // Render login page with error if invalid credentials
+        res.render('login', { error: 'Invalid username or password.' });
+      }
+    })
+    .catch(err => {
+      console.error('Database error:', err);
+      res.status(500).send('Internal Server Error');
+    });
+});
+
 //Route to How to help page
 app.get('/internalLanding', (req, res) => {
   res.render('internalLanding'); 
