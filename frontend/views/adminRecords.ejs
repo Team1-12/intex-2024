@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no" />
+        <meta name="description" content="" />
+        <meta name="author" content="" />
+        <title>Turtle</title>
+        <!-- Favicon-->
+        <link rel="icon" type="image/x-icon" href="assets/favicon.ico" />
+        <!-- Font Awesome icons (free version)-->
+        <script src="https://use.fontawesome.com/releases/v6.3.0/js/all.js" crossorigin="anonymous"></script>
+        <!-- Google fonts-->
+        <link href="https://fonts.googleapis.com/css?family=Montserrat:400,700" rel="stylesheet" type="text/css" />
+        <link href="https://fonts.googleapis.com/css?family=Roboto+Slab:400,100,300,700" rel="stylesheet" type="text/css" />
+        <!-- Core theme CSS (includes Bootstrap)-->
+        <link href="css/styles.css" rel="stylesheet" />
+</head>
+<body>
+    <!-- Navigation-->
+    <nav class="navbar navbar-expand-lg navbar-dark fixed-top" id="mainNav" style="background-color: #303030;">
+        <div class="container-fluid p-0" style="background-color: #303030;">
+            <a class="navbar-brand" href="#page-top"><img src="../assets/TSlogoLowRes.png" alt="..." />Turtle Shelter Project -- Admin</a>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarResponsive" aria-controls="navbarResponsive" aria-expanded="false" aria-label="Toggle navigation">
+                Menu
+                <i class="fas fa-bars ms-1"></i>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarResponsive">
+                <ul class="navbar-nav text-uppercase ms-auto py-4 py-lg-0">
+                    <li class="nav-item"><a class="nav-link" href="/internalLanding">Home</a></li>
+                    <li class="nav-item"><a class="nav-link" href="/eventRecords">Event Records</a></li>
+                    <li class="nav-item"><a class="nav-link" href="/volunteerRecords">Volunteer Records</a></li>
+                    <li class="nav-item"><a class="nav-link" href="/adminRecords">Admin Records</a></li>
+                    <li class="nav-item"><a class="nav-link" href="#team">Admin</a></li>
+                </ul>
+            </div>
+        </div>
+    </nav>
+    <main style="padding-top: 70px;"></main>
+    <div class="container mt-5">
+        <h2>Admin Records</h2>
+        <table class="table table-striped table-bordered">
+            <thead class="thead-dark">
+                <tr>
+                    <th>First Name</th>
+                    <th>Last Name</th>
+                    <th>Phone</th>
+                    <th>Email</th>
+                    <th>City</th>
+                    <th>State</th>
+                    <th>Username</th>
+                    <th>Password</th>
+                </tr>
+            </thead>
+            <tbody>
+                <% if (admin && admin.length > 0) { %>
+                  <% admin.forEach(function(row) { %>
+                    <tr>
+                        <!-- have the primary key which is the id and make it hidden on the page-->
+                        <input type="hidden" name="volunteerid" value="<%= row.volunteerid %>">
+                        <td><%= row.firstname %></td>
+                        <td><%= row.lastname %></td>
+                        <td><%= row.phone %></td>
+                        <td><%= row.email %></td>
+                        <td><%= row.city %></td>
+                        <td><%= row.state %></td>
+                        <td><%= row.username %></td>
+                        <td><%= row.password %></td>
+                    </tr>
+                  <% }); %>
+                <% } else { %>
+                  <tr>
+                    <td colspan="8">No admin records available.</td>
+                  </tr>
+                <% } %>
+              </tbody>
+        </table>
+    </div>
+    </main>
+</body>
+</html>

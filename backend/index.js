@@ -8,6 +8,8 @@ let path = require('path'); // access to the path
 
 const port = process.env.PORT || 5001
 
+const session = require('express-session'); 
+
 app.use(express.urlencoded( {extended: true} )) //determines how html is received from forms. This allows us to grab stuff out of the HTML form
 
 app.set("view engine", "ejs") //shows what view engine we are using 
@@ -15,6 +17,16 @@ app.set("view engine", "ejs") //shows what view engine we are using
 app.set("views", path.join(__dirname, "../frontend/views")) //This is telling the server that we are going to start using certain views
 
 app.use(express.urlencoded({extended: true})); //allows us to get data out of the request.body
+
+
+// Session middleware setup
+app.use(session({
+  secret: '123456789', // Replace with a secure secret key
+  resave: false,
+  saveUninitialized: false,
+  cookie: { maxAge: 60 * 60 * 1000 } // Session expires after 60 minutes
+}));
+
 
 // Serve static files from the 'CSS' directory
 app.use('/css', express.static(path.join(__dirname, '../frontend/css')));
@@ -82,41 +94,58 @@ app.post('/login', (req, res) => {
     return res.render('login', { error: 'Username and password are required.' });
   }
 
-  // Query the database to check if the username and password exist
-  knex('admin')
-    .select('*')
-    .where({ username, password }) // Check against plaintext password
-    .first() // Fetch only one record
-    .then(user => {
-      if (user) {
-        // Redirect to internal landing page if login is successful
-        res.redirect('/internalLanding');
-      } else {
-        // Render login page with error if invalid credentials
-        res.render('login', { error: 'Invalid username or password.' });
-      }
-    })
-    .catch(err => {
-      console.error('Database error:', err);
-      res.status(500).send('Internal Server Error');
-    });
+   // Query the database to check if the username and password exist
+   knex('admin')
+   .select('*')
+   .where({ username, password }) // Note: Storing plaintext passwords is insecure
+   .first()
+   .then(user => {
+     if (user) {
+       // Set session variable
+       req.session.isAuthenticated = true;
+       req.session.save(err => {
+         if (err) {
+           console.error('Session save error:', err);
+           return res.status(500).send('Internal Server Error');
+         }
+         // Redirect to internal landing page if login is successful
+         res.redirect('/internalLanding');
+       });
+     } else {
+       // Render login page with error if invalid credentials
+       res.render('login', { error: 'Invalid username or password.' });
+     }
+   })
+   .catch(err => {
+     console.error('Database error:', err);
+     res.status(500).send('Internal Server Error');
+   });
 });
 
-//Route to internal Landing page
-app.get('/internalLanding', (req, res) => {
-  res.render('internalLanding'); 
+// Authentication middleware
+function isAuthenticated(req, res, next) {
+  if (req.session && req.session.isAuthenticated) {
+    // User is authenticated, proceed to the next middleware
+    return next();
+  } else {
+    // User is not authenticated, redirect to login page
+    res.redirect('/login');
+  }
+}
 
-}); 
+// Protected routes using the authentication middleware
+app.get('/internalLanding', isAuthenticated, (req, res) => {
+  res.render('internalLanding');
+});
 
 
 //Route to adminRecords page
-app.get('/adminRecords', (req, res) => {
-  res.render('adminRecords'); 
-
-}); 
+app.get('/adminRecords', isAuthenticated, (req, res) => {
+  res.render('adminRecords');
+});
 
 //Route to display Event records 
-app.get('/eventRecords', (req, res) => {
+app.get('/eventRecords', isAuthenticated, (req, res) => {
   knex('event')
       .select(
       'eventid',
@@ -141,15 +170,15 @@ app.get('/eventRecords', (req, res) => {
 });
 
 // this chunk of code finds the record with the primary key aka id and deletes the record
-app.post('/deleteEventRec/:eventid', (req, res) => {
+app.post('/deleteEventRec/:eventid', isAuthenticated, (req, res) => {
 
-  const eventid = req.params.eventid;
+  const eventid = parseInt(req.params.eventid, 10);
 
   knex('event')
     .where('eventid', eventid)
     .del() // Deletes the record with the specified ID
     .then(() => {
-      res.redirect('/eventRec'); // Redirect to the Event Records Table after deletion
+      res.redirect('/eventRecords'); // Redirect to the Event Records Table after deletion
     })
     .catch(error => {
       console.error('Error deleting Event Record:', error);
@@ -158,7 +187,7 @@ app.post('/deleteEventRec/:eventid', (req, res) => {
 });   
 
 
-app.get('/volunteerRecords', (req, res) => {
+app.get('/volunteerRecords', isAuthenticated, (req, res) => {
   knex('volunteer')
     .select(
       'volunteerid',
@@ -186,6 +215,52 @@ app.get('/volunteerRecords', (req, res) => {
     });
 });
 
+// Deletes a volunteer and any associated admin records
+app.post('/deleteVolunteer/:volunteerid', (req, res) => {
+  const volunteerid = parseInt(req.params.volunteerid, 10); // Extract volunteer ID
+
+  // Step 1: Delete associated admin record first
+  knex('admin')
+    .where('volunteerid', volunteerid)
+    .del()
+    .then(() => {
+      // Step 2: Delete the volunteer record
+      return knex('volunteer').where('volunteerid', volunteerid).del();
+    })
+    .then(() => {
+      res.redirect('/volunteerRecords'); // Redirect after successful deletion
+    })
+    .catch(error => {
+      console.error('Error deleting Volunteer Record:', error);
+      res.status(500).send('Internal Server Error');
+    });
+});
+
+
+// Route to display admin records
+app.get('/adminRecords', (req, res) => {
+  knex('admin')
+    .join('volunteer', 'volunteer.volunteerid', '=', 'admin.volunteerid')
+    .select(
+      'volunteer.volunteerid',
+      'volunteer.firstname',
+      'volunteer.lastname',
+      'volunteer.phone',
+      'volunteer.email',
+      'volunteer.city',
+      'volunteer.state',
+      'admin.username',
+      'admin.password'
+    )
+    .then(admin => {
+      console.log(admin); // Log the data to verify structure
+      res.render('adminRecords', { admin }); // Pass the admin data to the EJS template
+    })
+    .catch(error => {
+      console.error('Error querying database:', error);
+      res.status(500).send('Internal Server Error');
+    });
+});
 
 
 // To post the new volunteer to the database
