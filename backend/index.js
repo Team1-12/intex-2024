@@ -108,11 +108,6 @@ app.get('/internalLanding', (req, res) => {
 
 }); 
 
-//Route to How to help page
-app.get('/eventRecords', (req, res) => {
-  res.render('eventRecords'); 
-
-}); 
 
 //Route to How to help page
 app.get('/adminRecords', (req, res) => {
@@ -161,6 +156,35 @@ app.post('/deleteEventRec/:eventid', (req, res) => {
       res.status(500).send('Internal Server Error');
     });
 });   
+
+
+app.get('/volunteerRecords', (req, res) => {
+  knex('volunteer')
+    .select(
+      'volunteerid',
+      'firstname',
+      'lastname',
+      'email',
+      'phone',
+      'city',
+      'state',
+      'howtheyheard',
+      'sewinglevel',
+      'monthlyhrswilling',
+      'leadwilling',
+      'traveltime',
+      'comments'
+    )
+    .then(volunteer => {
+      // Render the volunteerRecords.ejs template and pass the data
+      res.render('volunteerRecords', { volunteer });
+    })
+    // Catch to handle errors
+    .catch(error => {
+      console.error('Error querying database:', error);
+      res.status(500).send('Internal Server Error');
+    });
+});
 
 
 
