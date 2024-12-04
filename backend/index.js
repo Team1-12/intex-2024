@@ -136,13 +136,13 @@ app.get('/eventRecords', (req, res) => {
 // this chunk of code finds the record with the primary key aka id and deletes the record
 app.post('/deleteEventRec/:eventid', (req, res) => {
 
-  const eventid = req.params.eventid;
+  const eventid = parseInt(req.params.eventid, 10);
 
   knex('event')
     .where('eventid', eventid)
     .del() // Deletes the record with the specified ID
     .then(() => {
-      res.redirect('/eventRec'); // Redirect to the Event Records Table after deletion
+      res.redirect('/eventRecords'); // Redirect to the Event Records Table after deletion
     })
     .catch(error => {
       console.error('Error deleting Event Record:', error);
@@ -150,6 +150,110 @@ app.post('/deleteEventRec/:eventid', (req, res) => {
     });
 });   
 
+app.get('/editEventRec/:eventid', (req, res) => {
+  const eventid = req.params.eventid;
+
+  // Query the Event by eventid
+  knex('event')
+    .where('eventid', eventid)
+    .first()
+    .then(event => {
+      if (!event) {
+        return res.status(404).send('Event not found');
+      }
+      res.render('editEventRec', { event }); // Pass the event data to the template
+    })
+    .catch(error => {
+      console.error('Error fetching event for editing:', error);
+      res.status(500).send('Internal Server Error');
+    });
+});
+
+
+app.post('/editEventRec/:eventid', (req, res) => {
+  const eventid = req.params.eventid;
+
+  // Extract all fields from the request body
+  const {
+    startdaterange,
+    enddaterange,
+    expectedparticipants,
+    expectedduration,
+    eventactivities,
+    address,
+    city,
+    state,
+    zip,
+    starttime,
+    contactname,
+    contactphone,
+    contactemail,
+    jenshare,
+    organization,
+    comments,
+    spacedescription,
+    numsewers,
+    nummachines,
+    numroundtables,
+    numrectanglestables,
+    numadults,
+    numchildren,
+    actualparticipants,
+    actualduration,
+    eventdate,
+    pockets,
+    collars,
+    envelopes,
+    vests,
+    completedproducts,
+    eventstatus,
+  } = req.body;
+
+  // Update the record in the database
+  knex('event')
+    .where('eventid', eventid)
+    .update({
+      startdaterange: startdaterange,
+      enddaterange: enddaterange || null,
+      expectedparticipants: expectedparticipants ? parseInt(expectedparticipants) : null,
+      expectedduration: expectedduration ? parseInt(expectedduration) : null,
+      eventactivities: eventactivities || null,
+      address: address || null,
+      city: city || null,
+      state: state || null,
+      zip: zip ? parseInt(zip) : null,
+      starttime: starttime || null,
+      contactname: contactname || null,
+      contactphone: contactphone || null,
+      contactemail: contactemail || null,
+      jenshare: jenshare === 'yes', // Convert radio button to boolean
+      organization: organization || null,
+      comments: comments || null,
+      spacedescription: spacedescription || null,
+      numsewers: numsewers ? parseInt(numsewers) : null,
+      nummachines: nummachines ? parseInt(nummachines) : null,
+      numroundtables: numroundtables ? parseInt(numroundtables) : null,
+      numrectanglestables: numrectanglestables ? parseInt(numrectanglestables) : null,
+      numadults: numadults ? parseInt(numadults) : null,
+      numchildren: numchildren ? parseInt(numchildren) : null,
+      actualparticipants: actualparticipants ? parseInt(actualparticipants) : null,
+      actualduration: actualduration ? parseInt(actualduration) : null,
+      eventdate: eventdate || null,
+      pockets: pockets ? parseInt(pockets) : null,
+      collars: collars ? parseInt(collars) : null,
+      envelopes: envelopes ? parseInt(envelopes) : null,
+      vests: vests ? parseInt(vests) : null,
+      completedproducts: completedproducts ? parseInt(completedproducts) : null,
+      eventstatus: eventstatus || 'pending', // Default to "Pending" if not provided
+    })
+    .then(() => {
+      res.redirect('/eventRecords'); // Redirect to the event records page
+    })
+    .catch((error) => {
+      console.error('Error updating event:', error);
+      res.status(500).send('Internal Server Error');
+    });
+});
 
 app.get('/volunteerRecords', (req, res) => {
   knex('volunteer')
