@@ -56,14 +56,16 @@
                 <% if (admin && admin.length > 0) { %>
                   <% admin.forEach(function(row) { %>
                     <tr>
-                      <td><%= row.firstname %></td>
-                      <td><%= row.lastname %></td>
-                      <td><%= row.phone %></td>
-                      <td><%= row.email %></td>
-                      <td><%= row.city %></td>
-                      <td><%= row.state %></td>
-                      <td><%= row.username %></td>
-                      <td><%= row.password %></td>
+                        <!-- have the primary key which is the id and make it hidden on the page-->
+                        <input type="hidden" name="volunteerid" value="<%= row.volunteerid %>">
+                        <td><%= row.firstname %></td>
+                        <td><%= row.lastname %></td>
+                        <td><%= row.phone %></td>
+                        <td><%= row.email %></td>
+                        <td><%= row.city %></td>
+                        <td><%= row.state %></td>
+                        <td><%= row.username %></td>
+                        <td><%= row.password %></td>
                     </tr>
                   <% }); %>
                 <% } else { %>
