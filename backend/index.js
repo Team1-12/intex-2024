@@ -139,12 +139,24 @@ function isAuthenticated(req, res, next) {
   }
 }
 
+// Logout endpoint
+app.get('/logout', (req, res) => {
+  // Destroy the session
+  req.session.destroy(err => {
+    if (err) {
+      console.error('Error destroying session:', err);
+      return res.status(500).send('Failed to log out. Please try again.');
+    }
+    // Redirect to home page or login page after logout
+    res.redirect('/login'); // Or replace with '/' if you want to redirect to the homepage
+  });
+});
+
 // Protected routes using the authentication middleware
 app.get('/internalLanding', isAuthenticated, (req, res) => {
   res.render('internalLanding');
 });
 
-// Checks to see if they are authenticated to go to admin landing page
 app.get('/adminRedirect', (req, res) => {
   if (req.session && req.session.isAuthenticated) {
     res.redirect('/internalLanding'); // Redirect to internalLanding if authenticated
@@ -153,49 +165,56 @@ app.get('/adminRedirect', (req, res) => {
   }
 });
 
-//Route to display Event records 
-app.get('/eventRecords', isAuthenticated, (req, res) => {
-  knex('event')
-      .select(
-      'eventid',
-      'eventstatus',
-      'eventdate',
-      'starttime',
-      'city',
-      'state',
-      'zip',
-      'contactname',
-      'eventactivities', 
-      'organization'
-    )
-    .then(event => {
-      // Render the eventRecords.ejs template and pass the data
-      res.render('eventRecords', { event });
+
+ //Route to display events with optional status filter
+app.get('/eventRecords', (req, res) => {
+  const status = req.query.status; // Extract 'status' from query parameters
+
+  const validStatuses = ['pending', 'approved', 'planned', 'completed'];
+
+   //Start building the query
+  let query = knex('event').select('*');
+
+   //Apply filter if a valid status is provided and not 'all'
+  if (status && status.toLowerCase() !== 'all' && validStatuses.includes(status.toLowerCase())) {
+  query = query.where('eventstatus', status.toLowerCase());
+  }
+
+   //Execute the query
+  query
+    .then(events => {
+      res.render('eventRecords', {
+        events,
+        eventstatus: status ? status.toLowerCase() : 'all', // Pass 'eventstatus' to EJS
+      });
     })
-    // Memorize or paste in to the end of all 
     .catch(error => {
-      console.error('Error querying database:', error);
+      console.error('Error fetching events:', error);
       res.status(500).send('Internal Server Error');
     });
 });
+   
 
-// this chunk of code finds the record with the primary key aka id and deletes the record
+// Deletes a volunteer and any associated admin records
 app.post('/deleteEventRec/:eventid', isAuthenticated, (req, res) => {
+  const eventid = parseInt(req.params.eventid, 10); // Extract volunteer ID
 
-  const eventid = parseInt(req.params.eventid, 10);
-
+  // Step 1: Delete associated admin record first
   knex('event')
     .where('eventid', eventid)
-    .del() // Deletes the record with the specified ID
+    .del()
     .then(() => {
-      res.redirect('/eventRecords'); // Redirect to the Event Records Table after deletion
+      // Step 2: Delete the volunteer record
+      return knex('event').where('eventid', eventid).del();
+    })
+    .then(() => {
+      res.redirect('/eventRecords'); // Redirect after successful deletion
     })
     .catch(error => {
-      console.error('Error deleting Event Record:', error);
+      console.error('Error deleting Volunteer Record:', error);
       res.status(500).send('Internal Server Error');
     });
-});   
-
+});
 
 app.get('/volunteerRecords', isAuthenticated, (req, res) => {
   knex('volunteer')
@@ -249,7 +268,7 @@ app.post('/deleteVolunteer/:volunteerid', isAuthenticated, (req, res) => {
 app.get('/editEventRec/:eventid', (req, res) => {
   const eventid = req.params.eventid;
 
-  // Query the Event by eventid
+   //Query the Event by eventid
   knex('event')
     .where('eventid', eventid)
     .first()
@@ -423,7 +442,7 @@ app.post('/submitVolunteerForm', (req, res) => {
 
   const city = req.body.City; 
 
-  const state = req.body.state;
+  const state = req.body.State;
 
   const howtheyheard = req.body.HowTheyHeard;
 
@@ -461,6 +480,28 @@ app.post('/submitVolunteerForm', (req, res) => {
       console.error('Error adding Volunteer:', error);
       res.status(500).send('Internal Server Error');
     });
+});
+
+// This makes it so the admin can edit the volunteer records on page
+app.put('/updateVolunteer/:id', (req, res) => {
+  const volunteerid = req.params.id;
+  const updates = req.body; // Updated data sent from the client
+
+  // Check if updates object has any keys
+  if (!updates || Object.keys(updates).length === 0) {
+      return res.status(400).send({ message: 'No data provided for update' });
+  }
+
+  knex('volunteer')
+      .where('volunteerid', volunteerid)
+      .update(updates)
+      .then(() => {
+          res.status(200).send({ message: 'Volunteer record updated successfully' });
+      })
+      .catch(error => {
+          console.error('Error updating volunteer record:', error);
+          res.status(500).send({ message: 'Internal Server Error' });
+      });
 });
 
 
@@ -521,7 +562,11 @@ app.post('/EventRequest', (req, res) => {
       eventstatus : eventstatus,
     })
     .then(() => {
-      res.redirect('/'); // Redirect to 
+      if (req.session && req.session.isAuthenticated) {
+        res.redirect('/eventRecords'); // Redirect to internalLanding if authenticated
+      } else {
+        res.redirect('/'); // Redirect to login if not authenticated
+      } 
     })
     .catch(error => {
       console.error('Error adding event:', error);

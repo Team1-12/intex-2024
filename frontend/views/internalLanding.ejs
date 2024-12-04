@@ -1,107 +1,80 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <!-- Meta tags and title -->
     <meta charset="utf-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <title>Internal Landing Page</title>
-    <!-- Bootstrap CSS -->
-    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
-    <!-- Font Awesome icons -->
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no" />
+    <meta name="description" content="" />
+    <meta name="author" content="" />
+    <title>Turtle Volunteer Records</title>
+    <!-- Favicon-->
+    <link rel="icon" type="image/x-icon" href="assets/favicon.ico" />
+    <!-- Font Awesome icons (free version)-->
     <script src="https://use.fontawesome.com/releases/v6.3.0/js/all.js" crossorigin="anonymous"></script>
     <!-- Google fonts-->
-    <link href="https://fonts.googleapis.com/css?family=Montserrat:400,700" rel="stylesheet" />
-    <!-- Custom CSS -->
+    <link href="https://fonts.googleapis.com/css?family=Montserrat:400,700" rel="stylesheet" type="text/css" />
+    <link href="https://fonts.googleapis.com/css?family=Roboto+Slab:400,100,300,700" rel="stylesheet" type="text/css" />
+    <!-- Core theme CSS (includes Bootstrap)-->
+    <link href="css/styles.css" rel="stylesheet" />
     <style>
-        /* Incorporate your CSS styles and color scheme */
-        @charset "UTF-8";
-
-        /* Our Styles */
-        body {
-            font-family: Arial, sans-serif;
-            background-color: #f4f4f4;
-            margin: 0;
-            padding: 0;
-        }
-        .container-fluid {
-            padding-top: 20px;
-        }
-        h1, h2 {
-            color: #333; /* Darker grey for headers */
-        }
-        .navbar {
-            background-color: #303030; /* Darker turtle green */
-        }
-        .navbar-brand, .nav-link {
-            color: #fff !important;
-        }
-        .nav-link.active {
-            background-color: #354A21; /* Turtle green accent */
-            color: #fff !important;
-            border-radius: 10px;
-            
-        }
-        .logout-btn {
-            color: #fff;
-            margin-left: 15px;
-        }
         .table-responsive {
-            background-color: #fff;
-            padding: 20px;
-            border-radius: 8px;
+            margin-top: 20px;
+            max-height: 500px;
+            overflow-y: auto;
         }
-        /* Adjust navbar padding */
-        .navbar .nav-link {
-            padding-right: 20px;
+        .thead-dark th {
+            position: sticky;
+            top: 0;
+            z-index: 1;
+            background-color: #303030;
+            color: white;
         }
-        /* Custom styles for charts */
-        .chart-container {
-            padding: 20px;
-            background-color: #fff;
-            border-radius: 8px;
-            margin-bottom: 20px;
+        .dropdown-menu {
+            right: 0; /* Aligns the dropdown menu with the edge of the button */
+            left: auto; /* Prevents overlap with the toggle button */
         }
     </style>
 </head>
-
 <body>
-    <!-- Navigation Bar -->
-    <nav class="navbar navbar-expand-lg navbar-dark">
-        <a class="navbar-brand" href="#">Turtle Shelter Project -- Admin</a>
-        <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav" 
-            aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
-            <span class="navbar-toggler-icon"></span>
-        </button>
-        <div class="collapse navbar-collapse ml-auto" id="navbarNav">
-            <ul class="navbar-nav ml-auto">
-                <li class="nav-item">
-                    <a class="nav-link active" href="/internalLanding">
-                        <i class="fas fa-home"></i> Home
-                    </a>
-                </li>
-                <li class="nav-item">
-                    <a class="nav-link" href="/eventRecords">
-                        <i class="fas fa-calendar-alt"></i> Events
-                    </a>
-                </li>
-                <li class="nav-item">
-                    <a class="nav-link" href="/volunteerRecords">
-                        <i class="fas fa-users"></i> Volunteers
-                    </a>
-                </li>
-                <li class="nav-item">
-                    <a class="nav-link" href="/adminRecords">
-                        <i class="fas fa-user-shield"></i> Admins
-                    </a>
-                </li>
-                <li class="nav-item">
-                    <a class="nav-link logout-btn" href="#">
-                        <i class="fas fa-sign-out-alt"></i> Logout
-                    </a>
-                </li>
-            </ul>
+    <!-- Navigation-->
+    <nav class="navbar navbar-expand-lg navbar-dark fixed-top" id="mainNav" style="background-color: #303030;">
+        <div class="container-fluid p-0" style="background-color: #303030;">
+            <a class="navbar-brand" href="/internalLanding"><img src="../assets/TSlogoLowRes.png" alt="..." />Turtle Shelter Project -- Admin</a>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarResponsive" aria-controls="navbarResponsive" aria-expanded="false" aria-label="Toggle navigation">
+                Menu
+                <i class="fas fa-bars ms-1"></i>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarResponsive">
+                <ul class="navbar-nav text-uppercase ms-auto py-4 py-lg-0">
+                    <li class="nav-item"><a class="nav-link" href="/internalLanding"><i class="fas fa-tools"></i> Admin Home</a></li>
+                    <li class="nav-item"><a class="nav-link" href="/eventRecords"><i class="fas fa-calendar-alt"></i> Events</a></li>
+                    <li class="nav-item"><a class="nav-link" href="/volunteerRecords"><i class="fas fa-users"></i> Volunteers</a></li>
+                    <li class="nav-item"><a class="nav-link" href="/adminRecords"><i class="fas fa-user-cog"></i> Admins</a></li>
+                    <li class="nav-item dropdown">
+                        <a 
+                            class="nav-link dropdown-toggle logout-btn" 
+                            href="#" 
+                            id="navbarDropdown" 
+                            role="button" 
+                            data-toggle="dropdown" 
+                            aria-haspopup="true" 
+                            aria-expanded="false"
+                        >
+                            <i class="fas fa-sign-out-alt"></i> Logout
+                        </a>
+                        <div class="dropdown-menu dropdown-menu-end" aria-labelledby="navbarDropdown">
+                            <a class="dropdown-item" href="/logout">
+                                <i class="fas fa-sign-out-alt"></i> Logout
+                            </a>
+                            <a class="dropdown-item" href="/">
+                                <i class="fas fa-home"></i> Return Home
+                            </a>
+                        </div>
+                    </li>
+                    
+                </ul>
+            </div>
         </div>
-    </nav>
+      </nav>
 
     <!-- Main content -->
     <div class="container-fluid">
