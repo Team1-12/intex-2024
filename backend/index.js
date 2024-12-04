@@ -336,16 +336,16 @@ app.post('/editEventRec/:eventid', (req, res) => {
       expectedparticipants: toIntOrDefault(expectedparticipants, defaultExpectedParticipants),
       expectedduration: toIntOrDefault(expectedduration, defaultExpectedDuration),
       eventactivities: eventactivities || '', // Provide a default empty string if null not allowed
-      address: address || '',
-      city: city || '',
-      state: state || '',
+      address: (address || '').toLowerCase(),
+      city: (city || '').toLowerCase(),
+      state: (state || '').toLowerCase(),
       zip: zip || '', // Assuming zip is a string
       starttime: starttime || '',
-      contactname: contactname || '',
+      contactname: (contactname || '').toLowerCase(),
       contactphone: contactphone || '',
       contactemail: contactemail || '',
       jenshare: jenshare === 'yes', // Convert radio button to boolean
-      organization: organization || '',
+      organization: (organization || '').toLowerCase(),
       comments: comments || '',
       spacedescription: spacedescription || '',
       numsewers: toIntOrDefault(numsewers, 0),
