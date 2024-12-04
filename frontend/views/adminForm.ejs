@@ -48,8 +48,8 @@
     </nav>
         <section>
             <div class="container">
-                <h2>Volunteer Form</h2>
-                <form id="volunteerForm" method="post" action="/submitVolunteerForm">
+                <h2>Admin Form</h2>
+                <form id="adminRequestForm" method="post" action="/submitAdminForm">
                     <div class="form-row">
                         <div class="row">
                             <div class="form-group col-md-5">
@@ -184,6 +184,14 @@
                             <label class="form-check-label" for="leadOutNo">No</label>
                         </div>
                     </div>
+                    <div class="row">                  
+                        <div class="form-group col-md-3">
+                            <input class="form-control" type="string" name="username" id="username" placeholder="UserName *" min="1" required />
+                        </div>
+                        <div class="form-group col-md-4">
+                            <input class="form-control" type="string" name="password" id="password" placeholder="Password *" min="1" required />
+                        </div>
+                    </div> 
                     <div><h6>Additional Details</h6></div>
                     <div class="form-group">
                         <textarea class="form-control" name="Comments" id="Comments" placeholder="Please let us know any addtional details that may be important" ></textarea>

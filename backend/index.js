@@ -88,6 +88,12 @@ app.get('/volunteerForm', (req, res) => {
 
 });
 
+//Route to admin form page
+app.get('/addAdmin', isAuthenticated, (req, res) => {
+  res.render('adminForm'); 
+
+});
+
 app.get('/login', (req, res) => {
   res.render('login'); 
 
@@ -152,6 +158,63 @@ app.get('/adminRedirect', (req, res) => {
   }
 });
 
+// To post the new admin to the database
+app.post('/submitAdminForm', (req, res) => {
+  // Access each value directly from req.body
+  const firstname = req.body.FirstName.toLowerCase();
+  const lastname = req.body.LastName.toLowerCase();
+  const phone = req.body.Phone;
+  const email = req.body.Email.toLowerCase();
+  const city = req.body.City.toLowerCase();
+  const state = req.body.state;
+  const howtheyheard = req.body.HowTheyHeard.toLowerCase();
+  const sewinglevel = req.body.SewingLevel;
+  const monthlyhrswilling = parseInt(req.body.MonthlyHrsWilling); // Convert to integer
+  const leadwilling = req.body.LeadWilling;
+  const traveltime = parseInt(req.body.TravelTime); // Convert to integer
+  const comments = req.body.Comments || 'No comments';
+  const username = req.body.username;
+  const password = req.body.password;
+
+  // Use a transaction to ensure both inserts happen together
+  knex.transaction(trx => {
+    return trx('volunteer')
+      .insert({
+        firstname: firstname,
+        lastname: lastname,
+        phone: phone,
+        email: email,
+        city: city,
+        state: state,
+        howtheyheard: howtheyheard,
+        sewinglevel: sewinglevel,
+        monthlyhrswilling: monthlyhrswilling,
+        leadwilling: leadwilling,
+        traveltime: traveltime,
+        comments: comments,
+      })
+      .returning('volunteerid') // Return the ID of the inserted volunteer
+      .then(volunteerIds => {
+        const volunteerId = Array.isArray(volunteerIds) && typeof volunteerIds[0] === 'object'
+          ? volunteerIds[0].volunteerid // Extract ID if knex returns an object
+          : volunteerIds[0]; // Extract ID if knex returns a plain array
+
+        // Insert the admin record with the foreign key reference to the volunteer
+        return trx('admin').insert({
+          volunteerid: volunteerId,
+          username: username,
+          password: password,
+        });
+      });
+  })
+    .then(() => {
+      res.redirect('/adminRecords'); // Redirect after successful insertion
+    })
+    .catch(error => {
+      console.error('Error adding Admin:', error);
+      res.status(500).send('Internal Server Error');
+    });
+});
 
 // Route to display events with optional status filter
 app.get('/eventRecords', (req, res) => {
@@ -452,7 +515,7 @@ app.post('/submitVolunteerForm', (req, res) => {
 
   const city = req.body.City; 
 
-  const state = req.body.State;
+  const state = req.body.state;
 
   const howtheyheard = req.body.HowTheyHeard;
 
@@ -484,34 +547,16 @@ app.post('/submitVolunteerForm', (req, res) => {
       comments: comments,
     })
     .then(() => {
-      res.redirect('/'); // Redirect to 
+      if (req.session && req.session.isAuthenticated) {
+        res.redirect('/volunteerRecords'); // Redirect to internalLanding if authenticated
+      } else {
+        res.redirect('/'); // Redirect to login if not authenticated
+      }
     })
     .catch(error => {
       console.error('Error adding Volunteer:', error);
       res.status(500).send('Internal Server Error');
     });
-});
-
-// This makes it so the admin can edit the volunteer records on page
-app.put('/updateVolunteer/:id', (req, res) => {
-  const volunteerid = req.params.id;
-  const updates = req.body; // Updated data sent from the client
-
-  // Check if updates object has any keys
-  if (!updates || Object.keys(updates).length === 0) {
-      return res.status(400).send({ message: 'No data provided for update' });
-  }
-
-  knex('volunteer')
-      .where('volunteerid', volunteerid)
-      .update(updates)
-      .then(() => {
-          res.status(200).send({ message: 'Volunteer record updated successfully' });
-      })
-      .catch(error => {
-          console.error('Error updating volunteer record:', error);
-          res.status(500).send({ message: 'Internal Server Error' });
-      });
 });
 
 
