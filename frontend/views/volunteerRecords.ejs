@@ -2,44 +2,58 @@
 <html lang="en">
 <head>
     <meta charset="utf-8" />
-        <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no" />
-        <meta name="description" content="" />
-        <meta name="author" content="" />
-        <title>Turtle</title>
-        <!-- Favicon-->
-        <link rel="icon" type="image/x-icon" href="assets/favicon.ico" />
-        <!-- Font Awesome icons (free version)-->
-        <script src="https://use.fontawesome.com/releases/v6.3.0/js/all.js" crossorigin="anonymous"></script>
-        <!-- Google fonts-->
-        <link href="https://fonts.googleapis.com/css?family=Montserrat:400,700" rel="stylesheet" type="text/css" />
-        <link href="https://fonts.googleapis.com/css?family=Roboto+Slab:400,100,300,700" rel="stylesheet" type="text/css" />
-        <!-- Core theme CSS (includes Bootstrap)-->
-        <link href="css/styles.css" rel="stylesheet" />
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no" />
+    <meta name="description" content="" />
+    <meta name="author" content="" />
+    <title>Turtle Volunteer Records</title>
+    <!-- Favicon-->
+    <link rel="icon" type="image/x-icon" href="assets/favicon.ico" />
+    <!-- Font Awesome icons (free version)-->
+    <script src="https://use.fontawesome.com/releases/v6.3.0/js/all.js" crossorigin="anonymous"></script>
+    <!-- Google fonts-->
+    <link href="https://fonts.googleapis.com/css?family=Montserrat:400,700" rel="stylesheet" type="text/css" />
+    <link href="https://fonts.googleapis.com/css?family=Roboto+Slab:400,100,300,700" rel="stylesheet" type="text/css" />
+    <!-- Core theme CSS (includes Bootstrap)-->
+    <link href="css/styles.css" rel="stylesheet" />
+    <style>
+        .table-responsive {
+            margin-top: 20px;
+            max-height: 500px;
+            overflow-y: auto;
+        }
+        .thead-dark th {
+            position: sticky;
+            top: 0;
+            z-index: 1;
+            background-color: #303030;
+            color: white;
+        }
+    </style>
 </head>
 <body>
     <!-- Navigation-->
     <nav class="navbar navbar-expand-lg navbar-dark fixed-top" id="mainNav" style="background-color: #303030;">
         <div class="container-fluid p-0" style="background-color: #303030;">
-            <a class="navbar-brand" href="#page-top"><img src="../assets/TSlogoLowRes.png" alt="..." />Turtle Shelter Project -- Admin</a>
+            <a class="navbar-brand" href="/internalLanding"><img src="../assets/TSlogoLowRes.png" alt="..." />Turtle Shelter Project -- Admin</a>
             <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarResponsive" aria-controls="navbarResponsive" aria-expanded="false" aria-label="Toggle navigation">
                 Menu
                 <i class="fas fa-bars ms-1"></i>
             </button>
             <div class="collapse navbar-collapse" id="navbarResponsive">
                 <ul class="navbar-nav text-uppercase ms-auto py-4 py-lg-0">
-                    <li class="nav-item"><a class="nav-link" href="/internalLanding">Home</a></li>
+                    <li class="nav-item"><a class="nav-link" href="/">Home</a></li>
                     <li class="nav-item"><a class="nav-link" href="/eventRecords">Event Records</a></li>
                     <li class="nav-item"><a class="nav-link" href="/volunteerRecords">Volunteer Records</a></li>
                     <li class="nav-item"><a class="nav-link" href="/adminRecords">Admin Records</a></li>
-                    <li class="nav-item"><a class="nav-link" href="#team">Admin</a></li>
+                    <li class="nav-item"><a class="nav-link" href="/internalLanding">Admin</a></li>
                 </ul>
             </div>
         </div>
-    </nav>
+      </nav>
     <main style="padding-top: 70px;"></main>
     <div class="container mt-5">
         <h2>Volunteer Records</h2>
-        <!-- <form action="/addVolunteer" method="POST" class="mb-4">
+        <div class="table-responsive">
             <table class="table table-striped table-bordered">
                 <thead class="thead-dark">
                     <tr>
@@ -49,87 +63,46 @@
                         <th>Email</th>
                         <th>City</th>
                         <th>State</th>
-                        <th>How They Heard About Us</th>
-                        <th>Sewing Experience Level</th>
-                        <th>Hours Willing to Contribute Per Month</th>
-                        <th>Willing to Lead an Event?</th>
-                        <th>Time Willing to Travel For an Event</th>
+                        <th>How Heard</th>
+                        <th>Sewing Level</th>
+                        <th>Monthly Hours</th>
+                        <th>Lead Event?</th>
+                        <th>Travel Time</th>
                         <th>Comments</th>
                         <th>Actions</th>
                     </tr>
                 </thead>
                 <tbody>
-                    <tr>
-                        <td><input type="text" name="FirstName" class="form-control" required></td>
-                        <td><input type="text" name="LastName" class="form-control" required></td>
-                        <td><input type="tel" name="Phone" class="form-control" required></td>
-                        <td><input type="email" name="Email" class="form-control" required></td>
-                        <td><input type="text" name="City" class="form-control"></td>
-                        <td><input type="text" name="State" class="form-control"></td>
-                        <td><input type="text" name="HowTheyHeard" class="form-control"></td>
-                        <td><input type="text" name="SewingLevel" class="form-control"></td>
-                        <td><input type="number" name="MonthlyHrsWilling" min="0" class="form-control"></td>
-                        <td>
-                            <select name="LeadEvent" class="form-select">
-                                <option value="Yes">Yes</option>
-                                <option value="No">No</option>
-                            </select>
-                        </td>
-                        <td><input type="text" name="TravelTime" class="form-control"></td>
-                        <td><input type="text" name="Comments" class="form-control"></td>
-                        <td><button type="submit" class="btn btn-success">Add</button></td>
-                    </tr>
+                    <% if (volunteer && volunteer.length > 0) { %>
+                        <% volunteer.forEach(function(row) { %>
+                            <tr>
+                                <td><%= row.firstname %></td>
+                                <td><%= row.lastname %></td>
+                                <td><%= row.phone %></td>
+                                <td><%= row.email %></td>
+                                <td><%= row.city %></td>
+                                <td><%= row.state %></td>
+                                <td><%= row.howtheyheard %></td>
+                                <td><%= row.sewinglevel %></td>
+                                <td><%= row.monthlyhrswilling %></td>
+                                <td><%= row.leadevent ? 'Yes' : 'No' %></td>
+                                <td><%= row.traveltime %> mins</td>
+                                <td><%= row.comments || 'N/A' %></td>
+                                <td>
+                                    <form action="/deleteVolunteer/<%= row.volunteerid %>" method="POST" style="display:inline;">
+                                        <button type="submit" onclick="return confirm('Are you sure you want to delete this record?');" class="btn btn-danger btn-sm">Delete</button>
+                                    </form>
+                                </td>
+                            </tr>
+                        <% }); %>
+                    <% } else { %>
+                        <tr>
+                            <td colspan="13" class="text-center">No volunteer records available.</td>
+                        </tr>
+                    <% } %>
                 </tbody>
             </table>
-        </form> -->
-        <table class="table table-striped table-bordered">
-            <thead class="thead-dark">
-                <tr>
-                    <th>First Name</th>
-                    <th>Last Name</th>
-                    <th>Phone</th>
-                    <th>Email</th>
-                    <th>City</th>
-                    <th>State</th>
-                    <th>How They Heard About Us</th>
-                    <th>Sewing Experience Level</th>
-                    <th>Hours Willing to Contribute Per Month</th>
-                    <th>Willing to Lead an Event?</th>
-                    <th>Time Willing to Travel For an Event</th>
-                    <th>Comments</th>
-                    <th>Actions</th>
-                </tr>
-            </thead>
-            <tbody>
-                <% volunteer.forEach(function(volunteer) { %>
-                    <tr>
-                        <!-- have the primary key which is the id and make it hidden on the page-->
-                        <input type="hidden" name="volunteerid" value="<%= volunteer.volunteerid %>"> 
-                        <td><%= volunteer.firstname %></td>
-                        <td><%= volunteer.lastname %></td>
-                        <td><%= volunteer.phone %></td>
-                        <td><%= volunteer.email %></td>
-                        <td><%= volunteer.city %></td>
-                        <td><%= volunteer.state %></td>
-                        <td><%= volunteer.howtheyheard %></td>
-                        <td><%= volunteer.sewinglevel %></td>
-                        <td><%= volunteer.monthlyhrswilling %></td>
-                        <td><%= volunteer.leadevent %></td>
-                        <td><%= volunteer.traveltime %></td>
-                        <td><%= volunteer.comments %></td>
-                        <td>
-                            <form action="/deleteVolunteer/<%= volunteer.volunteerid %>" method="POST" style="display:inline;">
-                                <button type="submit" onclick="return confirm('Are you sure you want to delete this record?');">Delete</button>
-                              </form>
-                            <!-- <a href="/deleteVolunteer/<%= volunteer.volunteerid %>" onclick="return confirm('Are you sure you want to delete this record?');" class="text-danger">
-                                <i class="fas fa-trash-alt"></i>
-                            </a> -->
-                        </td>
-                    </tr>
-                <% }); %>
-            </tbody>
-        </table>
+        </div>
     </div>
-    </main>
 </body>
 </html>
