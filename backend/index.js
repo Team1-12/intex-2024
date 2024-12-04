@@ -108,13 +108,6 @@ app.get('/internalLanding', (req, res) => {
 
 }); 
 
-
-//Route to adminRecords page
-app.get('/adminRecords', (req, res) => {
-  res.render('adminRecords'); 
-
-}); 
-
 //Route to display Event records 
 app.get('/eventRecords', (req, res) => {
   knex('event')
@@ -186,6 +179,29 @@ app.get('/volunteerRecords', (req, res) => {
     });
 });
 
+// Route to display admin records
+app.get('/adminRecords', (req, res) => {
+  knex('admin')
+    .join('volunteer', 'volunteer.volunteerid', '=', 'admin.volunteerid')
+    .select(
+      'volunteer.firstname',
+      'volunteer.lastname',
+      'volunteer.phone',
+      'volunteer.email',
+      'volunteer.city',
+      'volunteer.state',
+      'admin.username',
+      'admin.password'
+    )
+    .then(admin => {
+      console.log(admin); // Log the data to verify structure
+      res.render('adminRecords', { admin }); // Pass the admin data to the EJS template
+    })
+    .catch(error => {
+      console.error('Error querying database:', error);
+      res.status(500).send('Internal Server Error');
+    });
+});
 
 
 // To post the new volunteer to the database
