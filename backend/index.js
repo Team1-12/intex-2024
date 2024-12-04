@@ -214,7 +214,7 @@ app.post('/submitVolunteerForm', (req, res) => {
 
   const traveltime = parseInt(req.body.TravelTime); // Convert to integer
 
-  const comments = req.body.Comments;
+  const comments = req.body.Comments || 'No comments';
 
 
   // Insert the Volunteer in the database
@@ -247,52 +247,63 @@ app.post('/submitVolunteerForm', (req, res) => {
 app.post('/EventRequest', (req, res) => {
 
   // Access each value directly from req.body
-  const firstname = req.body.FirstName;
+  const startdaterange = req.body.startdaterange;
 
-  const lastname = req.body.LastName;
+  const enddaterange = req.body.enddaterange || null;
 
-  const phone = req.body.Phone; 
+  const expectedparticipants = parseInt(req.body.expectedparticipants); 
 
-  const email = req.body.Email;
+  const expectedduration = parseInt(req.body.expectedduration);
 
-  const city = req.body.City; 
+  const eventactivities = req.body.eventactivities; 
 
-  const state = req.body.State;
+  const address = req.body.address;
 
-  const howtheyheard = req.body.HowTheyHeard;
+  const city = req.body.city;
 
-  const sewinglevel = req.body.SewingLevel;
+  const state = req.body.state;
 
-  const monthlyhrswilling = parseInt(req.body.MonthlyHrsWilling); // Convert to integer
+  const zip = req.body.zip;
 
-  const leadwilling = req.body.LeadWilling;
+  const contactname = req.body.contactname;
 
-  const traveltime = parseInt(req.body.TravelTime); // Convert to integer
+  const contactphone = req.body.contactphone;
 
-  const comments = req.body.Comments;
+  const contactemail = req.body.contactemail;
 
+  const jenshare = req.body.jenshare;
 
-  // Insert the Volunteer in the database
-  knex('volunteer')
+  const organization = req.body.organization;
+
+  const comments = req.body.comments || 'No comments';
+
+  const eventstatus = "Pending"
+
+  // Insert the event in the database
+  knex('event')
     .insert({
-      firstname: firstname,
-      lastname: lastname,
-      phone: phone,
-      email: email,
-      city: city,
-      state: state,
-      howtheyheard: howtheyheard,
-      sewinglevel: sewinglevel,
-      monthlyhrswilling: monthlyhrswilling,
-      leadwilling: leadwilling,
-      traveltime: traveltime,
-      comments: comments,
+      startdaterange : startdaterange,
+      enddaterange : enddaterange,
+      expectedparticipants : expectedparticipants,
+      expectedduration :expectedduration,
+      eventactivities : eventactivities,
+      address : address,
+      city : city,
+      state : state,
+      zip : zip,
+      contactname : contactname,
+      contactphone : contactphone,
+      contactemail : contactemail,
+      jenshare : jenshare,
+      organization : organization,
+      comments : comments,
+      eventstatus : eventstatus,
     })
     .then(() => {
       res.redirect('/'); // Redirect to 
     })
     .catch(error => {
-      console.error('Error adding Volunteer:', error);
+      console.error('Error adding event:', error);
       res.status(500).send('Internal Server Error');
     });
 });
