@@ -139,6 +139,19 @@ function isAuthenticated(req, res, next) {
   }
 }
 
+// Logout endpoint
+app.get('/logout', (req, res) => {
+  // Destroy the session
+  req.session.destroy(err => {
+    if (err) {
+      console.error('Error destroying session:', err);
+      return res.status(500).send('Failed to log out. Please try again.');
+    }
+    // Redirect to home page or login page after logout
+    res.redirect('/login'); // Or replace with '/' if you want to redirect to the homepage
+  });
+});
+
 // Protected routes using the authentication middleware
 app.get('/internalLanding', isAuthenticated, (req, res) => {
   res.render('internalLanding');
