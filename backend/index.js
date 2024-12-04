@@ -463,6 +463,28 @@ app.post('/submitVolunteerForm', (req, res) => {
     });
 });
 
+// This makes it so the admin can edit the volunteer records on page
+app.put('/updateVolunteer/:id', (req, res) => {
+  const volunteerid = req.params.id;
+  const updates = req.body; // Updated data sent from the client
+
+  // Check if updates object has any keys
+  if (!updates || Object.keys(updates).length === 0) {
+      return res.status(400).send({ message: 'No data provided for update' });
+  }
+
+  knex('volunteer')
+      .where('volunteerid', volunteerid)
+      .update(updates)
+      .then(() => {
+          res.status(200).send({ message: 'Volunteer record updated successfully' });
+      })
+      .catch(error => {
+          console.error('Error updating volunteer record:', error);
+          res.status(500).send({ message: 'Internal Server Error' });
+      });
+});
+
 
 // To post the event request to the database
 app.post('/EventRequest', (req, res) => {
