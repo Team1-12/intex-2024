@@ -153,21 +153,21 @@ app.get('/adminRedirect', (req, res) => {
 });
 
 
-// Route to display events with optional status filter
+ //Route to display events with optional status filter
 app.get('/eventRecords', (req, res) => {
   const status = req.query.status; // Extract 'status' from query parameters
 
   const validStatuses = ['pending', 'approved', 'planned', 'completed'];
 
-  // Start building the query
+   //Start building the query
   let query = knex('event').select('*');
 
-  // Apply filter if a valid status is provided and not 'all'
+   //Apply filter if a valid status is provided and not 'all'
   if (status && status.toLowerCase() !== 'all' && validStatuses.includes(status.toLowerCase())) {
-    query = query.where('eventstatus', status.toLowerCase());
+  query = query.where('eventstatus', status.toLowerCase());
   }
 
-  // Execute the query
+   //Execute the query
   query
     .then(events => {
       res.render('eventRecords', {
@@ -182,49 +182,44 @@ app.get('/eventRecords', (req, res) => {
 });
 
 
-//Route to display Event records 
-//app.get('/eventRecords', isAuthenticated, (req, res) => {
-  //knex('event')
-     // .select(
-      //'eventid',
-      //'eventstatus',
-      //'eventdate',
-      //'starttime',
-      //'city',
-      //'state',
-      //'zip',
-      //'contactname',
-      //'eventactivities', 
-      //'organization'
-    //)
-    //.then(event => {
-      // Render the eventRecords.ejs template and pass the data
-      //res.render('eventRecords', { event });
-    //})
-    // Memorize or paste in to the end of all 
-    //.catch(error => {
-      //console.error('Error querying database:', error);
-      //res.status(500).send('Internal Server Error');
-   // });
-//});
 
 // this chunk of code finds the record with the primary key aka id and deletes the record
+//app.post('/deleteEventRec/:eventid', isAuthenticated, (req, res) => {
+
+  //const eventid = parseInt(req.params.eventid, 10);
+
+  //knex('event')
+    //.where('eventid', eventid)
+    //.del() // Deletes the record with the specified ID
+    //.then(() => {
+    //  res.redirect('/eventRecords'); // Redirect to the Event Records Table after deletion
+    //})
+    //.catch(error => {
+    //  console.error('Error deleting Event Record:', error);
+    //  res.status(500).send('Internal Server Error');
+    //});
+//});   
+
+// Deletes a volunteer and any associated admin records
 app.post('/deleteEventRec/:eventid', isAuthenticated, (req, res) => {
+  const eventid = parseInt(req.params.eventid, 10); // Extract volunteer ID
 
-  const eventid = parseInt(req.params.eventid, 10);
-
+  // Step 1: Delete associated admin record first
   knex('event')
     .where('eventid', eventid)
-    .del() // Deletes the record with the specified ID
+    .del()
     .then(() => {
-      res.redirect('/eventRecords'); // Redirect to the Event Records Table after deletion
+      // Step 2: Delete the volunteer record
+      return knex('event').where('eventid', eventid).del();
+    })
+    .then(() => {
+      res.redirect('/eventRecords'); // Redirect after successful deletion
     })
     .catch(error => {
-      console.error('Error deleting Event Record:', error);
+      console.error('Error deleting Volunteer Record:', error);
       res.status(500).send('Internal Server Error');
     });
-});   
-
+});
 
 app.get('/volunteerRecords', isAuthenticated, (req, res) => {
   knex('volunteer')
