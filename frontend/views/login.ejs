@@ -19,9 +19,9 @@
 <body>
 <!-- Navigation-->
 <nav class="navbar navbar-expand-lg navbar-dark fixed-top" id="mainNav" style="background-color: #759145;">
-    <div class="container-fluid p-0" style="background-color: #759145;">
+    <div class="container-fluid p-0" style="background-color: #759145; margin-left: 10px; margin-right: 10px;">
         <a class="navbar-brand" href="/" style="color: #f7f4de;">
-            <img src="../assets/TSlogoLowRes.png" alt="..." />Turtle Shelter Project
+            Turtle Shelter Project
         </a>
         <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarResponsive" aria-controls="navbarResponsive" aria-expanded="false" aria-label="Toggle navigation" style="color: #f7f4de;">
             Menu
@@ -30,16 +30,8 @@
         <div class="collapse navbar-collapse" id="navbarResponsive">
             <ul class="navbar-nav text-uppercase ms-auto py-4 py-lg-0">
                 <li class="nav-item"><a class="nav-link" href="/">Home</a></li>
-                <li class="nav-item dropdown">
-                    <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
-                        How to Help
-                    </a>
-                    <ul class="dropdown-menu" aria-labelledby="navbarDropdown">
-                        <li><a class="dropdown-item" href="/howToHelpIcons">Become a Volunteer</a></li>
-                        <li><a class="dropdown-item" href="/howToHelpIcons">Donate</a></li>
-                        <li><a class="dropdown-item" href="/howToHelpIcons">Host an Event</a></li>
-                    </ul>
-                </li>
+                <li class="nav-item"><a class="nav-link" href="/howToHelp">How to Help</a></li>
+                <li class="nav-item"><a class="nav-link" href="/howToHelpIcons">Donate</a></li>
                 <li class="nav-item"><a class="nav-link" href="/eventRequest">Event Request</a></li>
                 <li class="nav-item"><a class="nav-link" href="/adminRedirect">Admin</a></li>
             </ul>
@@ -68,7 +60,6 @@
                     </div>
                     <button class="btn btn-primary" type="submit">Login</button>
                 </form>
-                <p>Don't have an account? Sign up <a href="/signUp">here</a></p>
             </div>
         </div>
     </div>
@@ -97,6 +88,19 @@
         const passwordType = passwordInput.getAttribute('type');
         passwordInput.setAttribute('type', passwordType === 'password' ? 'text' : 'password');
     }
+</script>
+<!-- AI chatbot -->
+<script>
+    window.embeddedChatbotConfig = {
+    chatbotId: "IkNw9nzzXdHAQli9XYC8V",
+    domain: "www.chatbase.co"
+    }
+    </script>
+    <script
+    src="https://www.chatbase.co/embed.min.js"
+    chatbotId="IkNw9nzzXdHAQli9XYC8V"
+    domain="www.chatbase.co"
+    defer>
 </script>
 </body>
 </html>
