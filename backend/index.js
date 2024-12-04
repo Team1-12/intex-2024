@@ -138,10 +138,13 @@ app.get('/internalLanding', isAuthenticated, (req, res) => {
   res.render('internalLanding');
 });
 
-
-//Route to adminRecords page
-app.get('/adminRecords', isAuthenticated, (req, res) => {
-  res.render('adminRecords');
+// Checks to see if they are authenticated to go to admin landing page
+app.get('/adminRedirect', (req, res) => {
+  if (req.session && req.session.isAuthenticated) {
+    res.redirect('/internalLanding'); // Redirect to internalLanding if authenticated
+  } else {
+    res.redirect('/login'); // Redirect to login if not authenticated
+  }
 });
 
 //Route to display Event records 
@@ -149,6 +152,7 @@ app.get('/eventRecords', isAuthenticated, (req, res) => {
   knex('event')
       .select(
       'eventid',
+      'eventstatus',
       'eventdate',
       'starttime',
       'city',
@@ -216,7 +220,7 @@ app.get('/volunteerRecords', isAuthenticated, (req, res) => {
 });
 
 // Deletes a volunteer and any associated admin records
-app.post('/deleteVolunteer/:volunteerid', (req, res) => {
+app.post('/deleteVolunteer/:volunteerid', isAuthenticated, (req, res) => {
   const volunteerid = parseInt(req.params.volunteerid, 10); // Extract volunteer ID
 
   // Step 1: Delete associated admin record first
@@ -232,6 +236,142 @@ app.post('/deleteVolunteer/:volunteerid', (req, res) => {
     })
     .catch(error => {
       console.error('Error deleting Volunteer Record:', error);
+      res.status(500).send('Internal Server Error');
+    });
+});
+
+app.get('/editEventRec/:eventid', (req, res) => {
+  const eventid = req.params.eventid;
+
+  // Query the Event by eventid
+  knex('event')
+    .where('eventid', eventid)
+    .first()
+    .then(event => {
+      if (!event) {
+        return res.status(404).send('Event not found');
+      }
+      res.render('editEventRec', { event }); // Pass the event data to the template
+    })
+    .catch(error => {
+      console.error('Error fetching event for editing:', error);
+      res.status(500).send('Internal Server Error');
+    });
+});
+
+app.post('/editEventRec/:eventid', (req, res) => {
+  const eventid = req.params.eventid;
+
+  // Extract all fields from the request body
+  const {
+    startdaterange,
+    enddaterange,
+    expectedparticipants,
+    expectedduration,
+    eventactivities,
+    address,
+    city,
+    state,
+    zip,
+    starttime,
+    contactname,
+    contactphone,
+    contactemail,
+    jenshare,
+    organization,
+    comments,
+    spacedescription,
+    numsewers,
+    nummachines,
+    numroundtables,
+    numrectanglestables,
+    numadults,
+    numchildren,
+    actualparticipants,
+    actualduration,
+    eventdate,
+    pockets,
+    collars,
+    envelopes,
+    vests,
+    completedproducts,
+    eventstatus,
+  } = req.body;
+
+  // Helper function to parse integers or return a default value
+  function toIntOrDefault(value, defaultValue) {
+    const parsed = parseInt(value, 10);
+    return isNaN(parsed) ? defaultValue : parsed;
+  }
+
+  // Define default values for required fields
+  const defaultExpectedParticipants = 1; // Example default value
+  const defaultExpectedDuration = 1;     // Example default value
+  // Add more default values as needed for required fields
+
+  // Input validation for required fields
+  const errors = [];
+
+  if (!startdaterange) {
+    errors.push('Start date range is required.');
+  }
+
+  if (!expectedparticipants) {
+    errors.push('Expected participants is required.');
+  }
+
+  // Add more validation checks for other required fields
+  // For example:
+  // if (!address) { errors.push('Address is required.'); }
+
+  if (errors.length > 0) {
+    // If there are validation errors, send them back to the client
+    res.status(400).json({ errors });
+    return;
+  }
+
+  // Update the record in the database
+  knex('event')
+    .where('eventid', eventid)
+    .update({
+      startdaterange: startdaterange,
+      enddaterange: enddaterange || null,
+      expectedparticipants: toIntOrDefault(expectedparticipants, defaultExpectedParticipants),
+      expectedduration: toIntOrDefault(expectedduration, defaultExpectedDuration),
+      eventactivities: eventactivities || '', // Provide a default empty string if null not allowed
+      address: address || '',
+      city: city || '',
+      state: state || '',
+      zip: zip || '', // Assuming zip is a string
+      starttime: starttime || null,
+      contactname: contactname || '',
+      contactphone: contactphone || '',
+      contactemail: contactemail || '',
+      jenshare: jenshare === 'yes', // Convert radio button to boolean
+      organization: organization || '',
+      comments: comments || '',
+      spacedescription: spacedescription || '',
+      numsewers: toIntOrDefault(numsewers, 0),
+      nummachines: toIntOrDefault(nummachines, 0),
+      numroundtables: toIntOrDefault(numroundtables, 0),
+      numrectanglestables: toIntOrDefault(numrectanglestables, 0),
+      numadults: toIntOrDefault(numadults, 0),
+      numchildren: toIntOrDefault(numchildren, 0),
+      actualparticipants: toIntOrDefault(actualparticipants, 0),
+      actualduration: toIntOrDefault(actualduration, 0),
+      eventdate: eventdate || null,
+      pockets: toIntOrDefault(pockets, 0),
+      collars: toIntOrDefault(collars, 0),
+      envelopes: toIntOrDefault(envelopes, 0),
+      vests: toIntOrDefault(vests, 0),
+      completedproducts: toIntOrDefault(completedproducts, 0),
+      eventstatus: eventstatus || 'pending', // Default to "pending" if not provided
+    })
+    .then(() => {
+      res.redirect('/eventRecords'); // Redirect to the event records page
+    })
+    .catch((error) => {
+      console.error('Error updating event:', error);
       res.status(500).send('Internal Server Error');
     });
 });
@@ -277,7 +417,7 @@ app.post('/submitVolunteerForm', (req, res) => {
 
   const city = req.body.City; 
 
-  const state = req.body.State;
+  const state = req.body.state;
 
   const howtheyheard = req.body.HowTheyHeard;
 
@@ -295,13 +435,13 @@ app.post('/submitVolunteerForm', (req, res) => {
   // Insert the Volunteer in the database
   knex('volunteer')
     .insert({
-      firstname: firstname,
-      lastname: lastname,
+      firstname: firstname.toLowerCase(),
+      lastname: lastname.toLowerCase(),
       phone: phone,
-      email: email,
-      city: city,
+      email: email.toLowerCase(),
+      city: city.toLowerCase(),
       state: state,
-      howtheyheard: howtheyheard,
+      howtheyheard: howtheyheard.toLowerCase(),
       sewinglevel: sewinglevel,
       monthlyhrswilling: monthlyhrswilling,
       leadwilling: leadwilling,
@@ -361,16 +501,16 @@ app.post('/EventRequest', (req, res) => {
       enddaterange : enddaterange,
       expectedparticipants : expectedparticipants,
       expectedduration :expectedduration,
-      eventactivities : eventactivities,
-      address : address,
-      city : city,
+      eventactivities : eventactivities.toLowerCase(),
+      address : address.toLowerCase(),
+      city : city.toLowerCase(),
       state : state,
       zip : zip,
-      contactname : contactname,
+      contactname : contactname.toLowerCase(),
       contactphone : contactphone,
-      contactemail : contactemail,
+      contactemail : contactemail.toLowerCase(),
       jenshare : jenshare,
-      organization : organization,
+      organization : organization.toLowerCase(),
       comments : comments,
       eventstatus : eventstatus,
     })

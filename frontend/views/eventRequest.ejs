@@ -18,10 +18,12 @@
     </head>
     <body id="page-top">
         <!-- Navigation-->
-        <nav class="navbar navbar-expand-lg navbar-dark fixed-top" id="mainNav" style="background-color: #303030;">
-            <div class="container-fluid p-0" style="background-color: #303030;">
-                <a class="navbar-brand" href="/" title="Go to Home"><img src="../assets/TSlogoLowRes.png" alt="..." />Turtle Shelter Project</a>
-                <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarResponsive" aria-controls="navbarResponsive" aria-expanded="false" aria-label="Toggle navigation">
+        <nav class="navbar navbar-expand-lg navbar-dark fixed-top" id="mainNav" style="background-color: #759145;">
+            <div class="container-fluid p-0" style="background-color: #759145;">
+                <a class="navbar-brand" href="/" style="color: #f7f4de;">
+                    <img src="../assets/TSlogoLowRes.png" alt="..." />Turtle Shelter Project
+                </a>
+                <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarResponsive" aria-controls="navbarResponsive" aria-expanded="false" aria-label="Toggle navigation" style="color: #f7f4de;">
                     Menu
                     <i class="fas fa-bars ms-1"></i>
                 </button>
@@ -30,7 +32,7 @@
                         <li class="nav-item"><a class="nav-link" href="/">Home</a></li>
                         <li class="nav-item"><a class="nav-link" href="/howToHelp">How to Help</a></li>
                         <li class="nav-item"><a class="nav-link" href="/eventRequest">Event Request</a></li>
-                        <li class="nav-item"><a class="nav-link" href="/login">Admin</a></li>
+                        <li class="nav-item"><a class="nav-link" href="/adminRedirect">Admin</a></li>
                     </ul>
                 </div>
             </div>
@@ -65,8 +67,61 @@
                                 <input class="form-control" type="text" name="city" id="city" placeholder="City *" required />
                             </div>
                             <div class="form-group col-md-3">
-                                <input class="form-control" type="text" name="state" id="state" placeholder="State *" required />
-                            </div>
+                                <select class="form-control" name="state" id="state" required>
+                                    <option value="" disabled selected>Select your state *</option>
+                                    <option value="ut">Utah</option>
+                                    <option value="al">Alabama</option>
+                                    <option value="ak">Alaska</option>
+                                    <option value="az">Arizona</option>
+                                    <option value="ar">Arkansas</option>
+                                    <option value="ca">California</option>
+                                    <option value="co">Colorado</option>
+                                    <option value="ct">Connecticut</option>
+                                    <option value="de">Delaware</option>
+                                    <option value="fl">Florida</option>
+                                    <option value="ga">Georgia</option>
+                                    <option value="hi">Hawaii</option>
+                                    <option value="id">Idaho</option>
+                                    <option value="il">Illinois</option>
+                                    <option value="in">Indiana</option>
+                                    <option value="ia">Iowa</option>
+                                    <option value="ks">Kansas</option>
+                                    <option value="ky">Kentucky</option>
+                                    <option value="la">Louisiana</option>
+                                    <option value="me">Maine</option>
+                                    <option value="md">Maryland</option>
+                                    <option value="ma">Massachusetts</option>
+                                    <option value="mi">Michigan</option>
+                                    <option value="mn">Minnesota</option>
+                                    <option value="ms">Mississippi</option>
+                                    <option value="mo">Missouri</option>
+                                    <option value="mt">Montana</option>
+                                    <option value="ne">Nebraska</option>
+                                    <option value="nv">Nevada</option>
+                                    <option value="nh">New Hampshire</option>
+                                    <option value="nj">New Jersey</option>
+                                    <option value="nm">New Mexico</option>
+                                    <option value="ny">New York</option>
+                                    <option value="nc">North Carolina</option>
+                                    <option value="nd">North Dakota</option>
+                                    <option value="oh">Ohio</option>
+                                    <option value="ok">Oklahoma</option>
+                                    <option value="or">Oregon</option>
+                                    <option value="pa">Pennsylvania</option>
+                                    <option value="ri">Rhode Island</option>
+                                    <option value="sc">South Carolina</option>
+                                    <option value="sd">South Dakota</option>
+                                    <option value="tn">Tennessee</option>
+                                    <option value="tx">Texas</option>
+                                    <option value="ut">Utah</option>
+                                    <option value="vt">Vermont</option>
+                                    <option value="va">Virginia</option>
+                                    <option value="wa">Washington</option>
+                                    <option value="wv">West Virginia</option>
+                                    <option value="wi">Wisconsin</option>
+                                    <option value="wy">Wyoming</option>
+                                </select>
+                            </div>                                                        
                             <div class="form-group col-md-3">
                                 <input class="form-control" type="number" name="zip" id="zip" placeholder="Zip Code *" required />
                             </div>
