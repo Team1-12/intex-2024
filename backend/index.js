@@ -102,14 +102,14 @@ app.post('/login', (req, res) => {
     });
 });
 
-//Route to How to help page
+//Route to internal Landing page
 app.get('/internalLanding', (req, res) => {
   res.render('internalLanding'); 
 
 }); 
 
 
-//Route to How to help page
+//Route to adminRecords page
 app.get('/adminRecords', (req, res) => {
   res.render('adminRecords'); 
 
