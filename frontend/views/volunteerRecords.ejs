@@ -110,7 +110,7 @@
                                 <td><%= row.sewinglevel %></td>
                                 <td><%= row.monthlyhrswilling %></td>
                                 <td><%= row.leadevent ? 'Yes' : 'No' %></td>
-                                <td><%= row.traveltime %> mins</td>
+                                <td><%= row.traveltime %></td>
                                 <td><%= row.comments || 'N/A' %></td>
                                 <td>
                                     <form action="/deleteVolunteer/<%= row.volunteerid %>" method="POST" style="display:inline;">
@@ -133,7 +133,6 @@
             </form>
           </div>
     </div>
-
     <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
     <script
         src="https://cdn.jsdelivr.net/npm/popper.js@1.16.1/dist/umd/popper.min.js"></script>
