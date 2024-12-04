@@ -60,7 +60,8 @@
                                 <input class="form-control" type="email" id="Email" name="Email" placeholder="Volunteer Email *" required />
                             </div>
                             <div class="form-group col-md-3">
-                                <input class="form-control" type="tel" id="Phone" name="Phone" placeholder="Volunteer Phone *" required />
+                                <input class="form-control" type="tel" name="Phone" id="Phone" placeholder="(823) 456-7890" pattern="\(\d{3}\) \d{3}-\d{4}" required 
+                                    oninput="this.value = this.value.replace(/[^0-9]/g, '').replace(/(\d{3})(\d{3})(\d{4})/, '($1) $2-$3');" />
                             </div>
                         </div>
                         <div><h6>Other Information</h6></div>
