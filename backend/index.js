@@ -108,13 +108,6 @@ app.get('/internalLanding', (req, res) => {
 
 }); 
 
-
-//Route to adminRecords page
-app.get('/adminRecords', (req, res) => {
-  res.render('adminRecords'); 
-
-}); 
-
 //Route to display Event records 
 app.get('/eventRecords', (req, res) => {
   knex('event')
@@ -323,6 +316,52 @@ app.get('/volunteerRecords', (req, res) => {
     });
 });
 
+// Deletes a volunteer and any associated admin records
+app.post('/deleteVolunteer/:volunteerid', (req, res) => {
+  const volunteerid = parseInt(req.params.volunteerid, 10); // Extract volunteer ID
+
+  // Step 1: Delete associated admin record first
+  knex('admin')
+    .where('volunteerid', volunteerid)
+    .del()
+    .then(() => {
+      // Step 2: Delete the volunteer record
+      return knex('volunteer').where('volunteerid', volunteerid).del();
+    })
+    .then(() => {
+      res.redirect('/volunteerRecords'); // Redirect after successful deletion
+    })
+    .catch(error => {
+      console.error('Error deleting Volunteer Record:', error);
+      res.status(500).send('Internal Server Error');
+    });
+});
+
+
+// Route to display admin records
+app.get('/adminRecords', (req, res) => {
+  knex('admin')
+    .join('volunteer', 'volunteer.volunteerid', '=', 'admin.volunteerid')
+    .select(
+      'volunteer.volunteerid',
+      'volunteer.firstname',
+      'volunteer.lastname',
+      'volunteer.phone',
+      'volunteer.email',
+      'volunteer.city',
+      'volunteer.state',
+      'admin.username',
+      'admin.password'
+    )
+    .then(admin => {
+      console.log(admin); // Log the data to verify structure
+      res.render('adminRecords', { admin }); // Pass the admin data to the EJS template
+    })
+    .catch(error => {
+      console.error('Error querying database:', error);
+      res.status(500).send('Internal Server Error');
+    });
+});
 
 
 // To post the new volunteer to the database
