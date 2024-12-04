@@ -82,6 +82,7 @@
           <tr>
             <!-- have the primary key which is the id and make it hidden on the page-->
             <input type="hidden" name="eventid" value="<%= row.eventid %>"> 
+            <td><%= row.eventstatus %></td>
             <td><%= new Date(row.eventdate).toLocaleDateString('en-US') %></td> <!-- Format date -->
             <td><%= row.starttime %></td>
             <td><%= row.city %></td>
