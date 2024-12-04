@@ -138,12 +138,6 @@ app.get('/internalLanding', isAuthenticated, (req, res) => {
   res.render('internalLanding');
 });
 
-
-//Route to adminRecords page
-app.get('/adminRecords', isAuthenticated, (req, res) => {
-  res.render('adminRecords');
-});
-
 //Route to display Event records 
 app.get('/eventRecords', isAuthenticated, (req, res) => {
   knex('event')
@@ -217,7 +211,7 @@ app.get('/volunteerRecords', isAuthenticated, (req, res) => {
 });
 
 // Deletes a volunteer and any associated admin records
-app.post('/deleteVolunteer/:volunteerid', (req, res) => {
+app.post('/deleteVolunteer/:volunteerid', isAuthenticated, (req, res) => {
   const volunteerid = parseInt(req.params.volunteerid, 10); // Extract volunteer ID
 
   // Step 1: Delete associated admin record first
@@ -432,13 +426,13 @@ app.post('/submitVolunteerForm', (req, res) => {
   // Insert the Volunteer in the database
   knex('volunteer')
     .insert({
-      firstname: firstname,
-      lastname: lastname,
+      firstname: firstname.toLowerCase(),
+      lastname: lastname.toLowerCase(),
       phone: phone,
-      email: email,
-      city: city,
+      email: email.toLowerCase(),
+      city: city.toLowerCase(),
       state: state,
-      howtheyheard: howtheyheard,
+      howtheyheard: howtheyheard.toLowerCase(),
       sewinglevel: sewinglevel,
       monthlyhrswilling: monthlyhrswilling,
       leadwilling: leadwilling,
@@ -498,16 +492,16 @@ app.post('/EventRequest', (req, res) => {
       enddaterange : enddaterange,
       expectedparticipants : expectedparticipants,
       expectedduration :expectedduration,
-      eventactivities : eventactivities,
-      address : address,
-      city : city,
+      eventactivities : eventactivities.toLowerCase(),
+      address : address.toLowerCase(),
+      city : city.toLowerCase(),
       state : state,
       zip : zip,
-      contactname : contactname,
+      contactname : contactname.toLowerCase(),
       contactphone : contactphone,
-      contactemail : contactemail,
+      contactemail : contactemail.toLowerCase(),
       jenshare : jenshare,
-      organization : organization,
+      organization : organization.toLowerCase(),
       comments : comments,
       eventstatus : eventstatus,
     })
