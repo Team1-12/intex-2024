@@ -1,136 +1,41 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
-  <title>Internal Landing Page</title>
-  <style>
-    table {
-      width: 80%;
-      margin: 20px auto;
-      border-collapse: collapse;
-      font-size: 10px; /* Reduce the font size of the table */
-    }
-    th, td {
-      border: 1px solid #ddd;
-      padding: 5px; /* Reduce the padding to decrease row height */
-      text-align: center;
-      line-height: 1.2; /* Adjust line height for smaller rows */
-    }
-    th {
-      background-color: #F2F2F2;
-      font-weight: bold;
-    }
-    button {
-      padding: 4px 8px; /* Adjust button size */
-      margin: 2px;
-      font-size: 12px; /* Adjust button font size */
-      cursor: pointer;
-    }
-  </style>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no" />
+    <meta name="description" content="" />
+    <meta name="author" content="" />
+    <title>Internal Landing Page</title>
+    <!-- Favicon-->
+    <link rel="icon" type="image/x-icon" href="assets/favicon.ico" />
+    <!-- Font Awesome icons (free version)-->
+    <script src="https://use.fontawesome.com/releases/v6.3.0/js/all.js" crossorigin="anonymous"></script>
+    <!-- Google fonts-->
+    <link href="https://fonts.googleapis.com/css?family=Montserrat:400,700" rel="stylesheet" type="text/css" />
+    <link href="https://fonts.googleapis.com/css?family=Roboto+Slab:400,100,300,700" rel="stylesheet" type="text/css" />
+    <!-- Core theme CSS (includes Bootstrap)-->
+    <link href="css/styles.css" rel="stylesheet" />
 </head>
+
 <body>
- 
-  <h1 style="text-align: center;">Event Requests</h1>
-  <table>
-    <thead>
-      <tr>
-        <th>Pokemon</th>
-        <th>Base Total</th>
-        <th>Date Created</th>
-        <th>Active</th>
-        <th>Gender</th>
-        <th>Type</th>
-        <th>Actions</th>
-      </tr>
-    </thead>
-    <tbody>
-        <!-- the less than, percentage sign is for when we are NOT grabbing data-->
-      <% if (pokemon.length > 0) { %>
-        <% pokemon.forEach(row => { %>
-          <tr>
-            <!-- have the primary key which is the id and make it hidden on the page-->
-            <input type="hidden" value="row.id">
-            <input type="hidden" value="row.poke_type_id"> 
-            <td><%= row.description %></td>
-            <td><%= row.base_total %></td>
-            <!-- put in date bc it came over in a string and then change it to the US style-->
-            <td><%= new Date(row.date_created).toLocaleDateString('en-US') %></td> <!-- Format date -->
-            <!-- ? is an inline if statement (the book talks about it)-->
-            <td><%= row.active_poke ? 'Yes' : 'No' %></td>
-            <td><%= row.gender %></td>
-            <td><%= row.poke_type_description %></td>
-            <td>
-                <!-- each of the buttons have their own form so that they can be called one at a time 
-                and so that when they are clicked they will call a different route-->
-
-              <form action="/editPoke/<%= row.id %>" method="GET" style="display:inline;">
-                <button type="submit">Edit</button>
-              </form>
-              <form action="/deletePoke/<%= row.id %>" method="POST" style="display:inline;">
-                <button type="submit" onclick="return confirm('Are you sure you want to delete this record?');">Delete</button>
-              </form>
-            </td>
-          </tr>
-        <% }) %>
-      <% } else { %>
-        <tr>
-          <td colspan="7">No data available</td>
-        </tr>
-      <% } %>
-    </tbody>
-  </table>
-<!-- THIS IS THE USER TABLE -->
-  <h1 style="text-align: center;">Users(Admin) Records</h1>
-  <table>
-    <thead>
-      <tr>
-        <th>Pokemon</th>
-        <th>Base Total</th>
-        <th>Date Created</th>
-        <th>Active</th>
-        <th>Gender</th>
-        <th>Type</th>
-        <th>Actions</th>
-      </tr>
-    </thead>
-    <tbody>
-        <!-- the less than, percentage sign is for when we are NOT grabbing data-->
-      <% if (pokemon.length > 0) { %>
-        <% pokemon.forEach(row => { %>
-          <tr>
-            <!-- have the primary key which is the id and make it hidden on the page-->
-            <input type="hidden" value="row.id">
-            <input type="hidden" value="row.poke_type_id"> 
-            <td><%= row.description %></td>
-            <td><%= row.base_total %></td>
-            <!-- put in date bc it came over in a string and then change it to the US style-->
-            <td><%= new Date(row.date_created).toLocaleDateString('en-US') %></td> <!-- Format date -->
-            <!-- ? is an inline if statement (the book talks about it)-->
-            <td><%= row.active_poke ? 'Yes' : 'No' %></td>
-            <td><%= row.gender %></td>
-            <td><%= row.poke_type_description %></td>
-            <td>
-                <!-- each of the buttons have their own form so that they can be called one at a time 
-                and so that when they are clicked they will call a different route-->
-
-              <form action="/editPoke/<%= row.id %>" method="GET" style="display:inline;">
-                <button type="submit">Edit</button>
-              </form>
-              <form action="/deletePoke/<%= row.id %>" method="POST" style="display:inline;">
-                <button type="submit" onclick="return confirm('Are you sure you want to delete this record?');">Delete</button>
-              </form>
-            </td>
-          </tr>
-        <% }) %>
-      <% } else { %>
-        <tr>
-          <td colspan="7">No data available</td>
-        </tr>
-      <% } %>
-    </tbody>
-  </table>
-
-  <form action="/addPoke" method="GET" style="display: flex; justify-content: center; margin: 20px 0;">
-    <button type="submit">Add</button>
-  </form>
+    <!-- Navigation-->
+    <nav class="navbar navbar-expand-lg navbar-dark fixed-top" id="mainNav" style="background-color: #303030;">
+        <div class="container-fluid p-0" style="background-color: #303030;">
+            <a class="navbar-brand" href="#page-top"><img src="../assets/TSlogoLowRes.png" alt="..." />Turtle Shelter Project -- Admin</a>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarResponsive" aria-controls="navbarResponsive" aria-expanded="false" aria-label="Toggle navigation">
+                Menu
+                <i class="fas fa-bars ms-1"></i>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarResponsive">
+                <ul class="navbar-nav text-uppercase ms-auto py-4 py-lg-0">
+                    <li class="nav-item"><a class="nav-link" href="/internalLanding">Home</a></li>
+                    <li class="nav-item"><a class="nav-link" href="/eventRecords">Event Records</a></li>
+                    <li class="nav-item"><a class="nav-link" href="/volunteerRecords">Volunteer Records</a></li>
+                    <li class="nav-item"><a class="nav-link" href="/adminRecords">Admin Records</a></li>
+                    <li class="nav-item"><a class="nav-link" href="#team">Admin</a></li>
+                </ul>
+            </div>
+        </div>
+    </nav>
 </body>
 </html>

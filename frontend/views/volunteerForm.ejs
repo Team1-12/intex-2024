@@ -1,0 +1,150 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="utf-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no" />
+        <meta name="description" content="" />
+        <meta name="author" content="" />
+        <title>Volunteer Form</title>
+        <!-- Favicon-->
+        <link rel="icon" type="image/x-icon" href="assets/favicon.ico" />
+        <!-- Font Awesome icons (free version)-->
+        <script src="https://use.fontawesome.com/releases/v6.3.0/js/all.js" crossorigin="anonymous"></script>
+        <!-- Google fonts-->
+        <link href="https://fonts.googleapis.com/css?family=Montserrat:400,700" rel="stylesheet" type="text/css" />
+        <link href="https://fonts.googleapis.com/css?family=Roboto+Slab:400,100,300,700" rel="stylesheet" type="text/css" />
+        <!-- Core theme CSS (includes Bootstrap)-->
+        <link href="css/styles.css" rel="stylesheet" />
+    </head>
+    <body id="page-top">
+        <!-- Navigation-->
+        <nav class="navbar navbar-expand-lg navbar-dark fixed-top" id="mainNav" style="background-color: #303030;">
+            <div class="container-fluid p-0" style="background-color: #303030;">
+                <a class="navbar-brand" href="#page-top"><img src="../assets/TSlogoLowRes.png" alt="..." />Turtle Shelter Project</a>
+                <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarResponsive" aria-controls="navbarResponsive" aria-expanded="false" aria-label="Toggle navigation">
+                    Menu
+                    <i class="fas fa-bars ms-1"></i>
+                </button>
+                <div class="collapse navbar-collapse" id="navbarResponsive">
+                    <ul class="navbar-nav text-uppercase ms-auto py-4 py-lg-0">
+                        <li class="nav-item"><a class="nav-link" href="/">Home</a></li>
+                        <li class="nav-item"><a class="nav-link" href="/howToHelp">How to Help</a></li>
+                        <li class="nav-item"><a class="nav-link" href="/eventRequest">Event Request</a></li>
+                        <li class="nav-item"><a class="nav-link" href="#team">Admin</a></li>
+                    </ul>
+                </div>
+            </div>
+        </nav>
+        <section>
+            <div class="container">
+                <h2>Volunteer Form</h2>
+                <form id="eventRequestForm" method="post" action="/submitVolunteerForm">
+                    <div class="form-row">
+                        <div class="row">
+                            <div class="form-group col-md-5">
+                                <input class="form-control" type="text" id="FirstName"name="FirstName" placeholder="Volunteer First Name *" required />
+                            </div>
+                            <div class="form-group col-md-5">
+                                <input class="form-control" type="text" id="LastName"name="LastName" placeholder="Volunteer Last Name" required/>
+                            </div>
+                        </div>
+                        <div><h6>Contact Information</h6></div>
+                        <div class="row">
+                            <div class="form-group col-md-3">
+                                <input class="form-control" type="text" id="City" name="City" placeholder="City *" required />
+                            </div>
+                            <div class="form-group col-md-3">
+                                <input class="form-control" type="text" id="State" name="State" placeholder="State *" required />
+                            </div>
+                            <div class="form-group col-md-3">
+                                <input class="form-control" type="email" id="Email" name="Email" placeholder="Volunteer Email *" required />
+                            </div>
+                            <div class="form-group col-md-3">
+                                <input class="form-control" type="tel" name="Phone" id="Phone" placeholder="(823) 456-7890" pattern="\(\d{3}\) \d{3}-\d{4}" required 
+                                    oninput="this.value = this.value.replace(/[^0-9]/g, '').replace(/(\d{3})(\d{3})(\d{4})/, '($1) $2-$3');" />
+                            </div>
+                        </div>
+                        <div><h6>Other Information</h6></div>
+                        <div class="row">                  
+                            <div class="form-group col-md-3">
+                                <input class="form-control" type="number" name="TravelTime" id="TravelTime" placeholder="Hours Willing to Travel for Events *" min="1" required />
+                            </div>
+                            <div class="form-group col-md-4">
+                                <input class="form-control" type="number" name="MonthlyHrsWilling" id="MonthlyHrsWilling" placeholder="Hours Available per Month *" min="1" required />
+                            </div>
+                        </div> 
+                    </div>
+                    <div class="form-group">
+                        <label for="volunteerType">Sewing Experience Level *</label>
+                        <select class="form-control" name="SewingLevel" id="SewingLevel" required>
+                            <option value="No Experience">No Experience</option>
+                            <option value="Beginner">Beginner</option>
+                            <option value="Intermediate">Intermediate</option>
+                            <option value="Advanced">Advanced</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label for="heardFrom">Where did you hear about this opportunity? *</label>
+                        <select class="form-control" name="HowTheyHeard" id="HowTheyHeard" required>
+                            <option value="">Select an option</option>
+                            <option value="social_media">Social Media</option>
+                            <option value="friends">Friends or Family</option>
+                            <option value="website">Website</option>
+                            <option value="other">Other</option>
+                        </select>
+                    </div>
+                    <div class="form-group" id="otherInput" style="display: none;">
+                        <label for="otherSource">Please specify</label>
+                        <input class="form-control" type="text" name="otherSource" id="otherSource" placeholder="Specify your source" />
+                    </div>
+                    <script>
+                        document.getElementById('HowTheyHeard').addEventListener('change', function () {
+                            var otherInput = document.getElementById('otherInput');
+                            if (this.value === 'other') {
+                                otherInput.style.display = 'block';
+                                document.getElementById('otherSource').setAttribute('required', 'required');
+                            } else {
+                                otherInput.style.display = 'none';
+                                document.getElementById('otherSource').removeAttribute('required');
+                            }
+                        });
+                    </script>
+                    <div class="form-group">
+                        <label>If called upon, would you be willing to lead out at an event? *</label><br>
+                        <div class="form-check form-check-inline">
+                            <input class="form-check-input" type="radio" name="LeadWilling" id="leadOutYes" value="yes" required>
+                            <label class="form-check-label" for="leadOutYes">Yes</label>
+                        </div>
+                        <div class="form-check form-check-inline">
+                            <input class="form-check-input" type="radio" name="LeadWilling" id="leadOutNo" value="no">
+                            <label class="form-check-label" for="leadOutNo">No</label>
+                        </div>
+                    </div>
+                    <div><h6>Additional Details</h6></div>
+                    <div class="form-group">
+                        <textarea class="form-control" name="Comments" id="Comments" placeholder="Please let us know any addtional details that may be important" ></textarea>
+                    </div>
+                    <button class="btn btn-primary" type="submit">Submit Information</button>
+                </form>
+            </div>
+        </section>
+        <!-- Footer-->
+        <footer class="footer py-4" style="background-color: #303030; position: absolute; bottom: 0; width: 100%; height: 30 px;">
+                <div class="row align-items-center">
+                    <div class="col-lg-4 text-lg-start ms-3 text-white">
+                        Copyright &copy; Turtle Shelter Project 2024
+                    </div>
+                    <div class="col-lg-4 my-3 my-lg-0 d-flex justify-content-center">
+                        <a class="btn btn-dark btn-social mx-2" href="https://www.facebook.com/turtleshelterproject/" target="blank" aria-label="Facebook">
+                            <i class="fab fa-facebook-f"></i>
+                        </a>
+                        <a class="btn btn-dark btn-social mx-2" href="https://www.instagram.com/turtleshelterproject/" target="blank" aria-label="Instagram">
+                            <i class="fab fa-instagram"></i>
+                        </a>
+                    </div>
+                </div>
+        </footer>
+        <!-- Bootstrap core JS-->
+        <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/js/bootstrap.bundle.min.js"></script>
+        <!-- Core theme JS-->
+        <script src="js/scripts.js"></script>

@@ -30,7 +30,7 @@
                         <li class="nav-item"><a class="nav-link" href="/">Home</a></li>
                         <li class="nav-item"><a class="nav-link" href="/howToHelp">How to Help</a></li>
                         <li class="nav-item"><a class="nav-link" href="/eventRequest">Event Request</a></li>
-                        <li class="nav-item"><a class="nav-link" href="#team">Admin</a></li>
+                        <li class="nav-item"><a class="nav-link" href="/login">Admin</a></li>
                     </ul>
                 </div>
             </div>
@@ -38,28 +38,51 @@
         <section>
             <div class="container">
                 <h2>Event Request Form</h2>
-                <form id="eventRequestForm" method="post" action="/submitEventRequest">
-                    <div class="form-group">
-                        <input class="form-control" type="text" name="name" placeholder="Contact Name *" required />
-                    </div>
-                    <div class="form-group">
-                        <input class="form-control" type="email" name="email" placeholder="Contact Email *" required />
-                    </div>
-                    <div class="form-group">
-                        <input class="form-control" type="tel" name="phone" placeholder="Contact Phone *" required />
-                    </div>
-                    <div class="form-group">
-                        <input class="form-control" type="text" name="organization" placeholder="Organization/Group Name" required/>
-                    </div>
-                    <div class="form-group">
-                        <input class="form-control" type="number" name="volunteers" placeholder="Number of Volunteers *" min="1" required />
-                    </div>
-                    <div class="form-group">
-                        <input class="form-control" type="number" name="hours" placeholder="Number of Hours for Event *" min="1" required />
+                <form id="eventRequestForm" method="post" action="/EventRequest">
+                    <div class="form-row">
+                        <div class="row">
+                            <div class="form-group col-md-3">
+                                <input class="form-control" type="text" name="contactname" id="contactname" placeholder="Contact Name *" required />
+                            </div>
+                            <div class="form-group col-md-3">
+                                <input class="form-control" type="text" name="organization" id="organization" placeholder="Organization/Group Name" required/>
+                            </div>
+                            <div class="form-group col-md-3">
+                                <input class="form-control" type="email" name="contactemail" id="contactemail" placeholder="Contact Email *" required />
+                            </div>
+                            <div class="form-group col-md-3">
+                                <input class="form-control" type="tel" name="contactphone" id="contactphone" placeholder="(823) 456-7890" pattern="\(\d{3}\) \d{3}-\d{4}" required 
+                                    oninput="this.value = this.value.replace(/[^0-9]/g, '').replace(/(\d{3})(\d{3})(\d{4})/, '($1) $2-$3');" />
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="form-group col-md-12">
+                                <input class="form-control" type="text" name="address" id="address" placeholder="Street Address *" required />
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="form-group col-md-3">
+                                <input class="form-control" type="text" name="city" id="city" placeholder="City *" required />
+                            </div>
+                            <div class="form-group col-md-3">
+                                <input class="form-control" type="text" name="state" id="state" placeholder="State *" required />
+                            </div>
+                            <div class="form-group col-md-3">
+                                <input class="form-control" type="number" name="zip" id="zip" placeholder="Zip Code *" required />
+                            </div>
+                        </div>
+                        <div class="row">                  
+                            <div class="form-group col-md-4">
+                                <input class="form-control" type="number" name="expectedparticipants" id="expectedparticipants" placeholder="Number of Volunteers *" min="1" required />
+                            </div>
+                            <div class="form-group col-md-4">
+                                <input class="form-control" type="number" name="expectedduration" id="expectedduration" placeholder="Number of Hours for Event *" min="1" required />
+                            </div>
+                        </div> 
                     </div>
                     <div class="form-group">
                         <label for="volunteerType">Type of Volunteering *</label>
-                        <select class="form-control" name="volunteerType" id="volunteerType" required>
+                        <select class="form-control" name="eventactivities" id="eventactivities" required>
                             <option value="">Select Type</option>
                             <option value="sewing">Sewing</option>
                             <option value="non-sewing">Non-Sewing</option>
@@ -67,16 +90,31 @@
                         </select>
                     </div>
                     <div class="form-group">
+                        <label>Do you want Jen, the founder of the Turtle Shelter Project, to share her story? *</label><br>
+                        <div class="form-check form-check-inline">
+                            <input class="form-check-input" type="radio" name="jenshare" id="JenShareYes" value="yes" required>
+                            <label class="form-check-label" for="JenShareYes">Yes</label>
+                        </div>
+                        <div class="form-check form-check-inline">
+                            <input class="form-check-input" type="radio" name="jenshare" id="JenShareNo" value="no">
+                            <label class="form-check-label" for="JenShareNo">No</label>
+                        </div>
+                    </div>
+                    <div class="form-group">
                         <p>Please select the range of dates below for which your organization is available to volunteer. <br>If only one date is available, insert that date into the first field and leave the second blank.</p>
-                        <label for="startDate">First Available Date *</label>
-                        <input class="form-control" type="date" name="startDate" required />
+                        <div class="row">
+                            <div class=">form-group col-md-3">
+                                <label for="StartDateRange">First Available Date *</label>
+                                <input class="form-control" type="date" name="startdaterange" id="startdaterange" required />
+                            </div>
+                            <div class=">form-group col-md-3">
+                                <label for="EndDateRange">Last Available Date</label>
+                                <input class="form-control" type="date" name="enddaterange" id="enddaterange" />
+                            </div>
+                        </div>
                     </div>
                     <div class="form-group">
-                        <label for="endDate">Last Available Date</label>
-                        <input class="form-control" type="date" name="endDate" />
-                    </div>
-                    <div class="form-group">
-                        <textarea class="form-control" name="eventDetails" placeholder="Other Scheduling/Event Details *" required></textarea>
+                        <textarea class="form-control" name="comments" id="comments" placeholder="Other Scheduling/Event Details" ></textarea>
                     </div>
                     <button class="btn btn-primary" type="submit">Send Request</button>
                 </form>

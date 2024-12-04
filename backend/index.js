@@ -28,12 +28,12 @@ app.use(express.static('frontend'));
 const knex = require("knex") ({
   client : "pg",
   connection : {
-      host : process.env.RDS_HOSTNAME || "localhost",
-      user : process.env.RDS_USERNAME || "postgres",
-      password : process.env.RDS_PASSWORD,
-      database : process.env.RDS_DB_NAME,
+      host : process.env.RDS_HOSTNAME || "awseb-e-xg3qx7rimi-stack-awsebrdsdatabase-d32v4dftp3db.cna8yiecw5c6.us-east-1.rds.amazonaws.com",
+      user : process.env.RDS_USERNAME || "turtle",
+      password : process.env.RDS_PASSWORD || "splishsplash",
+      database : process.env.RDS_DB_NAME || "ebdb",
       port : process.env.RDS_PORT || 5432,
-      ssl: process.env.DB_SSL ? {rejectUnauthorized: false} : false
+      ssl: {rejectUnauthorized: false}
   }
 });
 
@@ -62,6 +62,252 @@ app.get('/donate', (req, res) => {
   res.redirect('https://turtleshelterproject.org/checkout/donate?donatePageId=5b6a44c588251b72932df5a0'); 
 
 });
+
+
+//Route to volunteer form page
+app.get('/volunteerForm', (req, res) => {
+  res.render('volunteerForm'); 
+
+});
+
+app.get('/login', (req, res) => {
+  res.render('login'); 
+
+});
+
+app.post('/login', (req, res) => {
+  const { username, password } = req.body;
+
+  if (!username || !password) {
+    return res.render('login', { error: 'Username and password are required.' });
+  }
+
+  // Query the database to check if the username and password exist
+  knex('admin')
+    .select('*')
+    .where({ username, password }) // Check against plaintext password
+    .first() // Fetch only one record
+    .then(user => {
+      if (user) {
+        // Redirect to internal landing page if login is successful
+        res.redirect('/internalLanding');
+      } else {
+        // Render login page with error if invalid credentials
+        res.render('login', { error: 'Invalid username or password.' });
+      }
+    })
+    .catch(err => {
+      console.error('Database error:', err);
+      res.status(500).send('Internal Server Error');
+    });
+});
+
+//Route to internal Landing page
+app.get('/internalLanding', (req, res) => {
+  res.render('internalLanding'); 
+
+}); 
+
+
+//Route to adminRecords page
+app.get('/adminRecords', (req, res) => {
+  res.render('adminRecords'); 
+
+}); 
+
+//Route to display Event records 
+app.get('/eventRecords', (req, res) => {
+  knex('event')
+      .select(
+      'eventid',
+      'eventdate',
+      'starttime',
+      'city',
+      'state',
+      'zip',
+      'contactname',
+      'eventactivities', 
+      'organization'
+    )
+    .then(event => {
+      // Render the eventRecords.ejs template and pass the data
+      res.render('eventRecords', { event });
+    })
+    // Memorize or paste in to the end of all 
+    .catch(error => {
+      console.error('Error querying database:', error);
+      res.status(500).send('Internal Server Error');
+    });
+});
+
+// this chunk of code finds the record with the primary key aka id and deletes the record
+app.post('/deleteEventRec/:eventid', (req, res) => {
+
+  const eventid = req.params.eventid;
+
+  knex('event')
+    .where('eventid', eventid)
+    .del() // Deletes the record with the specified ID
+    .then(() => {
+      res.redirect('/eventRec'); // Redirect to the Event Records Table after deletion
+    })
+    .catch(error => {
+      console.error('Error deleting Event Record:', error);
+      res.status(500).send('Internal Server Error');
+    });
+});   
+
+
+app.get('/volunteerRecords', (req, res) => {
+  knex('volunteer')
+    .select(
+      'volunteerid',
+      'firstname',
+      'lastname',
+      'email',
+      'phone',
+      'city',
+      'state',
+      'howtheyheard',
+      'sewinglevel',
+      'monthlyhrswilling',
+      'leadwilling',
+      'traveltime',
+      'comments'
+    )
+    .then(volunteer => {
+      // Render the volunteerRecords.ejs template and pass the data
+      res.render('volunteerRecords', { volunteer });
+    })
+    // Catch to handle errors
+    .catch(error => {
+      console.error('Error querying database:', error);
+      res.status(500).send('Internal Server Error');
+    });
+});
+
+
+
+// To post the new volunteer to the database
+app.post('/submitVolunteerForm', (req, res) => {
+
+  // Access each value directly from req.body
+  const firstname = req.body.FirstName;
+
+  const lastname = req.body.LastName;
+
+  const phone = req.body.Phone; 
+
+  const email = req.body.Email;
+
+  const city = req.body.City; 
+
+  const state = req.body.State;
+
+  const howtheyheard = req.body.HowTheyHeard;
+
+  const sewinglevel = req.body.SewingLevel;
+
+  const monthlyhrswilling = parseInt(req.body.MonthlyHrsWilling); // Convert to integer
+
+  const leadwilling = req.body.LeadWilling;
+
+  const traveltime = parseInt(req.body.TravelTime); // Convert to integer
+
+  const comments = req.body.Comments || 'No comments';
+
+
+  // Insert the Volunteer in the database
+  knex('volunteer')
+    .insert({
+      firstname: firstname,
+      lastname: lastname,
+      phone: phone,
+      email: email,
+      city: city,
+      state: state,
+      howtheyheard: howtheyheard,
+      sewinglevel: sewinglevel,
+      monthlyhrswilling: monthlyhrswilling,
+      leadwilling: leadwilling,
+      traveltime: traveltime,
+      comments: comments,
+    })
+    .then(() => {
+      res.redirect('/'); // Redirect to 
+    })
+    .catch(error => {
+      console.error('Error adding Volunteer:', error);
+      res.status(500).send('Internal Server Error');
+    });
+});
+
+
+// To post the event request to the database
+app.post('/EventRequest', (req, res) => {
+
+  // Access each value directly from req.body
+  const startdaterange = req.body.startdaterange;
+
+  const enddaterange = req.body.enddaterange || null;
+
+  const expectedparticipants = parseInt(req.body.expectedparticipants); 
+
+  const expectedduration = parseInt(req.body.expectedduration);
+
+  const eventactivities = req.body.eventactivities; 
+
+  const address = req.body.address;
+
+  const city = req.body.city;
+
+  const state = req.body.state;
+
+  const zip = req.body.zip;
+
+  const contactname = req.body.contactname;
+
+  const contactphone = req.body.contactphone;
+
+  const contactemail = req.body.contactemail;
+
+  const jenshare = req.body.jenshare;
+
+  const organization = req.body.organization;
+
+  const comments = req.body.comments || 'No comments';
+
+  const eventstatus = "Pending"
+
+  // Insert the event in the database
+  knex('event')
+    .insert({
+      startdaterange : startdaterange,
+      enddaterange : enddaterange,
+      expectedparticipants : expectedparticipants,
+      expectedduration :expectedduration,
+      eventactivities : eventactivities,
+      address : address,
+      city : city,
+      state : state,
+      zip : zip,
+      contactname : contactname,
+      contactphone : contactphone,
+      contactemail : contactemail,
+      jenshare : jenshare,
+      organization : organization,
+      comments : comments,
+      eventstatus : eventstatus,
+    })
+    .then(() => {
+      res.redirect('/'); // Redirect to 
+    })
+    .catch(error => {
+      console.error('Error adding event:', error);
+      res.status(500).send('Internal Server Error');
+    });
+});
+
 
 // app listening
 app.listen(port, () => console.log("Express App has started and server is listening!"));
