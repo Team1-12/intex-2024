@@ -138,6 +138,15 @@ app.get('/internalLanding', isAuthenticated, (req, res) => {
   res.render('internalLanding');
 });
 
+// Checks to see if they are authenticated to go to admin landing page
+app.get('/adminRedirect', (req, res) => {
+  if (req.session && req.session.isAuthenticated) {
+    res.redirect('/internalLanding'); // Redirect to internalLanding if authenticated
+  } else {
+    res.redirect('/login'); // Redirect to login if not authenticated
+  }
+});
+
 //Route to display Event records 
 app.get('/eventRecords', isAuthenticated, (req, res) => {
   knex('event')
