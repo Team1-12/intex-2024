@@ -172,13 +172,13 @@ app.get('/eventRecords', isAuthenticated, (req, res) => {
 // this chunk of code finds the record with the primary key aka id and deletes the record
 app.post('/deleteEventRec/:eventid', isAuthenticated, (req, res) => {
 
-  const eventid = req.params.eventid;
+  const eventid = parseInt(req.params.eventid, 10);
 
   knex('event')
     .where('eventid', eventid)
     .del() // Deletes the record with the specified ID
     .then(() => {
-      res.redirect('/eventRec'); // Redirect to the Event Records Table after deletion
+      res.redirect('/eventRecords'); // Redirect to the Event Records Table after deletion
     })
     .catch(error => {
       console.error('Error deleting Event Record:', error);
@@ -215,6 +215,52 @@ app.get('/volunteerRecords', isAuthenticated, (req, res) => {
     });
 });
 
+// Deletes a volunteer and any associated admin records
+app.post('/deleteVolunteer/:volunteerid', (req, res) => {
+  const volunteerid = parseInt(req.params.volunteerid, 10); // Extract volunteer ID
+
+  // Step 1: Delete associated admin record first
+  knex('admin')
+    .where('volunteerid', volunteerid)
+    .del()
+    .then(() => {
+      // Step 2: Delete the volunteer record
+      return knex('volunteer').where('volunteerid', volunteerid).del();
+    })
+    .then(() => {
+      res.redirect('/volunteerRecords'); // Redirect after successful deletion
+    })
+    .catch(error => {
+      console.error('Error deleting Volunteer Record:', error);
+      res.status(500).send('Internal Server Error');
+    });
+});
+
+
+// Route to display admin records
+app.get('/adminRecords', (req, res) => {
+  knex('admin')
+    .join('volunteer', 'volunteer.volunteerid', '=', 'admin.volunteerid')
+    .select(
+      'volunteer.volunteerid',
+      'volunteer.firstname',
+      'volunteer.lastname',
+      'volunteer.phone',
+      'volunteer.email',
+      'volunteer.city',
+      'volunteer.state',
+      'admin.username',
+      'admin.password'
+    )
+    .then(admin => {
+      console.log(admin); // Log the data to verify structure
+      res.render('adminRecords', { admin }); // Pass the admin data to the EJS template
+    })
+    .catch(error => {
+      console.error('Error querying database:', error);
+      res.status(500).send('Internal Server Error');
+    });
+});
 
 
 // To post the new volunteer to the database
