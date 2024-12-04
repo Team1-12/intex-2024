@@ -216,42 +216,74 @@ app.post('/editEventRec/:eventid', (req, res) => {
     eventstatus,
   } = req.body;
 
+  // Helper function to parse integers or return a default value
+  function toIntOrDefault(value, defaultValue) {
+    const parsed = parseInt(value, 10);
+    return isNaN(parsed) ? defaultValue : parsed;
+  }
+
+  // Define default values for required fields
+  const defaultExpectedParticipants = 1; // Example default value
+  const defaultExpectedDuration = 1;     // Example default value
+  // Add more default values as needed for required fields
+
+  // Input validation for required fields
+  const errors = [];
+
+  if (!startdaterange) {
+    errors.push('Start date range is required.');
+  }
+
+  if (!expectedparticipants) {
+    errors.push('Expected participants is required.');
+  }
+
+  // Add more validation checks for other required fields
+  // For example:
+  // if (!address) { errors.push('Address is required.'); }
+
+  if (errors.length > 0) {
+    // If there are validation errors, send them back to the client
+    res.status(400).json({ errors });
+    return;
+  }
+
   // Update the record in the database
   knex('event')
     .where('eventid', eventid)
     .update({
       startdaterange: startdaterange,
       enddaterange: enddaterange || null,
-      expectedparticipants: expectedparticipants ? parseInt(expectedparticipants) : null,
-      expectedduration: expectedduration ? parseInt(expectedduration) : null,
-      eventactivities: eventactivities || null,
-      address: address || null,
-      city: city || null,
-      state: state || null,
-      zip: zip ? parseInt(zip) : null,
-      starttime: starttime || null,
-      contactname: contactname || null,
-      contactphone: contactphone || null,
-      contactemail: contactemail || null,
+      expectedparticipants: toIntOrDefault(expectedparticipants, defaultExpectedParticipants),
+      expectedduration: toIntOrDefault(expectedduration, defaultExpectedDuration),
+      eventactivities: eventactivities || '', // Provide a default empty string if null not allowed
+      address: address || '',
+      city: city || '',
+      state: state || '',
+      zip: zip || '', // Assuming zip is a string
+      starttime: starttime || '',
+      contactname: contactname || '',
+      contactphone: contactphone || '',
+      contactemail: contactemail || '',
       jenshare: jenshare === 'yes', // Convert radio button to boolean
-      organization: organization || null,
-      comments: comments || null,
-      spacedescription: spacedescription || null,
-      numsewers: numsewers ? parseInt(numsewers) : null,
-      nummachines: nummachines ? parseInt(nummachines) : null,
-      numroundtables: numroundtables ? parseInt(numroundtables) : null,
-      numrectanglestables: numrectanglestables ? parseInt(numrectanglestables) : null,
-      numadults: numadults ? parseInt(numadults) : null,
-      numchildren: numchildren ? parseInt(numchildren) : null,
-      actualparticipants: actualparticipants ? parseInt(actualparticipants) : null,
-      actualduration: actualduration ? parseInt(actualduration) : null,
+      organization: organization || '',
+      comments: comments || '',
+      spacedescription: spacedescription || '',
+      numsewers: toIntOrDefault(numsewers, 0),
+      nummachines: toIntOrDefault(nummachines, 0),
+      numroundtables: toIntOrDefault(numroundtables, 0),
+      numrectanglestables: toIntOrDefault(numrectanglestables, 0),
+      numadults: toIntOrDefault(numadults, 0),
+      numchildren: toIntOrDefault(numchildren, 0),
+      actualparticipants: toIntOrDefault(actualparticipants, 0),
+      actualduration: toIntOrDefault(actualduration, 0),
       eventdate: eventdate || null,
-      pockets: pockets ? parseInt(pockets) : null,
-      collars: collars ? parseInt(collars) : null,
-      envelopes: envelopes ? parseInt(envelopes) : null,
-      vests: vests ? parseInt(vests) : null,
-      completedproducts: completedproducts ? parseInt(completedproducts) : null,
-      eventstatus: eventstatus || 'pending', // Default to "Pending" if not provided
+      pockets: toIntOrDefault(pockets, 0),
+      collars: toIntOrDefault(collars, 0),
+      envelopes: toIntOrDefault(envelopes, 0),
+      vests: toIntOrDefault(vests, 0),
+      completedproducts: toIntOrDefault(completedproducts, 0),
+      eventstatus: eventstatus || 'pending', // Default to "pending" if not provided
     })
     .then(() => {
       res.redirect('/eventRecords'); // Redirect to the event records page
@@ -261,6 +293,7 @@ app.post('/editEventRec/:eventid', (req, res) => {
       res.status(500).send('Internal Server Error');
     });
 });
+
 
 app.get('/volunteerRecords', (req, res) => {
   knex('volunteer')
