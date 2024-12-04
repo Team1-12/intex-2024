@@ -8,6 +8,8 @@ let path = require('path'); // access to the path
 
 const port = process.env.PORT || 5001
 
+const session = require('express-session'); 
+
 app.use(express.urlencoded( {extended: true} )) //determines how html is received from forms. This allows us to grab stuff out of the HTML form
 
 app.set("view engine", "ejs") //shows what view engine we are using 
@@ -15,6 +17,16 @@ app.set("view engine", "ejs") //shows what view engine we are using
 app.set("views", path.join(__dirname, "../frontend/views")) //This is telling the server that we are going to start using certain views
 
 app.use(express.urlencoded({extended: true})); //allows us to get data out of the request.body
+
+
+// Session middleware setup
+app.use(session({
+  secret: '123456789', // Replace with a secure secret key
+  resave: false,
+  saveUninitialized: false,
+  cookie: { maxAge: 60 * 60 * 1000 } // Session expires after 60 minutes
+}));
+
 
 // Serve static files from the 'CSS' directory
 app.use('/css', express.static(path.join(__dirname, '../frontend/css')));
@@ -82,34 +94,58 @@ app.post('/login', (req, res) => {
     return res.render('login', { error: 'Username and password are required.' });
   }
 
-  // Query the database to check if the username and password exist
-  knex('admin')
-    .select('*')
-    .where({ username, password }) // Check against plaintext password
-    .first() // Fetch only one record
-    .then(user => {
-      if (user) {
-        // Redirect to internal landing page if login is successful
-        res.redirect('/internalLanding');
-      } else {
-        // Render login page with error if invalid credentials
-        res.render('login', { error: 'Invalid username or password.' });
-      }
-    })
-    .catch(err => {
-      console.error('Database error:', err);
-      res.status(500).send('Internal Server Error');
-    });
+   // Query the database to check if the username and password exist
+   knex('admin')
+   .select('*')
+   .where({ username, password }) // Note: Storing plaintext passwords is insecure
+   .first()
+   .then(user => {
+     if (user) {
+       // Set session variable
+       req.session.isAuthenticated = true;
+       req.session.save(err => {
+         if (err) {
+           console.error('Session save error:', err);
+           return res.status(500).send('Internal Server Error');
+         }
+         // Redirect to internal landing page if login is successful
+         res.redirect('/internalLanding');
+       });
+     } else {
+       // Render login page with error if invalid credentials
+       res.render('login', { error: 'Invalid username or password.' });
+     }
+   })
+   .catch(err => {
+     console.error('Database error:', err);
+     res.status(500).send('Internal Server Error');
+   });
 });
 
-//Route to internal Landing page
-app.get('/internalLanding', (req, res) => {
-  res.render('internalLanding'); 
+// Authentication middleware
+function isAuthenticated(req, res, next) {
+  if (req.session && req.session.isAuthenticated) {
+    // User is authenticated, proceed to the next middleware
+    return next();
+  } else {
+    // User is not authenticated, redirect to login page
+    res.redirect('/login');
+  }
+}
 
-}); 
+// Protected routes using the authentication middleware
+app.get('/internalLanding', isAuthenticated, (req, res) => {
+  res.render('internalLanding');
+});
+
+
+//Route to adminRecords page
+app.get('/adminRecords', isAuthenticated, (req, res) => {
+  res.render('adminRecords');
+});
 
 //Route to display Event records 
-app.get('/eventRecords', (req, res) => {
+app.get('/eventRecords', isAuthenticated, (req, res) => {
   knex('event')
       .select(
       'eventid',
@@ -134,7 +170,7 @@ app.get('/eventRecords', (req, res) => {
 });
 
 // this chunk of code finds the record with the primary key aka id and deletes the record
-app.post('/deleteEventRec/:eventid', (req, res) => {
+app.post('/deleteEventRec/:eventid', isAuthenticated, (req, res) => {
 
   const eventid = parseInt(req.params.eventid, 10);
 
@@ -150,112 +186,8 @@ app.post('/deleteEventRec/:eventid', (req, res) => {
     });
 });   
 
-app.get('/editEventRec/:eventid', (req, res) => {
-  const eventid = req.params.eventid;
 
-  // Query the Event by eventid
-  knex('event')
-    .where('eventid', eventid)
-    .first()
-    .then(event => {
-      if (!event) {
-        return res.status(404).send('Event not found');
-      }
-      res.render('editEventRec', { event }); // Pass the event data to the template
-    })
-    .catch(error => {
-      console.error('Error fetching event for editing:', error);
-      res.status(500).send('Internal Server Error');
-    });
-});
-
-
-app.post('/editEventRec/:eventid', (req, res) => {
-  const eventid = req.params.eventid;
-
-  // Extract all fields from the request body
-  const {
-    startdaterange,
-    enddaterange,
-    expectedparticipants,
-    expectedduration,
-    eventactivities,
-    address,
-    city,
-    state,
-    zip,
-    starttime,
-    contactname,
-    contactphone,
-    contactemail,
-    jenshare,
-    organization,
-    comments,
-    spacedescription,
-    numsewers,
-    nummachines,
-    numroundtables,
-    numrectanglestables,
-    numadults,
-    numchildren,
-    actualparticipants,
-    actualduration,
-    eventdate,
-    pockets,
-    collars,
-    envelopes,
-    vests,
-    completedproducts,
-    eventstatus,
-  } = req.body;
-
-  // Update the record in the database
-  knex('event')
-    .where('eventid', eventid)
-    .update({
-      startdaterange: startdaterange,
-      enddaterange: enddaterange || null,
-      expectedparticipants: expectedparticipants ? parseInt(expectedparticipants) : null,
-      expectedduration: expectedduration ? parseInt(expectedduration) : null,
-      eventactivities: eventactivities || null,
-      address: address || null,
-      city: city || null,
-      state: state || null,
-      zip: zip ? parseInt(zip) : null,
-      starttime: starttime || null,
-      contactname: contactname || null,
-      contactphone: contactphone || null,
-      contactemail: contactemail || null,
-      jenshare: jenshare === 'yes', // Convert radio button to boolean
-      organization: organization || null,
-      comments: comments || null,
-      spacedescription: spacedescription || null,
-      numsewers: numsewers ? parseInt(numsewers) : null,
-      nummachines: nummachines ? parseInt(nummachines) : null,
-      numroundtables: numroundtables ? parseInt(numroundtables) : null,
-      numrectanglestables: numrectanglestables ? parseInt(numrectanglestables) : null,
-      numadults: numadults ? parseInt(numadults) : null,
-      numchildren: numchildren ? parseInt(numchildren) : null,
-      actualparticipants: actualparticipants ? parseInt(actualparticipants) : null,
-      actualduration: actualduration ? parseInt(actualduration) : null,
-      eventdate: eventdate || null,
-      pockets: pockets ? parseInt(pockets) : null,
-      collars: collars ? parseInt(collars) : null,
-      envelopes: envelopes ? parseInt(envelopes) : null,
-      vests: vests ? parseInt(vests) : null,
-      completedproducts: completedproducts ? parseInt(completedproducts) : null,
-      eventstatus: eventstatus || 'pending', // Default to "Pending" if not provided
-    })
-    .then(() => {
-      res.redirect('/eventRecords'); // Redirect to the event records page
-    })
-    .catch((error) => {
-      console.error('Error updating event:', error);
-      res.status(500).send('Internal Server Error');
-    });
-});
-
-app.get('/volunteerRecords', (req, res) => {
+app.get('/volunteerRecords', isAuthenticated, (req, res) => {
   knex('volunteer')
     .select(
       'volunteerid',
