@@ -66,8 +66,14 @@ app.get('/eventRequest', (req, res) => {
 //Route to How to help page
 app.get('/howToHelp', (req, res) => {
   res.render('howToHelp'); 
-
 }); 
+
+//Route to get howToHelpIcons
+app.get('/howToHelpIcons', (req, res) => {
+  res.redirect('/howToHelp#help');
+});
+
+
 
 //Route to the donate page
 app.get('/donate', (req, res) => {
