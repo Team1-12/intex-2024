@@ -13,11 +13,12 @@
   "dependencies": {
     "ejs": "^3.1.10",
     "express": "^4.21.1",
+    "express-session": "^1.18.1",
     "knex": "^3.1.0",
     "pg": "^8.13.1"
   },
   "devDependencies": {
-    "nodemon": "^3.1.7",
-    "mocha": "^10.8.2"
+    "mocha": "^10.8.2",
+    "nodemon": "^3.1.7"
   }
 }
