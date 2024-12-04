@@ -144,6 +144,15 @@ app.get('/internalLanding', isAuthenticated, (req, res) => {
   res.render('internalLanding');
 });
 
+app.get('/adminRedirect', (req, res) => {
+  if (req.session && req.session.isAuthenticated) {
+    res.redirect('/internalLanding'); // Redirect to internalLanding if authenticated
+  } else {
+    res.redirect('/login'); // Redirect to login if not authenticated
+  }
+});
+
+
 // Route to display events with optional status filter
 app.get('/eventRecords', (req, res) => {
   const status = req.query.status; // Extract 'status' from query parameters
