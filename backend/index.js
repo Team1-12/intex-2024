@@ -180,25 +180,7 @@ app.get('/eventRecords', (req, res) => {
       res.status(500).send('Internal Server Error');
     });
 });
-
-
-
-// this chunk of code finds the record with the primary key aka id and deletes the record
-//app.post('/deleteEventRec/:eventid', isAuthenticated, (req, res) => {
-
-  //const eventid = parseInt(req.params.eventid, 10);
-
-  //knex('event')
-    //.where('eventid', eventid)
-    //.del() // Deletes the record with the specified ID
-    //.then(() => {
-    //  res.redirect('/eventRecords'); // Redirect to the Event Records Table after deletion
-    //})
-    //.catch(error => {
-    //  console.error('Error deleting Event Record:', error);
-    //  res.status(500).send('Internal Server Error');
-    //});
-//});   
+   
 
 // Deletes a volunteer and any associated admin records
 app.post('/deleteEventRec/:eventid', isAuthenticated, (req, res) => {
@@ -567,7 +549,11 @@ app.post('/EventRequest', (req, res) => {
       eventstatus : eventstatus,
     })
     .then(() => {
-      res.redirect('/'); // Redirect to 
+      if (req.session && req.session.isAuthenticated) {
+        res.redirect('/eventRecords'); // Redirect to internalLanding if authenticated
+      } else {
+        res.redirect('/'); // Redirect to login if not authenticated
+      } 
     })
     .catch(error => {
       console.error('Error adding event:', error);
