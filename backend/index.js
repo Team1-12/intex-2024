@@ -417,7 +417,7 @@ app.post('/submitVolunteerForm', (req, res) => {
 
   const city = req.body.City; 
 
-  const state = req.body.State;
+  const state = req.body.state;
 
   const howtheyheard = req.body.HowTheyHeard;
 
