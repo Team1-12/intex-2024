@@ -109,12 +109,6 @@ app.get('/internalLanding', (req, res) => {
 }); 
 
 //Route to How to help page
-app.get('/eventRecords', (req, res) => {
-  res.render('eventRecords'); 
-
-}); 
-
-//Route to How to help page
 app.get('/adminRecords', (req, res) => {
   res.render('adminRecords'); 
 
