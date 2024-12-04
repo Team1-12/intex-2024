@@ -103,18 +103,18 @@
             <tbody>
                 <% volunteer.forEach(function(volunteer) { %>
                     <tr>
-                        <td><%= volunteer.FirstName %></td>
-                        <td><%= volunteer.LastName %></td>
-                        <td><%= volunteer.Phone %></td>
-                        <td><%= volunteer.Email %></td>
-                        <td><%= volunteer.City %></td>
-                        <td><%= volunteer.State %></td>
-                        <td><%= volunteer.HowTheyHeard %></td>
-                        <td><%= volunteer.SewingLevel %></td>
-                        <td><%= volunteer.MonthlyHrsWilling %></td>
-                        <td><%= volunteer.LeadEvent %></td>
-                        <td><%= volunteer.TravelTime %></td>
-                        <td><%= volunteer.Comments %></td>
+                        <td><%= volunteer.firstname %></td>
+                        <td><%= volunteer.lastname %></td>
+                        <td><%= volunteer.phone %></td>
+                        <td><%= volunteer.email %></td>
+                        <td><%= volunteer.city %></td>
+                        <td><%= volunteer.state %></td>
+                        <td><%= volunteer.howtheyheard %></td>
+                        <td><%= volunteer.sewinglevel %></td>
+                        <td><%= volunteer.monthlyhrswilling %></td>
+                        <td><%= volunteer.leadevent %></td>
+                        <td><%= volunteer.traveltime %></td>
+                        <td><%= volunteer.comments %></td>
                         <td>
                             <a href="/deleteVolunteer/<%= volunteer.id %>" onclick="return confirm('Are you sure you want to delete this record?');" class="text-danger">
                                 <i class="fas fa-trash-alt"></i>
