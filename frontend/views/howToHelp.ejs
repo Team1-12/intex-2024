@@ -1,22 +1,19 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <head>
-        <meta charset="utf-8" />
-        <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no" />
-        <meta name="description" content="" />
-        <meta name="author" content="" />
-        <title>How To help</title>
-        <!-- Favicon-->
-        <link rel="icon" type="image/x-icon" href="assets/favicon.ico" />
-        <!-- Font Awesome icons (free version)-->
-        <script src="https://use.fontawesome.com/releases/v6.3.0/js/all.js" crossorigin="anonymous"></script>
-        <!-- Google fonts-->
-        <link href="https://fonts.googleapis.com/css?family=Montserrat:400,700" rel="stylesheet" type="text/css" />
-        <link href="https://fonts.googleapis.com/css?family=Roboto+Slab:400,100,300,700" rel="stylesheet" type="text/css" />
-        <!-- Core theme CSS (includes Bootstrap)-->
-        <link href="css/styles.css" rel="stylesheet" />
-    </head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="description" content="Make a difference with the Turtle Shelter Project" />
+    <title>How to Help | Turtle Shelter Project</title>
+    <!-- Favicon-->
+    <link rel="icon" type="image/x-icon" href="assets/favicon.ico" />
+    <!-- Font Awesome icons-->
+    <script src="https://use.fontawesome.com/releases/v6.3.0/js/all.js" crossorigin="anonymous"></script>
+    <!-- Google fonts-->
+    <link href="https://fonts.googleapis.com/css?family=Montserrat:400,700" rel="stylesheet" />
+    <link href="https://fonts.googleapis.com/css?family=Roboto+Slab:400,100,300,700" rel="stylesheet" />
+    <!-- Core theme CSS (includes Bootstrap)-->
+    <link href="css/styles.css" rel="stylesheet" />
 </head>
 <body>
     <!-- Navigation-->
@@ -32,57 +29,73 @@
             <div class="collapse navbar-collapse" id="navbarResponsive">
                 <ul class="navbar-nav text-uppercase ms-auto py-4 py-lg-0">
                     <li class="nav-item"><a class="nav-link" href="/">Home</a></li>
-                    <li class="nav-item"><a class="nav-link" href="/howToHelp">How to Help</a></li>
+                    <li class="nav-item dropdown">
+                        <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                            How to Help
+                        </a>
+                        <ul class="dropdown-menu" aria-labelledby="navbarDropdown">
+                            <li><a class="dropdown-item" href="/howToHelpIcons">Become a Volunteer</a></li>
+                            <li><a class="dropdown-item" href="/howToHelpIcons">Donate</a></li>
+                            <li><a class="dropdown-item" href="/howToHelpIcons">Host an Event</a></li>
+                        </ul>
+                    </li>
                     <li class="nav-item"><a class="nav-link" href="/eventRequest">Event Request</a></li>
                     <li class="nav-item"><a class="nav-link" href="/adminRedirect">Admin</a></li>
                 </ul>
             </div>
         </div>
     </nav>
-    <section class="page-section bg-light" id="team">
-        <div class="container">
-            <div class="text-center">
-                <h2 class="section-heading text-uppercase">How YOU Can Make a Difference</h2>
-                <h3 class="section-subheading text-muted">Just like the slow but steady pace of a turtle, small steps lead to big changes.</h3>
+    <!-- Image Banner -->
+    <div style="margin-top: 60px;"></div>
+        <img src="/assets/happyHomeless6.jpg" alt="Banner Image" class="img-fluid w-100" style="height: 50vh; object-fit: cover;">
+    </div>
+    <!-- How to Help Section-->
+    <section class="page-section bg-light" id="help">
+        <div class="text-center">
+            <h2 class="section-heading text-uppercase">How You Can Make a Difference</h2>
+            <h6 class="section-subheading text-muted">Just like the slow but steady pace of the proverbial tortise, your small efforts to support us leaves a big impact.</h6><br>
+        </div>
+        <div class="row">
+            <!-- Volunteer -->
+            <div class="col-lg-4">
+                <div class="team-member">
+                    <a href="/volunteerForm" class="text-decoration-none">
+                        <div class="p-4 text-center" style="transition: transform 0.2s; box-shadow: 0 10px 20px rgba(53, 74, 33, 0.5);" onmouseover="this.style.transform='scale(1.05)'" onmouseout="this.style.transform='scale(1)'">
+                            <img class="mx-auto rounded-circle mb-3" style="background-color: #759145;" src="/assets/Screenshot 2024-12-03 105402.png" alt="Become a Volunteer" />
+                            <h4>Become a Volunteer</h4>
+                            <p class="text-muted">Have time on your hands? <b>Click here</b> to become a valuable part of our team by dedicating time each month to help with events and other projects.</p>
+                        </div>
+                    </a>
+                </div>
             </div>
-            <div class="row">
-                <div class="col-lg-4">
-                    <div class="team-member">
-                        <a href="/volunteerForm" class="text-decoration-none">
-                            <div class="container" style="transition: transform 0.2s; box-shadow: 0 10px 20px rgba(53, 74, 33, 0.5);" onmouseover="this.style.transform='scale(1.05)'" onmouseout="this.style.transform='scale(1)'">
-                                <img class="mx-auto rounded-circle" style="background-color: #75b84f;" src="/assets/Screenshot 2024-12-03 105402.png" alt="..." />
-                                <h4>Become a Volunteer</h4>
-                                <p class="text-muted">Be available to help in your area</p>
-                            </div>
-                        </a>
-                    </div>
+            <!-- Donate -->
+            <div class="col-lg-4">
+                <div class="team-member">
+                    <a href="/donate" target="_blank" class="text-decoration-none">
+                        <div class="p-4 text-center" style="transition: transform 0.2s; box-shadow: 0 10px 20px rgba(53, 74, 33, 0.5);" onmouseover="this.style.transform='scale(1.05)'" onmouseout="this.style.transform='scale(1)'">
+                            <img class="mx-auto rounded-circle mb-3" style="background-color: #759145;" src="/assets/TSVestRecipients.jpg" alt="Donate" />
+                            <h4>Donate</h4>
+                            <p class="text-muted">Each life-saving vest costs around $50. Whether you can give $1, $10, or $100, your funds will change a life for good.<br><b>Click here</b> to donate securely online.</p>
+                        </div>
+                    </a>
                 </div>
-                <div class="col-lg-4">
-                    <div class="team-member">
-                        <a href="/donate" target="_blank" class="text-decoration-none">
-                            <div class="container" style="transition: transform 0.2s; box-shadow: 0 10px 20px rgba(53, 74, 33, 0.5);" onmouseover="this.style.transform='scale(1.05)'" onmouseout="this.style.transform='scale(1)'">
-                                <img class="mx-auto rounded-circle" style="background-color: #75b84f;" src="/assets/TSVestRecipients.jpg" alt="..." />
-                                <h4>Donate</h4>
-                                <p class="text-muted">Give to help create vests</p>
-                            </div>
-                        </a>
-                    </div>
-                </div>
-                <div class="col-lg-4">
-                    <div class="team-member">
-                        <a href="/eventRequest" class="text-decoration-none">
-                            <div class="container" style="transition: transform 0.2s; box-shadow: 0 10px 20px rgba(53, 74, 33, 0.5);" onmouseover="this.style.transform='scale(1.05)'" onmouseout="this.style.transform='scale(1)'">
-                                <img class="mx-auto rounded-circle" style="background-color: #75b84f;" src="/assets/vests.png" alt="..." />
-                                <h4>Schedule An Event</h4>
-                                <p class="text-muted">Host an event in your area</p>
-                            </div>
-                        </a>
-                    </div>
+            </div>
+            <!-- Schedule an Event -->
+            <div class="col-lg-4">
+                <div class="team-member">
+                    <a href="/eventRequest" class="text-decoration-none">
+                        <div class="p-4 text-center" style="transition: transform 0.2s; box-shadow: 0 10px 20px rgba(53, 74, 33, 0.5);" onmouseover="this.style.transform='scale(1.05)'" onmouseout="this.style.transform='scale(1)'">
+                            <img class="mx-auto rounded-circle mb-3" style="background-color: #759145;" src="/assets/vests.png" alt="Schedule an Event" />
+                            <h4>Schedule an Event</h4>
+                            <p class="text-muted">Want your company, group, or organization to volunteer? <b>Click here</b> to request an event with us! We find jobs for adults and kids of all ages and skill levels.</p>
+                        </div>
+                    </a>
                 </div>
             </div>
         </div>
     </section>
-    <footer class="footer py-4" style="background-color: #303030; position: relative; bottom: 0; width: 100%; height: 30 px;">
+    <!-- Footer-->
+    <footer class="footer py-4" style="background-color: #303030; position: absolute; bottom: 0; width: 100%; height: 30 px;">
         <div class="row align-items-center">
             <div class="col-lg-4 text-lg-start ms-3 text-white">
                 Copyright &copy; Turtle Shelter Project 2024
@@ -96,6 +109,10 @@
                 </a>
             </div>
         </div>
-</footer>
+    </footer>
+    <!-- Bootstrap core JS and other scripts-->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js" crossorigin="anonymous"></script>
+    <!-- Core theme JS-->
+    <script src="js/scripts.js"></script>
 </body>
 </html>
