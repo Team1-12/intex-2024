@@ -3689,16 +3689,22 @@ textarea.form-control-lg {
   font-weight: var(--bs-nav-link-font-weight);
   color: var(--bs-nav-link-color);
   text-decoration: none;
-  transition: color 0.15s ease-in-out, background-color 0.15s ease-in-out, border-color 0.15s ease-in-out;
+  transition: color 0.15s ease-in-out, background-color 0.15s ease-in-out, border-color 0.15s ease-in-out, box-shadow 0.15s ease-in-out border-radius 0s ;
 }
+
 @media (prefers-reduced-motion: reduce) {
   .nav-link {
-    transition: none;
+    transition: .15s;  
+    border-radius: 5px;
   }
 }
+
 .nav-link:hover, .nav-link:focus {
-  color: var(--bs-nav-link-hover-color);
+  background-color: #f7f4de;
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.2);
+  border-radius: 5px;
 }
+
 .nav-link.disabled {
   color: var(--bs-nav-link-disabled-color);
   pointer-events: none;
@@ -11401,7 +11407,9 @@ section#contact form#contactForm :-ms-input-placeholder {
   background-color: #fff;
   box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
   border-radius: 8px;
+  box-shadow: 0 10px 20px rgba(53, 74, 33, 0.2);
 }
+
 h1 {
   text-align: center;
   color: #333;
