@@ -214,10 +214,10 @@ app.post('/submitVolunteerForm', (req, res) => {
 
   const traveltime = parseInt(req.body.TravelTime); // Convert to integer
 
-  const comments = req.body.Comments;
+  const comments = req.body.Comments || 'No comments';
 
 
-  // Insert the Character in the database
+  // Insert the Volunteer in the database
   knex('volunteer')
     .insert({
       firstname: firstname,
@@ -242,6 +242,71 @@ app.post('/submitVolunteerForm', (req, res) => {
     });
 });
 
+
+// To post the event request to the database
+app.post('/EventRequest', (req, res) => {
+
+  // Access each value directly from req.body
+  const startdaterange = req.body.startdaterange;
+
+  const enddaterange = req.body.enddaterange || null;
+
+  const expectedparticipants = parseInt(req.body.expectedparticipants); 
+
+  const expectedduration = parseInt(req.body.expectedduration);
+
+  const eventactivities = req.body.eventactivities; 
+
+  const address = req.body.address;
+
+  const city = req.body.city;
+
+  const state = req.body.state;
+
+  const zip = req.body.zip;
+
+  const contactname = req.body.contactname;
+
+  const contactphone = req.body.contactphone;
+
+  const contactemail = req.body.contactemail;
+
+  const jenshare = req.body.jenshare;
+
+  const organization = req.body.organization;
+
+  const comments = req.body.comments || 'No comments';
+
+  const eventstatus = "Pending"
+
+  // Insert the event in the database
+  knex('event')
+    .insert({
+      startdaterange : startdaterange,
+      enddaterange : enddaterange,
+      expectedparticipants : expectedparticipants,
+      expectedduration :expectedduration,
+      eventactivities : eventactivities,
+      address : address,
+      city : city,
+      state : state,
+      zip : zip,
+      contactname : contactname,
+      contactphone : contactphone,
+      contactemail : contactemail,
+      jenshare : jenshare,
+      organization : organization,
+      comments : comments,
+      eventstatus : eventstatus,
+    })
+    .then(() => {
+      res.redirect('/'); // Redirect to 
+    })
+    .catch(error => {
+      console.error('Error adding event:', error);
+      res.status(500).send('Internal Server Error');
+    });
+});
 
 
 // app listening

@@ -42,47 +42,47 @@
                     <div class="form-row">
                         <div class="row">
                             <div class="form-group col-md-3">
-                                <input class="form-control" type="text" name="ContactName" id="ContactName" placeholder="Contact Name *" required />
+                                <input class="form-control" type="text" name="contactname" id="contactname" placeholder="Contact Name *" required />
                             </div>
                             <div class="form-group col-md-3">
-                                <input class="form-control" type="text" name="Organization" id="Organization" placeholder="Organization/Group Name" required/>
+                                <input class="form-control" type="text" name="organization" id="organization" placeholder="Organization/Group Name" required/>
                             </div>
                             <div class="form-group col-md-3">
-                                <input class="form-control" type="email" name="ContactEmail" id="ContactEmail" placeholder="Contact Email *" required />
+                                <input class="form-control" type="email" name="contactemail" id="contactemail" placeholder="Contact Email *" required />
                             </div>
                             <div class="form-group col-md-3">
-                                <input class="form-control" type="tel" name="ContactPhone" id="ContactPhone" placeholder="(823) 456-7890" pattern="\(\d{3}\) \d{3}-\d{4}" required 
+                                <input class="form-control" type="tel" name="contactphone" id="contactphone" placeholder="(823) 456-7890" pattern="\(\d{3}\) \d{3}-\d{4}" required 
                                     oninput="this.value = this.value.replace(/[^0-9]/g, '').replace(/(\d{3})(\d{3})(\d{4})/, '($1) $2-$3');" />
                             </div>
                         </div>
                         <div class="row">
                             <div class="form-group col-md-12">
-                                <input class="form-control" type="text" name="Address" id="Address" placeholder="Street Address *" required />
+                                <input class="form-control" type="text" name="address" id="address" placeholder="Street Address *" required />
                             </div>
                         </div>
                         <div class="row">
                             <div class="form-group col-md-3">
-                                <input class="form-control" type="text" name="City" id="City" placeholder="City *" required />
+                                <input class="form-control" type="text" name="city" id="city" placeholder="City *" required />
                             </div>
                             <div class="form-group col-md-3">
-                                <input class="form-control" type="text" name="State" id="State" placeholder="State *" required />
+                                <input class="form-control" type="text" name="state" id="state" placeholder="State *" required />
                             </div>
                             <div class="form-group col-md-3">
-                                <input class="form-control" type="number" name="Zip" id="Zip" placeholder="Zip Code *" required />
+                                <input class="form-control" type="number" name="zip" id="zip" placeholder="Zip Code *" required />
                             </div>
                         </div>
                         <div class="row">                  
                             <div class="form-group col-md-4">
-                                <input class="form-control" type="number" name="ExpectedParticipants" id="ExpectedParticipants" placeholder="Number of Volunteers *" min="1" required />
+                                <input class="form-control" type="number" name="expectedparticipants" id="expectedparticipants" placeholder="Number of Volunteers *" min="1" required />
                             </div>
                             <div class="form-group col-md-4">
-                                <input class="form-control" type="number" name="ExpectedDuration" id="ExpectedDuration" placeholder="Number of Hours for Event *" min="1" required />
+                                <input class="form-control" type="number" name="expectedduration" id="expectedduration" placeholder="Number of Hours for Event *" min="1" required />
                             </div>
                         </div> 
                     </div>
                     <div class="form-group">
                         <label for="volunteerType">Type of Volunteering *</label>
-                        <select class="form-control" name="EventActivities" id="EventActivities" required>
+                        <select class="form-control" name="eventactivities" id="eventactivities" required>
                             <option value="">Select Type</option>
                             <option value="sewing">Sewing</option>
                             <option value="non-sewing">Non-Sewing</option>
@@ -92,11 +92,11 @@
                     <div class="form-group">
                         <label>Do you want Jen, the founder of the Turtle Shelter Project, to share her story? *</label><br>
                         <div class="form-check form-check-inline">
-                            <input class="form-check-input" type="radio" name="JenShare" id="JenShareYes" value="yes" required>
+                            <input class="form-check-input" type="radio" name="jenshare" id="JenShareYes" value="yes" required>
                             <label class="form-check-label" for="JenShareYes">Yes</label>
                         </div>
                         <div class="form-check form-check-inline">
-                            <input class="form-check-input" type="radio" name="JenShare" id="JenShareNo" value="no">
+                            <input class="form-check-input" type="radio" name="jenshare" id="JenShareNo" value="no">
                             <label class="form-check-label" for="JenShareNo">No</label>
                         </div>
                     </div>
@@ -105,16 +105,16 @@
                         <div class="row">
                             <div class=">form-group col-md-3">
                                 <label for="StartDateRange">First Available Date *</label>
-                                <input class="form-control" type="date" name="StartDateRange" id="StartDateRange" required />
+                                <input class="form-control" type="date" name="startdaterange" id="startdaterange" required />
                             </div>
                             <div class=">form-group col-md-3">
                                 <label for="EndDateRange">Last Available Date</label>
-                                <input class="form-control" type="date" name="EndDateRange" id="EndDateRange" />
+                                <input class="form-control" type="date" name="enddaterange" id="enddaterange" />
                             </div>
                         </div>
                     </div>
                     <div class="form-group">
-                        <textarea class="form-control" name="Comments" id="Comments" placeholder="Other Scheduling/Event Details" ></textarea>
+                        <textarea class="form-control" name="comments" id="comments" placeholder="Other Scheduling/Event Details" ></textarea>
                     </div>
                     <button class="btn btn-primary" type="submit">Send Request</button>
                 </form>
