@@ -85,8 +85,6 @@
                 <% if (admin && admin.length > 0) { %>
                   <% admin.forEach(function(row) { %>
                     <tr>
-                        <!-- have the primary key which is the id and make it hidden on the page-->
-                        <input type="hidden" name="volunteerid" value="<%= row.volunteerid %>">
                         <td><%= row.firstname %></td>
                         <td><%= row.lastname %></td>
                         <td><%= row.phone %></td>
@@ -107,6 +105,8 @@
                             <!-- Removed duplicate script to fix unmatched braces -->
                             </div>
                         </td>
+                        <!-- have the primary key which is the id and make it hidden on the page-->
+                        <input type="hidden" name="volunteerid" value="<%= row.volunteerid %>">
                     </tr>
                   <% }); %>
                 <% } else { %>
