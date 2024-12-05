@@ -444,19 +444,19 @@ app.post('/editEventRec/:eventid', (req, res) => {
       enddaterange: enddaterange || null,
       expectedparticipants: toIntOrDefault(expectedparticipants, defaultExpectedParticipants),
       expectedduration: toIntOrDefault(expectedduration, defaultExpectedDuration),
-      eventactivities: eventactivities || '', // Provide a default empty string if null not allowed
-      address: address || '',
-      city: city || '',
-      state: state || '',
-      zip: zip || '', // Assuming zip is a string
+      eventactivities: eventactivities, // Provide a default empty string if null not allowed
+      address: address.toLowerCase() || '',
+      city: city.toLowerCase(),
+      state: state,
+      zip: zip, // Assuming zip is a string
       starttime: starttime || null,
-      contactname: contactname || '',
-      contactphone: contactphone || '',
-      contactemail: contactemail || '',
+      contactname: contactname.toLowerCase(),
+      contactphone: contactphone,
+      contactemail: contactemail.toLowerCase(),
       jenshare: jenshare === 'yes', // Convert radio button to boolean
-      organization: organization || '',
+      organization: organization.toLowerCase(),
       comments: comments || '',
-      spacedescription: spacedescription || '',
+      spacedescription: spacedescription.toLowerCase() || '',
       numsewers: toIntOrDefault(numsewers, 0),
       nummachines: toIntOrDefault(nummachines, 0),
       numroundtables: toIntOrDefault(numroundtables, 0),
@@ -471,7 +471,7 @@ app.post('/editEventRec/:eventid', (req, res) => {
       envelopes: toIntOrDefault(envelopes, 0),
       vests: toIntOrDefault(vests, 0),
       completedproducts: toIntOrDefault(completedproducts, 0),
-      eventstatus: eventstatus || 'pending', // Default to "pending" if not provided
+      eventstatus: eventstatus.toLowerCase() || 'pending', // Default to "pending" if not provided
     })
     .then(() => {
       res.redirect('/eventRecords'); // Redirect to the event records page

@@ -17,22 +17,22 @@
                 <div class="form-group col-md-3">
                   <label for="contactname">Contact Name *</label>
                   <p>Enter the full name of the primary contact person for the event.</p>
-                  <input class="form-control" type="text" name="contactname" id="contactname" value="<%= event.contactname || '' %>" required />
+                  <input class="form-control" type="text" name="contactname" id="contactname" value="<%= event.contactname%>" required />
                 </div>
                 <div class="form-group col-md-3">
                   <label for="organization">Organization</label>
                   <p>Enter the name of the organization or group hosting the event.</p>
-                  <input class="form-control" type="text" name="organization" id="organization" value="<%= event.organization || '' %>" />
+                  <input class="form-control" type="text" name="organization" id="organization" value="<%= event.organization%>" required/>
                 </div>
                 <div class="form-group col-md-3">
                   <label for="contactemail">Contact Email</label>
                   <p>Provide the email address of the event organizer.</p>
-                  <input class="form-control" type="email" name="contactemail" id="contactemail" value="<%= event.contactemail || '' %>" />
+                  <input class="form-control" type="email" name="contactemail" id="contactemail" value="<%= event.contactemail%>" required/>
                 </div>
                 <div class="form-group col-md-3">
                   <label for="contactphone">Contact Phone</label>
                   <p>Enter the phone number for the main event contact person.</p>
-                  <input class="form-control" type="tel" name="contactphone" id="contactphone" value="<%= event.contactphone || '' %>" />
+                  <input class="form-control" type="tel" name="contactphone" id="contactphone" value="<%= event.contactphone%>" required/>
                 </div>
               </div>
       
@@ -42,24 +42,75 @@
                 <div class="form-group col-md-12">
                   <label for="address">Street Address</label>
                   <p>Enter the complete street address for the event.</p>
-                  <input class="form-control" type="text" name="address" id="address" value="<%= event.address || '' %>" />
+                  <input class="form-control" type="text" name="address" id="address" value="<%= event.address%>" required/>
                 </div>
               </div>
               <div class="row">
                 <div class="form-group col-md-3">
                   <label for="city">City</label>
                   <p>Enter the city where the event will be held.</p>
-                  <input class="form-control" type="text" name="city" id="city" value="<%= event.city || '' %>" />
+                  <input class="form-control" type="text" name="city" id="city" value="<%= event.city%>" required/>
                 </div>
                 <div class="form-group col-md-3">
-                  <label for="state">State</label>
-                  <p>Enter the state where the event will be held.</p>
-                  <input class="form-control" type="text" name="state" id="state" value="<%= event.state || '' %>" />
-                </div>
+                  <label for="state">State *</label>
+                  <select class="form-control" name="state" id="state" required>
+                      <option value="" disabled <%= !event.state ? "selected" : "" %>>Select your state *</option>
+                      <option value="ut" <%= event.state === "ut" ? "selected" : "" %>>Utah</option>
+                      <option value="al" <%= event.state === "al" ? "selected" : "" %>>Alabama</option>
+                      <option value="ak" <%= event.state === "ak" ? "selected" : "" %>>Alaska</option>
+                      <option value="az" <%= event.state === "az" ? "selected" : "" %>>Arizona</option>
+                      <option value="ar" <%= event.state === "ar" ? "selected" : "" %>>Arkansas</option>
+                      <option value="ca" <%= event.state === "ca" ? "selected" : "" %>>California</option>
+                      <option value="co" <%= event.state === "co" ? "selected" : "" %>>Colorado</option>
+                      <option value="ct" <%= event.state === "ct" ? "selected" : "" %>>Connecticut</option>
+                      <option value="de" <%= event.state === "de" ? "selected" : "" %>>Delaware</option>
+                      <option value="fl" <%= event.state === "fl" ? "selected" : "" %>>Florida</option>
+                      <option value="ga" <%= event.state === "ga" ? "selected" : "" %>>Georgia</option>
+                      <option value="hi" <%= event.state === "hi" ? "selected" : "" %>>Hawaii</option>
+                      <option value="id" <%= event.state === "id" ? "selected" : "" %>>Idaho</option>
+                      <option value="il" <%= event.state === "il" ? "selected" : "" %>>Illinois</option>
+                      <option value="in" <%= event.state === "in" ? "selected" : "" %>>Indiana</option>
+                      <option value="ia" <%= event.state === "ia" ? "selected" : "" %>>Iowa</option>
+                      <option value="ks" <%= event.state === "ks" ? "selected" : "" %>>Kansas</option>
+                      <option value="ky" <%= event.state === "ky" ? "selected" : "" %>>Kentucky</option>
+                      <option value="la" <%= event.state === "la" ? "selected" : "" %>>Louisiana</option>
+                      <option value="me" <%= event.state === "me" ? "selected" : "" %>>Maine</option>
+                      <option value="md" <%= event.state === "md" ? "selected" : "" %>>Maryland</option>
+                      <option value="ma" <%= event.state === "ma" ? "selected" : "" %>>Massachusetts</option>
+                      <option value="mi" <%= event.state === "mi" ? "selected" : "" %>>Michigan</option>
+                      <option value="mn" <%= event.state === "mn" ? "selected" : "" %>>Minnesota</option>
+                      <option value="ms" <%= event.state === "ms" ? "selected" : "" %>>Mississippi</option>
+                      <option value="mo" <%= event.state === "mo" ? "selected" : "" %>>Missouri</option>
+                      <option value="mt" <%= event.state === "mt" ? "selected" : "" %>>Montana</option>
+                      <option value="ne" <%= event.state === "ne" ? "selected" : "" %>>Nebraska</option>
+                      <option value="nv" <%= event.state === "nv" ? "selected" : "" %>>Nevada</option>
+                      <option value="nh" <%= event.state === "nh" ? "selected" : "" %>>New Hampshire</option>
+                      <option value="nj" <%= event.state === "nj" ? "selected" : "" %>>New Jersey</option>
+                      <option value="nm" <%= event.state === "nm" ? "selected" : "" %>>New Mexico</option>
+                      <option value="ny" <%= event.state === "ny" ? "selected" : "" %>>New York</option>
+                      <option value="nc" <%= event.state === "nc" ? "selected" : "" %>>North Carolina</option>
+                      <option value="nd" <%= event.state === "nd" ? "selected" : "" %>>North Dakota</option>
+                      <option value="oh" <%= event.state === "oh" ? "selected" : "" %>>Ohio</option>
+                      <option value="ok" <%= event.state === "ok" ? "selected" : "" %>>Oklahoma</option>
+                      <option value="or" <%= event.state === "or" ? "selected" : "" %>>Oregon</option>
+                      <option value="pa" <%= event.state === "pa" ? "selected" : "" %>>Pennsylvania</option>
+                      <option value="ri" <%= event.state === "ri" ? "selected" : "" %>>Rhode Island</option>
+                      <option value="sc" <%= event.state === "sc" ? "selected" : "" %>>South Carolina</option>
+                      <option value="sd" <%= event.state === "sd" ? "selected" : "" %>>South Dakota</option>
+                      <option value="tn" <%= event.state === "tn" ? "selected" : "" %>>Tennessee</option>
+                      <option value="tx" <%= event.state === "tx" ? "selected" : "" %>>Texas</option>
+                      <option value="vt" <%= event.state === "vt" ? "selected" : "" %>>Vermont</option>
+                      <option value="va" <%= event.state === "va" ? "selected" : "" %>>Virginia</option>
+                      <option value="wa" <%= event.state === "wa" ? "selected" : "" %>>Washington</option>
+                      <option value="wv" <%= event.state === "wv" ? "selected" : "" %>>West Virginia</option>
+                      <option value="wi" <%= event.state === "wi" ? "selected" : "" %>>Wisconsin</option>
+                      <option value="wy" <%= event.state === "wy" ? "selected" : "" %>>Wyoming</option>
+                  </select>
+              </div>
                 <div class="form-group col-md-3">
                   <label for="zip">Zip Code</label>
                   <p>Enter the ZIP code for the event's location.</p>
-                  <input class="form-control" type="number" name="zip" id="zip" value="<%= event.zip || '' %>" />
+                  <input class="form-control" type="number" name="zip" id="zip" value="<%= event.zip%>" required/>
                 </div>
               </div>
       
@@ -69,12 +120,12 @@
                 <div class="form-group col-md-4">
                   <label for="expectedparticipants">Expected Participants</label>
                   <p>Provide the estimated number of participants.</p>
-                  <input class="form-control" type="number" name="expectedparticipants" id="expectedparticipants" value="<%= event.expectedparticipants || '' %>" />
+                  <input class="form-control" type="number" name="expectedparticipants" id="expectedparticipants" value="<%= event.expectedparticipants%>" required/>
                 </div>
                 <div class="form-group col-md-4">
                   <label for="expectedduration">Expected Duration</label>
                   <p>Enter the expected duration of the event in hours.</p>
-                  <input class="form-control" type="number" name="expectedduration" id="expectedduration" value="<%= event.expectedduration || '' %>" />
+                  <input class="form-control" type="number" name="expectedduration" id="expectedduration" value="<%= event.expectedduration%>" required/>
                 </div>
                 <div class="form-group col-md-4">
                   <label for="starttime">Start Time</label>
@@ -89,12 +140,12 @@
                 <div class="form-group col-md-3">
                   <label for="startdaterange">Start Date</label>
                   <p>Select the first available date for the event.</p>
-                  <input class="form-control" type="date" name="startdaterange" id="startdaterange" value="<%= event.startdaterange.toISOString().split('T')[0] || '' %>" required />
+                  <input class="form-control" type="date" name="startdaterange" id="startdaterange" value="<%= event.startdaterange.toISOString().split('T')[0]%>" required />
                 </div>
                 <div class="form-group col-md-3">
                   <label for="enddaterange">End Date</label>
                   <p>Select the last available date for the event (if applicable).</p>
-                  <input class="form-control" type="date" name="enddaterange" id="enddaterange" value="<%= event.enddaterange.toISOString().split('T')[0] || '' %>" />
+                  <input class="form-control" type="date" name="enddaterange" id="enddaterange" value="<%= event.enddaterange ? new Date(event.enddaterange).toISOString().split('T')[0] : '' %>"/>
                 </div>
               </div>
       
@@ -103,7 +154,7 @@
               <div class="form-group">
                 <label for="eventactivities">Type of Activities</label>
                 <p>Select the type of activities planned for the event.</p>
-                <select class="form-control" name="eventactivities" id="eventactivities">
+                <select class="form-control" name="eventactivities" id="eventactivities" required>
                   <option value="" <%= !event.eventactivities ? "selected" : "" %>>Select Activity</option>
                   <option value="sewing" <%= event.eventactivities === "sewing" ? "selected" : "" %>>Sewing</option>
                   <option value="non-sewing" <%= event.eventactivities === "non-sewing" ? "selected" : "" %>>Non-Sewing</option>
@@ -113,7 +164,7 @@
       
               <!-- Jen Sharing Story -->
               <h3>Special Request</h3>
-              <div class="form-group">
+              <div class="form-group" required>
                 <label for="jenshare">Would you like Jen to share her story?</label>
                 <p>Select "Yes" if you'd like the founder, Jen, to share her story at the event.</p>
                 <div class="form-check form-check-inline">
@@ -213,7 +264,7 @@
                 <div class="form-group col-md-3">
                   <label for="eventdate">Event Date</label>
                   <p>Select the actual date the event occurred.</p>
-                  <input class="form-control" type="date" name="eventdate" id="eventdate" value="<%= event.eventdate.toISOString().split('T')[0] || '' %>" />
+                  <input class="form-control" type="date" name="eventdate" id="eventdate" value="<%= event.eventdate ? new Date(event.eventdate).toISOString().split('T')[0] : '' %>"/>
                 </div>
               </div>
 
