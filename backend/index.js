@@ -288,18 +288,36 @@ app.get('/eventRecords', (req, res) => {
       res.status(500).send('Internal Server Error');
     });
 });
+
+// Deletes a admin record
+app.post('/deleteAdmin/:volunteerid', isAuthenticated, (req, res) => {
+  const volunteerid = parseInt(req.params.volunteerid, 10); // Extract volunteer ID
+
+  knex('admin')
+    .where('volunteerid', volunteerid)
+    .del()
+    .then(() => {
+      return knex('admin').where('volunteerid', volunteerid).del();
+    })
+    .then(() => {
+      res.redirect('/adminRecords'); // Redirect after successful deletion
+    })
+    .catch(error => {
+      console.error('Error deleting Admin Record:', error);
+      res.status(500).send('Internal Server Error');
+    });
+});
    
 
-// Deletes a volunteer and any associated admin records
+// Deletes a Event
 app.post('/deleteEventRec/:eventid', isAuthenticated, (req, res) => {
   const eventid = parseInt(req.params.eventid, 10); // Extract volunteer ID
 
-  // Step 1: Delete associated admin record first
   knex('event')
     .where('eventid', eventid)
     .del()
     .then(() => {
-      // Step 2: Delete the volunteer record
+      // Step 2: Delete the event record
       return knex('event').where('eventid', eventid).del();
     })
     .then(() => {
@@ -458,19 +476,19 @@ app.post('/editEventRec/:eventid', (req, res) => {
       enddaterange: enddaterange || null,
       expectedparticipants: toIntOrDefault(expectedparticipants, defaultExpectedParticipants),
       expectedduration: toIntOrDefault(expectedduration, defaultExpectedDuration),
-      eventactivities: eventactivities || '', // Provide a default empty string if null not allowed
-      address: address || '',
-      city: city || '',
-      state: state || '',
-      zip: zip || '', // Assuming zip is a string
+      eventactivities: eventactivities, // Provide a default empty string if null not allowed
+      address: address.toLowerCase() || '',
+      city: city.toLowerCase(),
+      state: state,
+      zip: zip, // Assuming zip is a string
       starttime: starttime || null,
-      contactname: contactname || '',
-      contactphone: contactphone || '',
-      contactemail: contactemail || '',
+      contactname: contactname.toLowerCase(),
+      contactphone: contactphone,
+      contactemail: contactemail.toLowerCase(),
       jenshare: jenshare === 'yes', // Convert radio button to boolean
-      organization: organization || '',
+      organization: organization.toLowerCase(),
       comments: comments || '',
-      spacedescription: spacedescription || '',
+      spacedescription: spacedescription.toLowerCase() || '',
       numsewers: toIntOrDefault(numsewers, 0),
       nummachines: toIntOrDefault(nummachines, 0),
       numroundtables: toIntOrDefault(numroundtables, 0),
@@ -485,7 +503,7 @@ app.post('/editEventRec/:eventid', (req, res) => {
       envelopes: toIntOrDefault(envelopes, 0),
       vests: toIntOrDefault(vests, 0),
       completedproducts: toIntOrDefault(completedproducts, 0),
-      eventstatus: eventstatus || 'pending', // Default to "pending" if not provided
+      eventstatus: eventstatus.toLowerCase() || 'pending', // Default to "pending" if not provided
     })
     .then(() => {
       res.redirect('/eventRecords'); // Redirect to the event records page
@@ -616,7 +634,7 @@ app.post('/EventRequest', (req, res) => {
 
   const comments = req.body.comments || 'No comments';
 
-  const eventstatus = "Pending"
+  const eventstatus = "pending"
 
   // Insert the event in the database
   knex('event')
@@ -636,7 +654,7 @@ app.post('/EventRequest', (req, res) => {
       jenshare : jenshare,
       organization : organization.toLowerCase(),
       comments : comments,
-      eventstatus : eventstatus,
+      eventstatus : eventstatus.toLowerCase(),
     })
     .then(() => {
       if (req.session && req.session.isAuthenticated) {
