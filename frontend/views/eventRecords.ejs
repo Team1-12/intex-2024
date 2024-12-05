@@ -107,22 +107,30 @@
   <script>
     document.addEventListener('DOMContentLoaded', function () {
       const dropdown = document.getElementById('status');
-      const table = document.querySelector('table');
+      const completedColumns = document.querySelectorAll('.completed-column');
+      const hideOnCompletedColumns = document.querySelectorAll('.hide-on-completed');
       
-      dropdown.addEventListener('change', function () {
+      function toggleColumns() {
         const isCompleted = dropdown.value === 'completed';
-        const columns = table.querySelectorAll('.hidden');
         
-        columns.forEach(column => {
-          if (isCompleted) {
-            column.classList.remove('hidden');
-          } else {
-            column.classList.add('hidden');
-          }
+        completedColumns.forEach(column => {
+          column.style.display = isCompleted ? '' : 'none';
         });
-      });
+        
+        hideOnCompletedColumns.forEach(column => {
+          column.style.display = isCompleted ? 'none' : '';
+        });
+      }
+  
+      dropdown.addEventListener('change', toggleColumns);
+  
+      // Initial state
+      toggleColumns();
     });
   </script>
+  
+    
+
   
   
   <!-- Main Content Container -->
@@ -157,20 +165,21 @@
           <tr>
             <th>Event Status</th>
             <th>Event Date</th>
-            <th>City</th>
-            <th>State</th>
-            <th>Zip</th>
+            <th class="hide-on-completed">City</th>
+            <th class="hide-on-completed">State</th>
+            <th class="hide-on-completed">Zip</th>
             <th>Contact Name</th>
-            <th>Event Activities</th>
+            <th class="hide-on-completed">Event Activities</th>
             <th>Organization</th>
-            <th class="hidden">Pockets</th>
-            <th class="hidden">Collars</th>
-            <th class="hidden">Envelopes</th>
-            <th class="hidden">Vests</th>
-            <th class="hidden">Completed Products</th>
+            <th class="completed-column">Pockets</th>
+            <th class="completed-column">Collars</th>
+            <th class="completed-column">Envelopes</th>
+            <th class="completed-column">Vests</th>
+            <th class="completed-column">Completed Products</th>
             <th>Actions</th>
           </tr>
         </thead>
+        
         <tbody>
           <% if (events.length > 0) { %>
             <% events.forEach(row => { %>
@@ -184,17 +193,17 @@
                           : '') 
                   %>
                 </td>
-                <td><%= row.city %></td>
-                <td><%= row.state %></td>
-                <td><%= row.zip %></td>
+                <td class="hide-on-completed"><%= row.city %></td>
+                <td class="hide-on-completed"><%= row.state %></td>
+                <td class="hide-on-completed"><%= row.zip %></td>
                 <td><%= row.contactname %></td>
-                <td><%= row.eventactivities %></td>
+                <td class="hide-on-completed"><%= row.eventactivities %></td>
                 <td><%= row.organization %></td>
-                <td class="hidden"><%= row.pockets || '' %></td>
-                <td class="hidden"><%= row.collars || '' %></td>
-                <td class="hidden"><%= row.envelopes || '' %></td>
-                <td class="hidden"><%= row.vests || '' %></td>
-                <td class="hidden"><%= row.completedproducts || '' %></td>
+                <td class="completed-column"><%= row.pockets || '' %></td>
+                <td class="completed-column"><%= row.collars || '' %></td>
+                <td class="completed-column"><%= row.envelopes || '' %></td>
+                <td class="completed-column"><%= row.vests || '' %></td>
+                <td class="completed-column"><%= row.completedproducts || '' %></td>
                 <td>
                   <form action="/editEventRec/<%= row.eventid %>" method="GET" class="d-inline">
                     <button type="submit" class="btn btn-primary btn-sm">Edit</button>
@@ -211,6 +220,8 @@
             </tr>
           <% } %>
         </tbody>
+        
+        
         
       </table>
     </div>
