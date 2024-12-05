@@ -10,6 +10,9 @@ const port = process.env.PORT || 5001
 
 const session = require('express-session'); 
 
+const { SESClient, SendEmailCommand } = require('@aws-sdk/client-ses');
+
+
 app.use(express.urlencoded( {extended: true} )) //determines how html is received from forms. This allows us to grab stuff out of the HTML form
 
 app.set("view engine", "ejs") //shows what view engine we are using 
@@ -17,7 +20,7 @@ app.set("view engine", "ejs") //shows what view engine we are using
 app.set("views", path.join(__dirname, "../frontend/views")) //This is telling the server that we are going to start using certain views
 
 app.use(express.urlencoded({extended: true})); //allows us to get data out of the request.body
-
+app.use(express.json());
 
 // Session middleware setup
 app.use(session({
@@ -797,6 +800,32 @@ app.post('/EventRequest', (req, res) => {
 });
 
 
+
+
+app.post('/EventRequest', async (req, res) => {
+  const { contactemail, contactname, organization } = req.body;
+
+  // Insert into the database as usual...
+
+  try {
+      const subject = `Event Request Confirmation for ${organization}`;
+      const body = `
+          Hi ${contactname},
+
+          Thank you for submitting an event request to the Turtle Shelter Project! We will review your request and get back to you shortly.
+
+          Best regards,
+          Turtle Shelter Project Team
+      `;
+
+      await sendEmail(contactemail, subject, body);
+      res.redirect('/'); // Redirect after successful email and DB operation
+  } catch (error) {
+      console.error('Error sending confirmation email:', error);
+      res.status(500).send('An error occurred while processing your request.');
+  }
+});
+
 // Route to handle newsletter subscription
 app.post('/subscribe', (req, res) => {
   const { email } = req.body;
@@ -816,6 +845,80 @@ app.post('/subscribe', (req, res) => {
       res.status(500).send('An error occurred. Please try again later.');
     });
 });
+
+
+
+const sesClient = new SESClient({
+  region: 'us-east-1', // Replace with your AWS region
+  credentials: {
+    accessKeyId: 'AKIA47GB7ZC7F4JHCE57',
+    secretAccessKey: '7GVn+cXu9b7+H9Bvbtjk5+vjj93rV+a8c0Y9sRsr',
+  },
+});
+// Function to send a single email
+const sendEmail = async (to, subject, body) => {
+  const params = {
+    Source: 'noreply@turtleshelterproject.net', // Replace with your verified email
+    Destination: {
+      ToAddresses: [to],
+    },
+    Message: {
+      Subject: {
+        Data: subject,
+      },
+      Body: {
+        Text: {
+          Data: body,
+        },
+      },
+    },
+  };
+
+  try {
+    const command = new SendEmailCommand(params);
+    await sesClient.send(command);
+    console.log(`Email sent to ${to}`);
+  } catch (error) {
+    console.error(`Error sending email to ${to}:`, error);
+    throw error;
+  }
+};
+
+app.post('/sendMassEmail', async (req, res) => {
+  const { subject, message } = req.body;
+
+  if (!subject || !message) {
+    return res.status(400).json({ error: 'Subject and message are required.' });
+  }
+
+  try {
+    // Fetch all emails from the emaillist table
+    const emails = await knex('emaillist').select('email');
+
+    if (!emails || emails.length === 0) {
+      return res.status(404).json({ error: 'No email addresses found in the database.' });
+    }
+
+    // Extract email addresses into an array
+    const emailAddresses = emails.map(e => e.email);
+
+    // Send email to each address using AWS SES
+    for (const email of emailAddresses) {
+      await sendEmail(email, subject, message);
+    }
+
+    console.log('Mass email sent successfully.');
+    res.json({ message: 'Emails sent successfully.' });
+  } catch (error) {
+    console.error('Error sending mass email:', error);
+    res.status(500).json({ error: 'An error occurred while sending emails.' });
+  }
+});
+
+
+
+
+
 
 // app listening
 app.listen(port, () => console.log("Express App has started and server is listening!"));
