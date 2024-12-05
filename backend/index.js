@@ -919,7 +919,24 @@ app.post('/sendMassEmail', async (req, res) => {
   }
 });
 
+// Route to send an individual email
+app.post('/sendEmail', async (req, res) => {
+  const { email, subject, message } = req.body;
 
+  if (!email || !subject || !message) {
+    return res.status(400).json({ error: 'Email, subject, and message are required.' });
+  }
+
+  try {
+    // Send the email using the sendEmail function
+    await sendEmail(email, subject, message);
+    console.log(`Email sent successfully to ${email}`);
+    res.json({ message: `Email sent successfully to ${email}` });
+  } catch (error) {
+    console.error('Error sending email:', error);
+    res.status(500).json({ error: 'Failed to send email. Please try again later.' });
+  }
+});
 
 
 
