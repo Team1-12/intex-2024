@@ -466,24 +466,25 @@ app.post('/saveAdmin/:volunteerid', isAuthenticated, async (req, res) => {
         password: password,
         role: role.toLowerCase(),
       });
- // Update volunteer table
- await knex('volunteer')
- .where('volunteerid', volunteerid)
- .update({
-   firstname: FirstName.toLowerCase(),
-   lastname: LastName.toLowerCase(),
-   phone: Phone,
-   email: Email.toLowerCase(),
-   city: City.toLowerCase(),
-   state: state,
- });
 
-// Redirect after both updates are successful
-res.redirect('/adminRecords');
-} catch (error) {
-console.error('Error updating admin:', error);
-res.status(500).send('Internal Server Error');
-}
+    // Update volunteer table
+    await knex('volunteer')
+      .where('volunteerid', volunteerid)
+      .update({
+        firstname: FirstName.toLowerCase(),
+        lastname: LastName.toLowerCase(),
+        phone: Phone,
+        email: Email.toLowerCase(),
+        city: City.toLowerCase(),
+        state: state,
+      });
+
+    // Redirect after both updates are successful
+    res.redirect('/adminRecords');
+  } catch (error) {
+    console.error('Error updating admin:', error);
+    res.status(500).send('Internal Server Error');
+  }
 });
 
 // Deletes a volunteer and any associated admin records
