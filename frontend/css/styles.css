@@ -57,6 +57,24 @@ h1 {
   background-color: #ccc;
   cursor: not-allowed;
 }
+.newsletter-subscribe {
+  margin: 20px auto;
+  max-width: 400px;
+  text-align: center;
+}
+
+.newsletter-subscribe h3 {
+  margin-bottom: 15px;
+}
+
+.newsletter-subscribe .form-group {
+  margin-bottom: 10px;
+}
+
+.newsletter-subscribe .btn {
+  width: 100%;
+}
+
 
 
 /* BOOTSTRAP!! */
