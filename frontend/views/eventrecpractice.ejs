@@ -1,0 +1,136 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <style>
+    .section-title {
+      margin-top: 30px;
+      font-size: 1.5rem;
+      font-weight: bold;
+    }
+  </style>
+</head>
+<body>
+  <section>
+    <div class="container">
+      <h2>Edit Event</h2>
+      <form id="editEventForm" method="post" action="/editEventRec/<%= event.eventid %>">
+        <!-- Event Status -->
+        <div class="form-group">
+          <label for="eventstatus">Event Status</label>
+          <select class="form-control" name="eventstatus" id="eventstatus" required>
+            <option value="pending" <%= event.eventstatus === "pending" ? "selected" : "" %>>Pending</option>
+            <option value="approved" <%= event.eventstatus === "approved" ? "selected" : "" %>>Approved</option>
+            <option value="planned" <%= event.eventstatus === "planned" ? "selected" : "" %>>Planned</option>
+            <option value="completed" <%= event.eventstatus === "completed" ? "selected" : "" %>>Completed</option>
+          </select>
+        </div>
+
+        <!-- Event Request -->
+        <div class="section-title">Event Request</div>
+        <div class="row">
+          <div class="form-group col-md-3">
+            <label for="startdaterange">Start Date</label>
+            <input class="form-control" type="date" name="startdaterange" id="startdaterange" value="<%= event.startdaterange ? event.startdaterange.toISOString().split('T')[0] : '' %>" required />
+          </div>
+          <div class="form-group col-md-3">
+            <label for="enddaterange">End Date</label>
+            <input class="form-control" type="date" name="enddaterange" id="enddaterange" value="<%= event.enddaterange ? event.enddaterange.toISOString().split('T')[0] : '' %>" />
+          </div>
+          <div class="form-group col-md-3">
+            <label for="expectedparticipants">Expected Participants</label>
+            <input class="form-control" type="number" name="expectedparticipants" id="expectedparticipants" value="<%= event.expectedparticipants || '' %>" required />
+          </div>
+          <div class="form-group col-md-3">
+            <label for="expectedduration">Expected Duration (hours)</label>
+            <input class="form-control" type="number" name="expectedduration" id="expectedduration" value="<%= event.expectedduration || '' %>" required />
+          </div>
+        </div>
+        <div class="row">
+          <div class="form-group col-md-6">
+            <label for="eventactivities">Type of Activities</label>
+            <select class="form-control" name="eventactivities" id="eventactivities">
+              <option value="sewing" <%= event.eventactivities === "sewing" ? "selected" : "" %>>Sewing</option>
+              <option value="non-sewing" <%= event.eventactivities === "non-sewing" ? "selected" : "" %>>Non-Sewing</option>
+              <option value="both" <%= event.eventactivities === "both" ? "selected" : "" %>>Both</option>
+            </select>
+          </div>
+        </div>
+        <div class="row">
+          <div class="form-group col-md-6">
+            <label for="address">Street Address</label>
+            <input class="form-control" type="text" name="address" id="address" value="<%= event.address || '' %>" required />
+          </div>
+          <div class="form-group col-md-3">
+            <label for="city">City</label>
+            <input class="form-control" type="text" name="city" id="city" value="<%= event.city || '' %>" required />
+          </div>
+          <div class="form-group col-md-3">
+            <label for="state">State</label>
+            <select class="form-control" name="state" id="state" required>
+              <!-- States dropdown here -->
+              <option value="ut" <%= event.state === "ut" ? "selected" : "" %>>Utah</option>
+              <!-- Add other states -->
+            </select>
+          </div>
+        </div>
+
+        <!-- Confirmed Event Details -->
+        <div class="section-title">Confirmed Event Details</div>
+        <div class="row">
+          <div class="form-group col-md-3">
+            <label for="eventdate">Event Date</label>
+            <input class="form-control" type="date" name="eventdate" id="eventdate" value="<%= event.eventdate ? event.eventdate.toISOString().split('T')[0] : '' %>" />
+          </div>
+          <div class="form-group col-md-3">
+            <label for="starttime">Start Time</label>
+            <input class="form-control" type="time" name="starttime" id="starttime" value="<%= event.starttime || '' %>" />
+          </div>
+          <div class="form-group col-md-6">
+            <label for="spacedescription">Space Description</label>
+            <textarea class="form-control" name="spacedescription" id="spacedescription"><%= event.spacedescription || '' %></textarea>
+          </div>
+        </div>
+
+        <!-- Supplies -->
+        <div class="section-title">Supplies</div>
+        <div class="row">
+          <div class="form-group col-md-3">
+            <label for="numsewers">Number of Sewers</label>
+            <input class="form-control" type="number" name="numsewers" id="numsewers" value="<%= event.numsewers || '' %>" />
+          </div>
+          <div class="form-group col-md-3">
+            <label for="nummachines">Number of Machines</label>
+            <input class="form-control" type="number" name="nummachines" id="nummachines" value="<%= event.nummachines || '' %>" />
+          </div>
+          <div class="form-group col-md-3">
+            <label for="numroundtables">Number of Round Tables</label>
+            <input class="form-control" type="number" name="numroundtables" id="numroundtables" value="<%= event.numroundtables || '' %>" />
+          </div>
+          <div class="form-group col-md-3">
+            <label for="numrectangletables">Number of Rectangle Tables</label>
+            <input class="form-control" type="number" name="numrectangletables" id="numrectangletables" value="<%= event.numrectangletables || '' %>" />
+          </div>
+        </div>
+
+        <!-- Results -->
+        <div class="section-title">Results</div>
+        <div class="row">
+          <div class="form-group col-md-3">
+            <label for="actualparticipants">Actual Participants</label>
+            <input class="form-control" type="number" name="actualparticipants" id="actualparticipants" value="<%= event.actualparticipants || '' %>" />
+          </div>
+          <div class="form-group col-md-3">
+            <label for="actualduration">Actual Duration</label>
+            <input class="form-control" type="number" name="actualduration" id="actualduration" value="<%= event.actualduration || '' %>" />
+          </div>
+          <div class="form-group col-md-3">
+            <label for="completedproducts">Completed Products</label>
+            <input class="form-control" type="number" name="completedproducts" id="completedproducts" value="<%= event.completedproducts || '' %>" />
+          </div>
+        </div>
+        <button class="btn btn-primary mt-3" type="submit">Update Record</button>
+      </form>
+    </div>
+  </section>
+</body>
+</html>
