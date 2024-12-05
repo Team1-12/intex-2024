@@ -129,7 +129,6 @@
           <tr>
             <th>Event Status</th>
             <th>Event Date</th>
-            <th>Start Time</th>
             <th>City</th>
             <th>State</th>
             <th>Zip</th>
@@ -145,7 +144,6 @@
               <tr>
                 <td><%= row.eventstatus.charAt(0).toUpperCase() + row.eventstatus.slice(1) %></td>
                 <td><%= row.eventdate ? new Date(row.eventdate).toLocaleDateString('en-US') : '' %></td> <!-- Format date -->
-                <td><%= row.starttime %></td>
                 <td><%= row.city %></td>
                 <td><%= row.state %></td>
                 <td><%= row.zip %></td>
@@ -165,7 +163,7 @@
             <% }) %>
           <% } else { %>
             <tr>
-              <td colspan="10" class="no-data">No data available</td>
+              <td colspan="9" class="no-data">No data available</td>
             </tr>
           <% } %>
         </tbody>
