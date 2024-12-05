@@ -314,6 +314,8 @@ app.get('/volunteerRecords', isAuthenticated, (req, res) => {
       'traveltime',
       'comments'
     )
+    .orderBy('lastname', 'asc')
+    .orderBy('firstname', 'asc')
     .then(volunteer => {
       // Render the volunteerRecords.ejs template and pass the data
       res.render('volunteerRecords', { volunteer });
@@ -321,6 +323,49 @@ app.get('/volunteerRecords', isAuthenticated, (req, res) => {
     // Catch to handle errors
     .catch(error => {
       console.error('Error querying database:', error);
+      res.status(500).send('Internal Server Error');
+    });
+});
+
+//Make save functionality for the volunteer records
+app.post('/saveVolunteer/:volunteerid', isAuthenticated, (req, res) => {
+  const volunteerid = parseInt(req.params.volunteerid, 10);
+  const {
+    FirstName,
+    LastName,
+    Phone,
+    Email,
+    City,
+    state,
+    HowTheyHeard,
+    SewingLevel,
+    MonthlyHrsWilling,
+    LeadWilling,
+    TravelTime,
+    Comments
+  } = req.body;
+
+  knex('volunteer')
+    .where('volunteerid', volunteerid)
+    .update({
+      firstname: FirstName.toLowerCase(),
+      lastname: LastName.toLowerCase(),
+      phone: Phone,
+      email: Email.toLowerCase(),
+      city: City.toLowerCase(),
+      state: state,
+      howtheyheard: HowTheyHeard.toLowerCase(),
+      sewinglevel: SewingLevel,
+      monthlyhrswilling: parseInt(MonthlyHrsWilling),
+      leadwilling: LeadWilling,
+      traveltime: parseInt(TravelTime),
+      comments: Comments || 'No comments'
+    })
+    .then(() => {
+      res.redirect('/volunteerRecords');
+    })
+    .catch(error => {
+      console.error('Error updating volunteer:', error);
       res.status(500).send('Internal Server Error');
     });
 });
