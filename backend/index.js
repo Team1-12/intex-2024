@@ -638,6 +638,25 @@ app.post('/EventRequest', (req, res) => {
 });
 
 
+// Route to handle newsletter subscription
+app.post('/subscribe', (req, res) => {
+  const { email } = req.body;
+
+  if (!email) {
+    return res.status(400).send('Email is required');
+  }
+
+  // Insert the email into the EmailList table
+  knex('emaillist')
+    .insert({ email: email.toLowerCase() })
+    .then(() => {
+      res.send('Thank you for subscribing!');
+    })
+    .catch(error => {
+      console.error('Error subscribing to newsletter:', error);
+      res.status(500).send('An error occurred. Please try again later.');
+    });
+});
 
 // app listening
 app.listen(port, () => console.log("Express App has started and server is listening!"));
