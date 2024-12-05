@@ -602,7 +602,7 @@ app.post('/EventRequest', (req, res) => {
 
   const comments = req.body.comments || 'No comments';
 
-  const eventstatus = "Pending"
+  const eventstatus = "pending"
 
   // Insert the event in the database
   knex('event')
@@ -622,7 +622,7 @@ app.post('/EventRequest', (req, res) => {
       jenshare : jenshare,
       organization : organization.toLowerCase(),
       comments : comments,
-      eventstatus : eventstatus,
+      eventstatus : eventstatus.toLowerCase(),
     })
     .then(() => {
       if (req.session && req.session.isAuthenticated) {
