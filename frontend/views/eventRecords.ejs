@@ -104,29 +104,31 @@
   </nav>
 
   <!-- Column Toggle that hides/unhides column fields-->
-    <script>
-      document.addEventListener('DOMContentLoaded', function () {
-        const dropdown = document.getElementById('status');
-        const completedColumns = document.querySelectorAll('.completed-column');
+  <script>
+    document.addEventListener('DOMContentLoaded', function () {
+      const dropdown = document.getElementById('status');
+      const completedColumns = document.querySelectorAll('.completed-column');
+      const hideOnCompletedColumns = document.querySelectorAll('.hide-on-completed');
+      
+      function toggleColumns() {
+        const isCompleted = dropdown.value === 'completed';
         
-        dropdown.addEventListener('change', function () {
-          const isCompleted = dropdown.value === 'completed';
-          
-          completedColumns.forEach(column => {
-            if (isCompleted) {
-              column.style.display = ''; // Show column
-            } else {
-              column.style.display = 'none'; // Hide column
-            }
-          });
+        completedColumns.forEach(column => {
+          column.style.display = isCompleted ? '' : 'none';
         });
-    
-        // Initial state: Hide completed columns if not "Completed"
-        if (dropdown.value !== 'completed') {
-          completedColumns.forEach(column => column.style.display = 'none');
-        }
-      });
-    </script>
+        
+        hideOnCompletedColumns.forEach(column => {
+          column.style.display = isCompleted ? 'none' : '';
+        });
+      }
+  
+      dropdown.addEventListener('change', toggleColumns);
+  
+      // Initial state
+      toggleColumns();
+    });
+  </script>
+  
     
 
   
@@ -163,11 +165,11 @@
           <tr>
             <th>Event Status</th>
             <th>Event Date</th>
-            <th>City</th>
-            <th>State</th>
-            <th>Zip</th>
+            <th class="hide-on-completed">City</th>
+            <th class="hide-on-completed">State</th>
+            <th class="hide-on-completed">Zip</th>
             <th>Contact Name</th>
-            <th>Event Activities</th>
+            <th class="hide-on-completed">Event Activities</th>
             <th>Organization</th>
             <th class="completed-column">Pockets</th>
             <th class="completed-column">Collars</th>
@@ -177,6 +179,7 @@
             <th>Actions</th>
           </tr>
         </thead>
+        
         <tbody>
           <% if (events.length > 0) { %>
             <% events.forEach(row => { %>
@@ -190,11 +193,11 @@
                           : '') 
                   %>
                 </td>
-                <td><%= row.city %></td>
-                <td><%= row.state %></td>
-                <td><%= row.zip %></td>
+                <td class="hide-on-completed"><%= row.city %></td>
+                <td class="hide-on-completed"><%= row.state %></td>
+                <td class="hide-on-completed"><%= row.zip %></td>
                 <td><%= row.contactname %></td>
-                <td><%= row.eventactivities %></td>
+                <td class="hide-on-completed"><%= row.eventactivities %></td>
                 <td><%= row.organization %></td>
                 <td class="completed-column"><%= row.pockets || '' %></td>
                 <td class="completed-column"><%= row.collars || '' %></td>
@@ -217,6 +220,7 @@
             </tr>
           <% } %>
         </tbody>
+        
         
         
       </table>
