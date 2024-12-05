@@ -192,12 +192,23 @@ app.get('/volunteerForm', isVolunteer, (req, res) => {
 app.get('/addAdmin', isAuthenticated, (req, res) => {
   res.render('adminForm'); 
 
-});
+});  
 
 app.get('/login', (req, res) => {
-  res.render('login'); 
+  // Check if the user is already authenticated
+  if (req.session && req.session.isAuthenticated) {
+    // Redirect based on the user's role
+    if (req.session.userRole === 'admin') {
+      return res.redirect('/internalLanding');
+    } else if (req.session.userRole === 'volunteer') {
+      return res.redirect('/volunteerPage');
+    }
+  }
 
+  // If not authenticated, render the login page
+  res.render('login');
 });
+ 
 
 app.post('/login', (req, res) => {
   const { username, password } = req.body;
@@ -303,7 +314,10 @@ app.get('/internalLanding', isAuthenticated, isVolunteer, (req, res) => {
       'starttime',
       'contactname',
       'organization',
-      'startdaterange'
+      'startdaterange',
+      'contactname',
+      'contactphone',
+      'contactemail'
     )
     .where('eventstatus', 'planned')
     .orderBy('eventdate', 'asc')
@@ -332,7 +346,7 @@ app.get('/adminRedirect', (req, res) => {
   } else {
     res.redirect('/login'); // Redirect to login if not authenticated
   }
-});
+}); 
 
 // To post the new admin to the database
 app.post('/submitAdminForm', isAuthenticated, isAdmin, (req, res) => {
@@ -1016,7 +1030,24 @@ app.post('/sendMassEmail', async (req, res) => {
   }
 });
 
+// Route to send an individual email
+app.post('/sendEmail', async (req, res) => {
+  const { email, subject, message } = req.body;
 
+  if (!email || !subject || !message) {
+    return res.status(400).json({ error: 'Email, subject, and message are required.' });
+  }
+
+  try {
+    // Send the email using the sendEmail function
+    await sendEmail(email, subject, message);
+    console.log(`Email sent successfully to ${email}`);
+    res.json({ message: `Email sent successfully to ${email}` });
+  } catch (error) {
+    console.error('Error sending email:', error);
+    res.status(500).json({ error: 'Failed to send email. Please try again later.' });
+  }
+});
 
 
 
