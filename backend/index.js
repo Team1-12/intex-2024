@@ -103,9 +103,20 @@ app.get('/addAdmin', isAuthenticated, (req, res) => {
 });  
 
 app.get('/login', (req, res) => {
-  res.render('login'); 
+  // Check if the user is already authenticated
+  if (req.session && req.session.isAuthenticated) {
+    // Redirect based on the user's role
+    if (req.session.userRole === 'admin') {
+      return res.redirect('/internalLanding');
+    } else if (req.session.userRole === 'volunteer') {
+      return res.redirect('/volunteerPage');
+    }
+  }
 
-});  
+  // If not authenticated, render the login page
+  res.render('login');
+});
+ 
 
 app.post('/login', (req, res) => {
   const { username, password } = req.body;
