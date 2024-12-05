@@ -104,25 +104,31 @@
   </nav>
 
   <!-- Column Toggle that hides/unhides column fields-->
-  <script>
-    document.addEventListener('DOMContentLoaded', function () {
-      const dropdown = document.getElementById('status');
-      const table = document.querySelector('table');
-      
-      dropdown.addEventListener('change', function () {
-        const isCompleted = dropdown.value === 'completed';
-        const columns = table.querySelectorAll('.hidden');
+    <script>
+      document.addEventListener('DOMContentLoaded', function () {
+        const dropdown = document.getElementById('status');
+        const completedColumns = document.querySelectorAll('.completed-column');
         
-        columns.forEach(column => {
-          if (isCompleted) {
-            column.classList.remove('hidden');
-          } else {
-            column.classList.add('hidden');
-          }
+        dropdown.addEventListener('change', function () {
+          const isCompleted = dropdown.value === 'completed';
+          
+          completedColumns.forEach(column => {
+            if (isCompleted) {
+              column.style.display = ''; // Show column
+            } else {
+              column.style.display = 'none'; // Hide column
+            }
+          });
         });
+    
+        // Initial state: Hide completed columns if not "Completed"
+        if (dropdown.value !== 'completed') {
+          completedColumns.forEach(column => column.style.display = 'none');
+        }
       });
-    });
-  </script>
+    </script>
+    
+
   
   
   <!-- Main Content Container -->
@@ -163,11 +169,11 @@
             <th>Contact Name</th>
             <th>Event Activities</th>
             <th>Organization</th>
-            <th class="hidden">Pockets</th>
-            <th class="hidden">Collars</th>
-            <th class="hidden">Envelopes</th>
-            <th class="hidden">Vests</th>
-            <th class="hidden">Completed Products</th>
+            <th class="completed-column">Pockets</th>
+            <th class="completed-column">Collars</th>
+            <th class="completed-column">Envelopes</th>
+            <th class="completed-column">Vests</th>
+            <th class="completed-column">Completed Products</th>
             <th>Actions</th>
           </tr>
         </thead>
@@ -190,11 +196,11 @@
                 <td><%= row.contactname %></td>
                 <td><%= row.eventactivities %></td>
                 <td><%= row.organization %></td>
-                <td class="hidden"><%= row.pockets || '' %></td>
-                <td class="hidden"><%= row.collars || '' %></td>
-                <td class="hidden"><%= row.envelopes || '' %></td>
-                <td class="hidden"><%= row.vests || '' %></td>
-                <td class="hidden"><%= row.completedproducts || '' %></td>
+                <td class="completed-column"><%= row.pockets || '' %></td>
+                <td class="completed-column"><%= row.collars || '' %></td>
+                <td class="completed-column"><%= row.envelopes || '' %></td>
+                <td class="completed-column"><%= row.vests || '' %></td>
+                <td class="completed-column"><%= row.completedproducts || '' %></td>
                 <td>
                   <form action="/editEventRec/<%= row.eventid %>" method="GET" class="d-inline">
                     <button type="submit" class="btn btn-primary btn-sm">Edit</button>
@@ -211,6 +217,7 @@
             </tr>
           <% } %>
         </tbody>
+        
         
       </table>
     </div>
