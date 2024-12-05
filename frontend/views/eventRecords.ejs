@@ -143,7 +143,14 @@
             <% events.forEach(row => { %>
               <tr>
                 <td><%= row.eventstatus.charAt(0).toUpperCase() + row.eventstatus.slice(1) %></td>
-                <td><%= row.eventdate ? new Date(row.eventdate).toLocaleDateString('en-US') : '' %></td> <!-- Format date -->
+                <td>
+                  <%= row.eventdate 
+                      ? new Date(row.eventdate).toLocaleDateString('en-US') 
+                      : (row.startdaterange 
+                          ? new Date(row.startdaterange).toLocaleDateString('en-US') 
+                          : '') 
+                  %>
+                </td>                
                 <td><%= row.city %></td>
                 <td><%= row.state %></td>
                 <td><%= row.zip %></td>
