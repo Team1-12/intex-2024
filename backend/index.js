@@ -84,11 +84,103 @@ app.get('/donate', (req, res) => {
 
 });
 
-//Route to volunteer page
-app.get('/volunteerPage', (req, res) => {
-  res.render('volunteerPage'); 
+// Route to volunteer page
+app.get('/volunteerPage', isAuthenticated, isVolunteer, (req, res) => {
+  const volunteerId = req.session.volunteerid; // Retrieve volunteerid from the session
 
+  if (!volunteerId) {
+    return res.status(403).send('Forbidden');
+  }
+
+  // Query events the volunteer has NOT signed up for
+  knex('event')
+    .whereIn('eventstatus', ['approved', 'planned']) // Only approved or planned events
+    .whereNotIn('eventid', function () {
+      // Subquery to get event IDs the volunteer has signed up for
+      this.select('eventid')
+        .from('volunteer_events')
+        .where('volunteerid', volunteerId);
+    })
+    .orderBy('eventdate', 'asc')
+    .orderBy('startdaterange', 'asc')
+    .then(events => {
+      res.render('volunteerPage', { events }); // Pass events to the view
+    })
+    .catch(error => {
+      console.error('Error fetching events for volunteer:', error);
+      res.status(500).send('Internal Server Error');
+    });
 });
+
+// Route to add volunteer to an event
+app.post('/eventSignup', isAuthenticated, isVolunteer, (req, res) => {
+  const { eventid } = req.body;
+  const volunteerid = req.session.volunteerid; // Get the volunteerid from the session
+
+  if (!eventid || !volunteerid) {
+    return res.status(400).json({ message: 'Event ID and Volunteer ID are required.' });
+  }
+
+  knex('volunteer_events')
+    .insert({ eventid, volunteerid })
+    .then(() => {
+      res.redirect('/volunteerPage'); // Redirect to volunteerPage for volunteers
+    })
+    .catch(error => {
+      console.error('Error adding volunteer to event:', error);
+      res.status(500).json({ message: 'Internal Server Error' });
+    });
+});
+
+
+// To load the events that the volunteer is signed up for
+// Route to show events the volunteer is signed up for
+app.get('/volunteerMain', isAuthenticated, isVolunteer, (req, res) => {
+  const volunteerId = req.session.volunteerid; // Retrieve volunteer ID from the session
+
+  if (!volunteerId) {
+    return res.status(403).send('Forbidden');
+  }
+
+  // Query events the volunteer is signed up for
+  knex('event')
+    .join('volunteer_events', 'event.eventid', 'volunteer_events.eventid') // Join event table with volunteer_events table
+    .select('event.*') // Select all event details
+    .where('volunteer_events.volunteerid', volunteerId) // Filter for events signed up by this volunteer
+    .orderBy('eventdate', 'asc')
+    .orderBy('startdaterange', 'asc')
+    .then(events => {
+      res.render('volunteerMain', { events }); // Render the 'myEvents' view and pass the events
+    })
+    .catch(error => {
+      console.error('Error fetching signed-up events:', error);
+      res.status(500).send('Internal Server Error');
+    });
+});
+
+
+// Remove the volunteer from the event
+app.post('/removeSignup', isAuthenticated, (req, res) => {
+  const { eventid } = req.body; // Extract eventid from the request body
+  const volunteerid = req.session.volunteerid; // Get volunteerid from the session
+
+  if (!eventid || !volunteerid) {
+    return res.status(400).send('Missing event or volunteer ID.');
+  }
+
+  knex('volunteer_events')
+    .where({ eventid, volunteerid })
+    .del()
+    .then(() => {
+      res.redirect('/volunteerMain'); // Redirect to volunteerMain for volunteers
+    })
+    .catch(error => {
+      console.error('Error removing volunteer from event:', error);
+      res.status(500).send('Internal Server Error');
+    });
+});
+
+
 
 //Route to volunteer form page
 app.get('/volunteerForm', isVolunteer, (req, res) => {
@@ -135,6 +227,7 @@ app.post('/login', (req, res) => {
         // Set session variables
         req.session.isAuthenticated = true;
         req.session.userRole = user.role; // Assuming the `role` column specifies the user's role (e.g., 'admin' or 'volunteer')
+        req.session.volunteerid = user.volunteerid; // Store volunteerid in the session
 
         req.session.save(err => {
           if (err) {
@@ -363,11 +456,12 @@ app.post('/deleteAdmin/:volunteerid', isAuthenticated, isAdmin, (req, res) => {
 });
    
 
-// Deletes a Event
+// Deletes an Event and any associated volunteer_event records
 app.post('/deleteEventRec/:eventid', isAuthenticated, isAdmin, (req, res) => {
-  const eventid = parseInt(req.params.eventid, 10); // Extract volunteer ID
+  const eventid = parseInt(req.params.eventid, 10); // Extract event ID
 
-  knex('event')
+  // Step 1: Delete associated records in volunteer_event
+  knex('volunteer_events')
     .where('eventid', eventid)
     .del()
     .then(() => {
@@ -378,10 +472,11 @@ app.post('/deleteEventRec/:eventid', isAuthenticated, isAdmin, (req, res) => {
       res.redirect('/eventRecords'); // Redirect after successful deletion
     })
     .catch(error => {
-      console.error('Error deleting Volunteer Record:', error);
+      console.error('Error deleting Event Record:', error);
       res.status(500).send('Internal Server Error');
     });
 });
+
 
 app.get('/volunteerRecords', isAuthenticated, isAdmin, (req, res) => {
   knex('volunteer')
@@ -501,16 +596,20 @@ app.post('/saveAdmin/:volunteerid', isAuthenticated, async (req, res) => {
   }
 });
 
-// Deletes a volunteer and any associated admin records
+// Deletes a volunteer and any associated admin and volunteer_event records
 app.post('/deleteVolunteer/:volunteerid', isAuthenticated, isAdmin, (req, res) => {
   const volunteerid = parseInt(req.params.volunteerid, 10); // Extract volunteer ID
 
-  // Step 1: Delete associated admin record first
-  knex('admin')
+  // Step 1: Delete associated records in volunteer_event
+  knex('volunteer_events')
     .where('volunteerid', volunteerid)
     .del()
     .then(() => {
-      // Step 2: Delete the volunteer record
+      // Step 2: Delete associated admin record
+      return knex('admin').where('volunteerid', volunteerid).del();
+    })
+    .then(() => {
+      // Step 3: Delete the volunteer record
       return knex('volunteer').where('volunteerid', volunteerid).del();
     })
     .then(() => {
@@ -521,6 +620,7 @@ app.post('/deleteVolunteer/:volunteerid', isAuthenticated, isAdmin, (req, res) =
       res.status(500).send('Internal Server Error');
     });
 });
+
 
 app.get('/editEventRec/:eventid', isAuthenticated, isAdmin, (req, res) => {
   const eventid = req.params.eventid;
