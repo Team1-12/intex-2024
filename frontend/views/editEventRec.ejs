@@ -1,10 +1,50 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
-  
-  
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no" />
+    <title>Edit Event Record</title>
+    <!-- Favicon -->
+    <link rel="icon" type="image/x-icon" href="assets/favicon.ico" />
+    <!-- Font Awesome icons (free version) -->
+    <script src="https://use.fontawesome.com/releases/v6.3.0/js/all.js" crossorigin="anonymous"></script>
+    <!-- Google fonts -->
+    <link href="https://fonts.googleapis.com/css?family=Montserrat:400,700" rel="stylesheet" />
+    <link href="https://fonts.googleapis.com/css?family=Roboto+Slab:400,100,300,700" rel="stylesheet" />
+    <!-- Core theme CSS (includes Bootstrap) -->
+    <link href="css/styles.css" rel="stylesheet" />
 </head>
-<body>
+<body id="page-top">
+    <!-- Navigation -->
+    <nav class="navbar navbar-expand-lg navbar-dark fixed-top" id="mainNav" style="background-color: #303030;">
+        <div class="container-fluid p-0">
+            <a class="navbar-brand" href="/internalLanding"><img src="../assets/TSlogoLowRes.png" alt="..." /> Turtle Shelter Project -- Admin</a>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarResponsive" aria-controls="navbarResponsive" aria-expanded="false" aria-label="Toggle navigation">
+                Menu
+                <i class="fas fa-bars ms-1"></i>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarResponsive">
+                <ul class="navbar-nav text-uppercase ms-auto py-4 py-lg-0">
+                    <li class="nav-item"><a class="nav-link" href="/internalLanding">Admin Home</a></li>
+                    <li class="nav-item"><a class="nav-link" href="/eventRecords">Events</a></li>
+                    <li class="nav-item"><a class="nav-link" href="/volunteerRecords">Volunteers</a></li>
+                    <li class="nav-item"><a class="nav-link" href="/adminRecords">Admins</a></li>
+                    <li class="nav-item dropdown">
+                        <a class="nav-link dropdown-toggle logout-btn" href="#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                            Logout
+                        </a>
+                        <div class="dropdown-menu dropdown-menu-end" aria-labelledby="navbarDropdown">
+                            <a class="dropdown-item" href="/logout">Logout</a>
+                            <a class="dropdown-item" href="/">Return Home</a>
+                        </div>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </nav>
+    <main style="padding-top: 70px;"></main>
+    
+    <!-- Main Content -->
     <section>
         <div class="container">
           <h2>Edit Event</h2>
@@ -213,45 +253,28 @@
                 </select>
               </div>
 
-              <!-- Additional Equipment and Event Details -->
-              <h3>Event and Equipment Details</h3>
-              <div class="row">
-                <!-- Number of Round Tables -->
-                <div class="form-group col-md-3">
-                  <label for="numroundtables">Number of Round Tables</label>
-                  <p>Enter the number of round tables available for the event.</p>
-                  <input class="form-control" type="number" name="numroundtables" id="numroundtables" value="<%= event.numroundtables || '' %>" />
-                </div>
-                
-                <!-- Number of Rectangle Tables -->
-                <div class="form-group col-md-3">
-                  <label for="numrectanglestables">Number of Rectangle Tables</label>
-                  <p>Enter the number of rectangle tables available for the event.</p>
-                  <input class="form-control" type="number" name="numrectanglestables" id="numrectanglestables" value="<%= event.numrectanglestables || '' %>" />
-                </div>
-
-                <!-- Number of Adults -->
-                <div class="form-group col-md-3">
-                  <label for="numadults">Number of Adults</label>
-                  <p>Enter the number of adult participants expected.</p>
-                  <input class="form-control" type="number" name="numadults" id="numadults" value="<%= event.numadults || '' %>" />
-                </div>
-
-                <!-- Number of Children -->
-                <div class="form-group col-md-3">
-                  <label for="numchildren">Number of Children</label>
-                  <p>Enter the number of child participants expected.</p>
-                  <input class="form-control" type="number" name="numchildren" id="numchildren" value="<%= event.numchildren || '' %>" />
-                </div>
-              </div>
-
-              <div class="row">
-                <!-- Actual Participants -->
-                <div class="form-group col-md-3">
-                  <label for="actualparticipants">Actual Participants</label>
-                  <p>Enter the actual number of participants who attended.</p>
-                  <input class="form-control" type="number" name="actualparticipants" id="actualparticipants" value="<%= event.actualparticipants || '' %>" />
-                </div>
+                <!-- Additional Event and Equipment Details -->
+                <fieldset class="mb-4">
+                    <legend>Additional Event and Equipment Details</legend>
+                    <div class="row">
+                        <div class="form-group col-md-3">
+                            <label for="numroundtables">Number of Round Tables</label>
+                            <input class="form-control" type="number" name="numroundtables" id="numroundtables" value="<%= event.numroundtables || '' %>" />
+                        </div>
+                        <div class="form-group col-md-3">
+                            <label for="numrectanglestables">Number of Rectangle Tables</label>
+                            <input class="form-control" type="number" name="numrectanglestables" id="numrectanglestables" value="<%= event.numrectanglestables || '' %>" />
+                        </div>
+                        <div class="form-group col-md-3">
+                            <label for="numadults">Number of Adults</label>
+                            <input class="form-control" type="number" name="numadults" id="numadults" value="<%= event.numadults || '' %>" />
+                        </div>
+                        <div class="form-group col-md-3">
+                            <label for="numchildren">Number of Children</label>
+                            <input class="form-control" type="number" name="numchildren" id="numchildren" value="<%= event.numchildren || '' %>" />
+                        </div>
+                    </div>
+                </fieldset>
 
                 <!-- Actual Duration -->
                 <div class="form-group col-md-3">
@@ -289,31 +312,9 @@
                   <p>Enter the number of envelopes produced during the event.</p>
                   <input class="form-control" type="number" name="envelopes" id="envelopes" value="<%= event.envelopes || '' %>" />
                 </div>
-
-                <!-- Vests -->
-                <div class="form-group col-md-3">
-                  <label for="vests">Vests</label>
-                  <p>Enter the number of vests produced during the event.</p>
-                  <input class="form-control" type="number" name="vests" id="vests" value="<%= event.vests || '' %>" />
-                </div>
-              </div>
-
-              <div class="row">
-                <!-- Completed Products -->
-                <div class="form-group col-md-3">
-                  <label for="completedproducts">Completed Products</label>
-                  <p>Enter the total number of completed products during the event.</p>
-                  <input class="form-control" type="number" name="completedproducts" id="completedproducts" value="<%= event.completedproducts || '' %>" />
-                </div>
-              </div>
-
-              <div class="form-group">
-                <button class="btn btn-primary" type="submit">Update Record</button>
-              </div>
-            </div>
-          </form>
+                
+            </form>
         </div>
-      </section>
-      
+    </section>
 </body>
 </html>
