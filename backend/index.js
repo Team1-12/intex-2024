@@ -256,18 +256,36 @@ app.get('/eventRecords', (req, res) => {
       res.status(500).send('Internal Server Error');
     });
 });
+
+// Deletes a admin record
+app.post('/deleteAdmin/:volunteerid', isAuthenticated, (req, res) => {
+  const volunteerid = parseInt(req.params.volunteerid, 10); // Extract volunteer ID
+
+  knex('admin')
+    .where('volunteerid', volunteerid)
+    .del()
+    .then(() => {
+      return knex('admin').where('volunteerid', volunteerid).del();
+    })
+    .then(() => {
+      res.redirect('/adminRecords'); // Redirect after successful deletion
+    })
+    .catch(error => {
+      console.error('Error deleting Admin Record:', error);
+      res.status(500).send('Internal Server Error');
+    });
+});
    
 
-// Deletes a volunteer and any associated admin records
+// Deletes a Event
 app.post('/deleteEventRec/:eventid', isAuthenticated, (req, res) => {
   const eventid = parseInt(req.params.eventid, 10); // Extract volunteer ID
 
-  // Step 1: Delete associated admin record first
   knex('event')
     .where('eventid', eventid)
     .del()
     .then(() => {
-      // Step 2: Delete the volunteer record
+      // Step 2: Delete the event record
       return knex('event').where('eventid', eventid).del();
     })
     .then(() => {
