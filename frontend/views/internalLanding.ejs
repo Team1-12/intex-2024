@@ -167,7 +167,7 @@
                             <% events.forEach(function(event) { %>
                                 <tr>
                                     <td><%= event.eventstatus %></td>
-                                    <td><%= event.eventdate ? new Date(event.eventdate).toLocaleDateString('en-US') : 'N/A' %></td>
+                                    <td><%= event.eventdate ? event.eventdate.toISOString().split('T')[0] : event.startdaterange.toISOString().split('T')[0] %></td>
                                     <td><%= event.starttime || 'N/A' %></td>
                                     <td><%= event.city || 'N/A' %></td>
                                     <td><%= event.state || 'N/A' %></td>
