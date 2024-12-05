@@ -378,7 +378,7 @@ app.post('/deleteVolunteer/:volunteerid', isAuthenticated, (req, res) => {
     });
 });
 
-app.get('/editEventRec/:eventid', (req, res) => {
+app.get('/editEventRec/:eventid', isAuthenticated, (req, res) => {
   const eventid = req.params.eventid;
 
    //Query the Event by eventid
@@ -397,7 +397,7 @@ app.get('/editEventRec/:eventid', (req, res) => {
     });
 });
 
-app.post('/editEventRec/:eventid', (req, res) => {
+app.post('/editEventRec/:eventid', isAuthenticated, (req, res) => {
   const eventid = req.params.eventid;
 
   // Extract all fields from the request body
@@ -516,7 +516,7 @@ app.post('/editEventRec/:eventid', (req, res) => {
 
 
 // Route to display admin records
-app.get('/adminRecords', (req, res) => {
+app.get('/adminRecords', isAuthenticated,(req, res) => {
   knex('admin')
     .join('volunteer', 'volunteer.volunteerid', '=', 'admin.volunteerid')
     .select(
