@@ -160,7 +160,39 @@ app.get('/logout', (req, res) => {
 
 // Protected routes using the authentication middleware
 app.get('/internalLanding', isAuthenticated, (req, res) => {
-  res.render('internalLanding');
+  const eventStatusCounts = knex('event')
+    .select('eventstatus')
+    .count('eventid as count')
+    .groupBy('eventstatus');
+
+  const plannedEvents = knex('event')
+    .select(
+      'eventstatus',
+      'eventdate',
+      'eventactivities',
+      'city',
+      'state',
+      'zip',
+      'starttime',
+      'contactname',
+      'organization'
+    )
+    .where('eventstatus', 'planned')
+    .orderBy('eventdate', 'asc');
+
+  Promise.all([eventStatusCounts, plannedEvents])
+    .then(([counts, events]) => {
+      const statusCounts = counts.reduce((acc, row) => {
+        acc[row.eventstatus] = row.count;
+        return acc;
+      }, {});
+
+      res.render('internalLanding', { events, statusCounts });
+    })
+    .catch(error => {
+      console.error('Error fetching data for internalLanding:', error);
+      res.status(500).send('Internal Server Error');
+    });
 });
 
 app.get('/adminRedirect', (req, res) => {
