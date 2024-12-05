@@ -10,6 +10,10 @@ const port = process.env.PORT || 5001
 
 const session = require('express-session'); 
 
+const AWS = require('aws-sdk');
+
+const ses = new AWS.SES();
+
 app.use(express.urlencoded( {extended: true} )) //determines how html is received from forms. This allows us to grab stuff out of the HTML form
 
 app.set("view engine", "ejs") //shows what view engine we are using 
@@ -669,6 +673,65 @@ app.post('/EventRequest', (req, res) => {
     });
 });
 
+AWS.config.update({
+  accessKeyId: process.env.AWS_ACCESS_KEY_ID, // Replace with your IAM Access Key ID
+  secretAccessKey: process.env.AWS_SECRET_ACCESS_KEY, // Replace with your IAM Secret Access Key
+  region: 'us-east-1', // Replace with your SES region
+});
+
+
+const sendEmail = async (to, subject, body) => {
+  const params = {
+      Source: 'noreply@turtleshelterproject.net', // Your WorkMail email
+      Destination: {
+          ToAddresses: [to],
+      },
+      Message: {
+          Subject: {
+              Data: subject,
+          },
+          Body: {
+              Text: {
+                  Data: body,
+              },
+          },
+      },
+  };
+
+  try {
+      await ses.sendEmail(params).promise();
+      console.log(`Email sent to ${to}`);
+  } catch (error) {
+      console.error(`Error sending email to ${to}:`, error);
+      throw error;
+  }
+};
+
+
+
+app.post('/EventRequest', async (req, res) => {
+  const { contactemail, contactname, organization } = req.body;
+
+  // Insert into the database as usual...
+
+  try {
+      const subject = `Event Request Confirmation for ${organization}`;
+      const body = `
+          Hi ${contactname},
+
+          Thank you for submitting an event request to the Turtle Shelter Project! We will review your request and get back to you shortly.
+
+          Best regards,
+          Turtle Shelter Project Team
+      `;
+
+      await sendEmail(contactemail, subject, body);
+      res.redirect('/'); // Redirect after successful email and DB operation
+  } catch (error) {
+      console.error('Error sending confirmation email:', error);
+      res.status(500).send('An error occurred while processing your request.');
+  }
+});
 
 
 // app listening
