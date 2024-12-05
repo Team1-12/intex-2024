@@ -89,12 +89,12 @@
                 <div class="form-group col-md-3">
                   <label for="startdaterange">Start Date</label>
                   <p>Select the first available date for the event.</p>
-                  <input class="form-control" type="date" name="startdaterange" id="startdaterange" value="<%= event.startdaterange || '' %>" required />
+                  <input class="form-control" type="date" name="startdaterange" id="startdaterange" value="<%= event.startdaterange.toISOString().split('T')[0] || '' %>" required />
                 </div>
                 <div class="form-group col-md-3">
                   <label for="enddaterange">End Date</label>
                   <p>Select the last available date for the event (if applicable).</p>
-                  <input class="form-control" type="date" name="enddaterange" id="enddaterange" value="<%= event.enddaterange || '' %>" />
+                  <input class="form-control" type="date" name="enddaterange" id="enddaterange" value="<%= event.enddaterange.toISOString().split('T')[0] || '' %>" />
                 </div>
               </div>
       
