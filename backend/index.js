@@ -100,12 +100,12 @@ app.get('/volunteerForm', isVolunteer, (req, res) => {
 app.get('/addAdmin', isAuthenticated, (req, res) => {
   res.render('adminForm'); 
 
-});
+});  
 
 app.get('/login', (req, res) => {
   res.render('login'); 
 
-});
+});  
 
 app.post('/login', (req, res) => {
   const { username, password } = req.body;
@@ -210,7 +210,10 @@ app.get('/internalLanding', isAuthenticated, isVolunteer, (req, res) => {
       'starttime',
       'contactname',
       'organization',
-      'startdaterange'
+      'startdaterange',
+      'contactname',
+      'contactphone',
+      'contactemail'
     )
     .where('eventstatus', 'planned')
     .orderBy('eventdate', 'asc')
@@ -239,7 +242,7 @@ app.get('/adminRedirect', (req, res) => {
   } else {
     res.redirect('/login'); // Redirect to login if not authenticated
   }
-});
+}); 
 
 // To post the new admin to the database
 app.post('/submitAdminForm', isAuthenticated, isAdmin, (req, res) => {
