@@ -1,0 +1,118 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="utf-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no" />
+        <meta name="description" content="" />
+        <meta name="author" content="" />
+        <title>Turtle Shelter Project - Volunteer</title>
+        <!-- Favicon-->
+        <link rel="icon" type="image/x-icon" href="assets/favicon.ico" />
+        <!-- Font Awesome icons (free version)-->
+        <script src="https://use.fontawesome.com/releases/v6.3.0/js/all.js" crossorigin="anonymous"></script>
+        <!-- Google fonts-->
+        <link href="https://fonts.googleapis.com/css?family=Montserrat:400,700" rel="stylesheet" type="text/css" />
+        <link href="https://fonts.googleapis.com/css?family=Roboto+Slab:400,100,300,700" rel="stylesheet" type="text/css" />
+        <!-- Core theme CSS (includes Bootstrap)-->
+        <link href="css/styles.css" rel="stylesheet" />
+        <style>
+            body {
+                padding-top: 80px; /* Ensure top content isn't cut off */
+            }
+            .info-card-container {
+                display: flex;
+                flex-wrap: wrap;
+                justify-content: space-between;
+                gap: 10px;
+                margin-top: 50px;
+            }
+            .info-card {
+                flex: 1;
+                padding: 10px;
+                border-radius: 8px;
+                text-align: center;
+                box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+                color: #fff;
+                max-width: 220px;
+                min-width: 150px;
+                margin-bottom: 20px;
+            }
+            .bg-pending { background-color: #ffc107; }
+            .bg-approved { background-color: #28a745; }
+            .bg-planned { background-color: #17a2b8; }
+            .bg-completed { background-color: #6c757d; }
+            .info-card h3 {
+                font-size: 17px;
+                margin-bottom: 5px;
+                margin-top: 5px;
+            }
+            .info-card p {
+                font-size: 24px;
+                font-weight: bold;
+            }
+           
+            .chart-row {
+                display: flex;
+                flex-wrap: wrap;
+                margin-top: 20px;
+                gap: 10px;
+            }
+            .chart-container {
+                flex: 1;
+                padding: 20px;
+                background-color: #fff;
+                border-radius: 8px;
+                box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+                min-width: 300px; /* Ensures charts maintain a good size */
+            }
+    
+            .table-container {
+                margin-top: 20px;
+            }
+            .thead-dark th {
+                position: sticky;
+                top: 0;
+                z-index: 1;
+                background-color: #303030;
+                color: white;
+            }
+        </style>
+    </head>
+    <body>
+        <!-- Navigation -->
+        <nav class="navbar navbar-expand-lg navbar-dark fixed-top" id="mainNav" style="background-color: #303030;">
+            <div class="container-fluid p-0">
+                <a class="navbar-brand" href="/volunteerPage"><img src="../assets/TSlogoLowRes.png" alt="..." />Turtle Shelter Project -- Volunteer</a>
+                <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarResponsive" aria-controls="navbarResponsive" aria-expanded="false" aria-label="Toggle navigation">
+                    Menu
+                    <i class="fas fa-bars ms-1"></i>
+                </button>
+                <div class="collapse navbar-collapse" id="navbarResponsive">
+                    <ul class="navbar-nav text-uppercase ms-auto py-4 py-lg-0">
+                        <li class="nav-item"><a class="nav-link" href="/volunteerPage"><i class="fas fa-tools"></i> Volunteer Home</a></li>
+                        <li class="nav-item dropdown">
+                            <a class="nav-link dropdown-toggle logout-btn" href="#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                <i class="fas fa-sign-out-alt"></i> Logout
+                            </a>
+                            <div class="dropdown-menu dropdown-menu-end" aria-labelledby="navbarDropdown">
+                                <a class="dropdown-item" href="/logout"><i class="fas fa-sign-out-alt"></i> Logout</a>
+                                <a class="dropdown-item" href="/"><i class="fas fa-home"></i> Return Home</a>
+                            </div>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </nav>
+    
+
+
+
+
+
+<!-- Bootstrap JS and Chart.js -->
+<script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.1/dist/umd/popper.min.js"></script>
+<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+</body>
+</html>
