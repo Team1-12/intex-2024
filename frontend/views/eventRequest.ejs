@@ -173,6 +173,34 @@
                         <textarea class="form-control" name="comments" id="comments" placeholder="Other Scheduling/Event Details" ></textarea>
                     </div>
                     <button class="btn btn-primary" type="submit">Send Request</button>
+                <!-- Confirmation Modal -->
+                <div class="modal fade" id="confirmationModal" tabindex="-1" aria-labelledby="confirmationModalLabel" aria-hidden="true">
+                    <div class="modal-dialog">
+                        <div class="modal-content">
+                            <div class="modal-header">
+                                <h5 class="modal-title" id="confirmationModalLabel">Form Submitted</h5>
+                                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                            </div>
+                            <div class="modal-body">
+                                Thank you! Your event request has been submitted successfully.
+                            </div>
+                            <div class="modal-footer">
+                                <button type="button" class="btn btn-primary" data-bs-dismiss="modal">OK</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <script>
+                    document.getElementById('eventRequestForm').addEventListener('submit', function(event) {
+                        event.preventDefault();
+                        var confirmationModal = new bootstrap.Modal(document.getElementById('confirmationModal'));
+                        confirmationModal.show();
+                        confirmationModal._element.addEventListener('hidden.bs.modal', function () {
+                            event.target.submit();
+                        });
+                    });
+                </script>
                 </form>
             </div>
         </section>
