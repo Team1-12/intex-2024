@@ -426,7 +426,7 @@ app.post('/saveVolunteer/:volunteerid', isAuthenticated, (req, res) => {
       howtheyheard: HowTheyHeard.toLowerCase(),
       sewinglevel: SewingLevel,
       monthlyhrswilling: parseInt(MonthlyHrsWilling),
-      leadwilling: LeadWilling,
+      leadwilling: LeadWilling.toLowerCase(),
       traveltime: parseInt(TravelTime),
       comments: Comments || 'No comments'
     })
