@@ -161,6 +161,101 @@
                   <option value="completed" <%= event.eventstatus === "completed" ? "selected" : "" %>>Completed</option>
                 </select>
               </div>
+
+              <!-- Additional Equipment and Event Details -->
+              <h3>Event and Equipment Details</h3>
+              <div class="row">
+                <!-- Number of Round Tables -->
+                <div class="form-group col-md-3">
+                  <label for="numroundtables">Number of Round Tables</label>
+                  <p>Enter the number of round tables available for the event.</p>
+                  <input class="form-control" type="number" name="numroundtables" id="numroundtables" value="<%= event.numroundtables || '' %>" />
+                </div>
+                
+                <!-- Number of Rectangle Tables -->
+                <div class="form-group col-md-3">
+                  <label for="numrectanglestables">Number of Rectangle Tables</label>
+                  <p>Enter the number of rectangle tables available for the event.</p>
+                  <input class="form-control" type="number" name="numrectanglestables" id="numrectanglestables" value="<%= event.numrectanglestables || '' %>" />
+                </div>
+
+                <!-- Number of Adults -->
+                <div class="form-group col-md-3">
+                  <label for="numadults">Number of Adults</label>
+                  <p>Enter the number of adult participants expected.</p>
+                  <input class="form-control" type="number" name="numadults" id="numadults" value="<%= event.numadults || '' %>" />
+                </div>
+
+                <!-- Number of Children -->
+                <div class="form-group col-md-3">
+                  <label for="numchildren">Number of Children</label>
+                  <p>Enter the number of child participants expected.</p>
+                  <input class="form-control" type="number" name="numchildren" id="numchildren" value="<%= event.numchildren || '' %>" />
+                </div>
+              </div>
+
+              <div class="row">
+                <!-- Actual Participants -->
+                <div class="form-group col-md-3">
+                  <label for="actualparticipants">Actual Participants</label>
+                  <p>Enter the actual number of participants who attended.</p>
+                  <input class="form-control" type="number" name="actualparticipants" id="actualparticipants" value="<%= event.actualparticipants || '' %>" />
+                </div>
+
+                <!-- Actual Duration -->
+                <div class="form-group col-md-3">
+                  <label for="actualduration">Actual Duration</label>
+                  <p>Enter the actual duration of the event in hours.</p>
+                  <input class="form-control" type="number" name="actualduration" id="actualduration" value="<%= event.actualduration || '' %>" />
+                </div>
+
+                <!-- Event Date -->
+                <div class="form-group col-md-3">
+                  <label for="eventdate">Event Date</label>
+                  <p>Select the actual date the event occurred.</p>
+                  <input class="form-control" type="date" name="eventdate" id="eventdate" value="<%= event.eventdate || '' %>" />
+                </div>
+              </div>
+
+              <div class="row">
+                <!-- Pockets -->
+                <div class="form-group col-md-3">
+                  <label for="pockets">Pockets</label>
+                  <p>Enter the number of pockets produced during the event.</p>
+                  <input class="form-control" type="number" name="pockets" id="pockets" value="<%= event.pockets || '' %>" />
+                </div>
+
+                <!-- Collars -->
+                <div class="form-group col-md-3">
+                  <label for="collars">Collars</label>
+                  <p>Enter the number of collars produced during the event.</p>
+                  <input class="form-control" type="number" name="collars" id="collars" value="<%= event.collars || '' %>" />
+                </div>
+
+                <!-- Envelopes -->
+                <div class="form-group col-md-3">
+                  <label for="envelopes">Envelopes</label>
+                  <p>Enter the number of envelopes produced during the event.</p>
+                  <input class="form-control" type="number" name="envelopes" id="envelopes" value="<%= event.envelopes || '' %>" />
+                </div>
+
+                <!-- Vests -->
+                <div class="form-group col-md-3">
+                  <label for="vests">Vests</label>
+                  <p>Enter the number of vests produced during the event.</p>
+                  <input class="form-control" type="number" name="vests" id="vests" value="<%= event.vests || '' %>" />
+                </div>
+              </div>
+
+              <div class="row">
+                <!-- Completed Products -->
+                <div class="form-group col-md-3">
+                  <label for="completedproducts">Completed Products</label>
+                  <p>Enter the total number of completed products during the event.</p>
+                  <input class="form-control" type="number" name="completedproducts" id="completedproducts" value="<%= event.completedproducts || '' %>" />
+                </div>
+              </div>
+
               <div class="form-group">
                 <button class="btn btn-primary" type="submit">Update Record</button>
               </div>
