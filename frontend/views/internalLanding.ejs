@@ -5,7 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no" />
     <meta name="description" content="" />
     <meta name="author" content="" />
-    <title>Internal Landing Page</title>
+    <title>Turtle Volunteer Records</title>
     <!-- Favicon-->
     <link rel="icon" type="image/x-icon" href="assets/favicon.ico" />
     <!-- Font Awesome icons (free version)-->
@@ -15,27 +15,199 @@
     <link href="https://fonts.googleapis.com/css?family=Roboto+Slab:400,100,300,700" rel="stylesheet" type="text/css" />
     <!-- Core theme CSS (includes Bootstrap)-->
     <link href="css/styles.css" rel="stylesheet" />
+    <style>
+        .table-responsive {
+            margin-top: 20px;
+            max-height: 500px;
+            overflow-y: auto;
+        }
+        .thead-dark th {
+            position: sticky;
+            top: 0;
+            z-index: 1;
+            background-color: #303030;
+            color: white;
+        }
+        .dropdown-menu {
+            right: 0; /* Aligns the dropdown menu with the edge of the button */
+            left: auto; /* Prevents overlap with the toggle button */
+        }
+    </style>
 </head>
-
 <body>
     <!-- Navigation-->
     <nav class="navbar navbar-expand-lg navbar-dark fixed-top" id="mainNav" style="background-color: #303030;">
         <div class="container-fluid p-0" style="background-color: #303030;">
-            <a class="navbar-brand" href="#page-top"><img src="../assets/TSlogoLowRes.png" alt="..." />Turtle Shelter Project -- Admin</a>
+            <a class="navbar-brand" href="/internalLanding"><img src="../assets/TSlogoLowRes.png" alt="..." />Turtle Shelter Project -- Admin</a>
             <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarResponsive" aria-controls="navbarResponsive" aria-expanded="false" aria-label="Toggle navigation">
                 Menu
                 <i class="fas fa-bars ms-1"></i>
             </button>
             <div class="collapse navbar-collapse" id="navbarResponsive">
                 <ul class="navbar-nav text-uppercase ms-auto py-4 py-lg-0">
-                    <li class="nav-item"><a class="nav-link" href="/internalLanding">Home</a></li>
-                    <li class="nav-item"><a class="nav-link" href="/eventRecords">Event Records</a></li>
-                    <li class="nav-item"><a class="nav-link" href="/volunteerRecords">Volunteer Records</a></li>
-                    <li class="nav-item"><a class="nav-link" href="/adminRecords">Admin Records</a></li>
-                    <li class="nav-item"><a class="nav-link" href="#team">Admin</a></li>
+                    <li class="nav-item"><a class="nav-link" href="/internalLanding"><i class="fas fa-tools"></i> Admin Home</a></li>
+                    <li class="nav-item"><a class="nav-link" href="/eventRecords"><i class="fas fa-calendar-alt"></i> Events</a></li>
+                    <li class="nav-item"><a class="nav-link" href="/volunteerRecords"><i class="fas fa-users"></i> Volunteers</a></li>
+                    <li class="nav-item"><a class="nav-link" href="/adminRecords"><i class="fas fa-user-cog"></i> Admins</a></li>
+                    <li class="nav-item dropdown">
+                        <a 
+                            class="nav-link dropdown-toggle logout-btn" 
+                            href="#" 
+                            id="navbarDropdown" 
+                            role="button" 
+                            data-toggle="dropdown" 
+                            aria-haspopup="true" 
+                            aria-expanded="false"
+                        >
+                            <i class="fas fa-sign-out-alt"></i> Logout
+                        </a>
+                        <div class="dropdown-menu dropdown-menu-end" aria-labelledby="navbarDropdown">
+                            <a class="dropdown-item" href="/logout">
+                                <i class="fas fa-sign-out-alt"></i> Logout
+                            </a>
+                            <a class="dropdown-item" href="/">
+                                <i class="fas fa-home"></i> Return Home
+                            </a>
+                        </div>
+                    </li>
+                    
                 </ul>
             </div>
         </div>
-    </nav>
+      </nav>
+
+    <!-- Main content -->
+    <div class="container-fluid">
+        <!-- Header -->
+        <div
+            class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pt-3 pb-2 mb-3 border-bottom">
+            <h1 class="h2">Dashboard</h1>
+        </div>
+
+        <!-- Content here -->
+        <h2>Overview</h2>
+        <div class="row">
+            <!-- Chart or dashboard elements -->
+            <div class="col-md-6 chart-container">
+                <!-- Placeholder for a chart -->
+                <canvas class="my-4 w-100" id="myChart" width="900" height="380"></canvas>
+            </div>
+            <div class="col-md-6 chart-container">
+                <!-- Another chart or data -->
+                <canvas class="my-4 w-100" id="myChart2" width="900" height="380"></canvas>
+            </div>
+        </div>
+
+        <!-- Additional content -->
+        <h2>Recent Activity</h2>
+        <div class="table-responsive">
+            <!-- Placeholder for a table or other content -->
+            <table class="table table-striped table-sm">
+                <thead>
+                    <tr>
+                        <th>#</th>
+                        <th>Activity</th>
+                        <th>Date</th>
+                        <th>User</th>
+                        <th>Status</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <!-- Table data -->
+                    <tr>
+                        <td>1</td>
+                        <td>New Event Requested</td>
+                        <td>2023-10-12</td>
+                        <td>John Doe</td>
+                        <td>Pending</td>
+                    </tr>
+                    <!-- Add more rows as needed -->
+                </tbody>
+            </table>
+        </div>
+
+    </div>
+
+    <!-- Bootstrap JS and dependencies (Popper.js and jQuery) -->
+    <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+    <script
+        src="https://cdn.jsdelivr.net/npm/popper.js@1.16.1/dist/umd/popper.min.js"></script>
+    <script
+        src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+    <!-- Chart.js for charts -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <!-- Custom scripts for this template -->
+    <script>
+        // Sample data for Chart 1
+        var ctx = document.getElementById('myChart').getContext('2d');
+        var myChart = new Chart(ctx, {
+            type: 'line', // Chart type
+            data: {
+                labels: ['January', 'February', 'March', 'April', 'May', 'June', 'July'],
+                datasets: [{
+                    label: 'Volunteer Sign-ups',
+                    data: [3, 5, 2, 8, 7, 10, 6],
+                    backgroundColor: 'rgba(117, 184, 79, 0.5)', // Turtle green with opacity
+                    borderColor: 'rgba(117, 184, 79, 1)', // Turtle green
+                    fill: false,
+                    lineTension: 0
+                }]
+            },
+            options: {
+                responsive: true,
+                title: {
+                    display: true,
+                    text: 'Monthly Volunteer Sign-ups'
+                },
+                scales: {
+                    yAxes: [{
+                        ticks: {
+                            beginAtZero: true,
+                            precision: 0
+                        }
+                    }]
+                }
+            }
+        });
+
+        // Sample data for Chart 2
+        var ctx2 = document.getElementById('myChart2').getContext('2d');
+        var myChart2 = new Chart(ctx2, {
+            type: 'bar', // Chart type
+            data: {
+                labels: ['Events', 'Volunteers', 'Admins'],
+                datasets: [{
+                    label: 'Total Count',
+                    data: [12, 50, 5],
+                    backgroundColor: [
+                        'rgba(117, 184, 79, 0.7)', // Turtle green
+                        'rgba(54, 162, 235, 0.7)', // Blue
+                        'rgba(255, 206, 86, 0.7)'  // Yellow
+                    ],
+                    borderColor: [
+                        'rgba(117, 184, 79, 1)',
+                        'rgba(54,162,235,1)',
+                        'rgba(255,206,86,1)'
+                    ],
+                    borderWidth: 1
+                }]
+            },
+            options: {
+                responsive: true,
+                title: {
+                    display: true,
+                    text: 'Current Totals'
+                },
+                scales: {
+                    yAxes: [{
+                        ticks: {
+                            beginAtZero: true,
+                            precision: 0
+                        }
+                    }]
+                }
+            }
+        });
+    </script>
 </body>
 </html>

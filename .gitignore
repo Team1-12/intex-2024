@@ -27,3 +27,7 @@ DB_HOST=localhost
 DB_USER=postgres
 DB_PASSWORD=V0lleyball#5
 DB_NAME=
+
+# random needed colors
+Light turtle green: 619c3f
+Dark turtle green: 
