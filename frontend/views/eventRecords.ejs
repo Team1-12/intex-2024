@@ -1,245 +1,177 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>Event Records</title>
-  
-  <!-- Bootstrap CSS -->
-  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
-  
-  <!-- Font Awesome Icons -->
-  <link rel="stylesheet" href="https://use.fontawesome.com/releases/v6.3.0/css/all.css" crossorigin="anonymous">
-  
-  <!-- Custom Styles -->
-  <style>
-    body {
-      padding-top: 70px; /* To prevent content overlap with fixed navbar */
-      background-color: #f8f9fa;
-    }
-    .filter-dropdown {
-      margin-bottom: 20px;
-    }
-    .add-event-btn {
-      margin: 20px 0;
-    }
-    table {
-      width: 100%;
-      font-size: 14px;
-    }
-    th, td {
-      text-align: center;
-      vertical-align: middle;
-    }
-    .no-data {
-      text-align: center;
-      font-style: italic;
-    }
-    /* Responsive Adjustments */
-    @media (max-width: 768px) {
-      table {
-        font-size: 12px;
-      }
-      .add-event-btn button {
-        width: 100%;
-      }
-    }
-    .dropdown-menu {
-        right: 0; /* Aligns the dropdown menu with the edge of the button */
-        left: auto; /* Prevents overlap with the toggle button */
-    }
-  
-    .hidden {
-      display: none;
-    }
-
-  </style>
-
-  
-  <!-- Bootstrap JS Bundle (Includes Popper) -->
-  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no" />
+    <meta name="description" content="" />
+    <meta name="author" content="" />
+    <title>Event Records</title>
+    <!-- Favicon-->
+    <link rel="icon" type="image/x-icon" href="assets/favicon.ico" />
+    <!-- Font Awesome icons (free version)-->
+    <script src="https://use.fontawesome.com/releases/v6.3.0/js/all.js" crossorigin="anonymous"></script>
+    <!-- Google fonts-->
+    <link href="https://fonts.googleapis.com/css?family=Montserrat:400,700" rel="stylesheet" type="text/css" />
+    <link href="https://fonts.googleapis.com/css?family=Roboto+Slab:400,100,300,700" rel="stylesheet" type="text/css" />
+    <!-- Core theme CSS (includes Bootstrap)-->
+    <link href="css/styles.css" rel="stylesheet" />
+    <style>
+        .table-responsive {
+            margin-top: 20px;
+            max-height: 500px;
+            overflow-y: auto;
+            overflow-x: auto; /* Enable horizontal scrolling */
+        }
+        .thead-dark th {
+            position: sticky;
+            top: 0;
+            z-index: 1;
+            background-color: #303030;
+            color: white;
+        }
+        .dropdown-menu {
+            right: 0; /* Aligns the dropdown menu with the edge of the button */
+            left: auto; /* Prevents overlap with the toggle button */
+        }
+        .hide-on-completed {
+            display: table-cell;
+        }
+        .completed-column {
+            display: none;
+        }
+    </style>
 </head>
 <body>
-  
-  <!-- Custom Navigation Bar -->
-  <nav class="navbar navbar-expand-lg navbar-dark fixed-top" id="mainNav" style="background-color: #759145;">
-    <div class="container-fluid p-0" style="background-color: #759145;">
-      <a class="navbar-brand" href="/" style="color: #f7f4de;">
-        <img src="../assets/TSlogoLowRes.png" alt="Turtle Shelter Project Logo" style="height: 40px; margin-right: 10px;" />Turtle Shelter Project
-      </a>
-      <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarResponsive" aria-controls="navbarResponsive" aria-expanded="false" aria-label="Toggle navigation" style="color: #f7f4de;">
-        Menu
-        <i class="fas fa-bars ms-1"></i>
-      </button>
-      <div class="collapse navbar-collapse" id="navbarResponsive">
-          <ul class="navbar-nav text-uppercase ms-auto py-4 py-lg-0">
-            <li class="nav-item"><a class="nav-link" href="/internalLanding"><i class="fas fa-tools"></i> Admin Home</a></li>
-            <li class="nav-item"><a class="nav-link" href="/eventRecords"><i class="fas fa-calendar-alt"></i> Events</a></li>
-            <li class="nav-item"><a class="nav-link" href="/volunteerRecords"><i class="fas fa-users"></i> Volunteers</a></li>
-            <li class="nav-item"><a class="nav-link" href="/adminRecords"><i class="fas fa-user-cog"></i> Admins</a></li>
-            <li class="nav-item dropdown">
-                <a 
-                    class="nav-link dropdown-toggle logout-btn" 
-                    href="#" 
-                    id="navbarDropdown" 
-                    role="button" 
-                    data-toggle="dropdown" 
-                    aria-haspopup="true" 
-                    aria-expanded="false"
-                >
-                    <i class="fas fa-sign-out-alt"></i> Logout
-                </a>
-                <div class="dropdown-menu dropdown-menu-end" aria-labelledby="navbarDropdown">
-                    <a class="dropdown-item" href="/logout">
-                        <i class="fas fa-sign-out-alt"></i> Logout
-                    </a>
-                    <a class="dropdown-item" href="/">
-                        <i class="fas fa-home"></i> Return Home
-                    </a>
-                </div>
-            </li>
-          </ul>
-      </div>
-    </div>
-  </nav>
+    <!-- Navigation-->
+    <nav class="navbar navbar-expand-lg navbar-dark fixed-top" id="mainNav" style="background-color: #303030;">
+        <div class="container-fluid p-0">
+            <a class="navbar-brand" href="/internalLanding"><img src="../assets/TSlogoLowRes.png" alt="..." />Turtle Shelter Project -- Admin</a>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarResponsive" aria-controls="navbarResponsive" aria-expanded="false" aria-label="Toggle navigation">
+                Menu
+                <i class="fas fa-bars ms-1"></i>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarResponsive">
+                <ul class="navbar-nav text-uppercase ms-auto py-4 py-lg-0">
+                    <li class="nav-item"><a class="nav-link" href="/internalLanding"><i class="fas fa-tools"></i> Admin Home</a></li>
+                    <li class="nav-item"><a class="nav-link" href="/eventRecords"><i class="fas fa-calendar-alt"></i> Events</a></li>
+                    <li class="nav-item"><a class="nav-link" href="/volunteerRecords"><i class="fas fa-users"></i> Volunteers</a></li>
+                    <li class="nav-item"><a class="nav-link" href="/adminRecords"><i class="fas fa-user-cog"></i> Admins</a></li>
+                    <li class="nav-item dropdown">
+                        <a 
+                            class="nav-link dropdown-toggle logout-btn" 
+                            href="#" 
+                            id="navbarDropdown" 
+                            role="button" 
+                            data-toggle="dropdown" 
+                            aria-haspopup="true" 
+                            aria-expanded="false"
+                        >
+                            <i class="fas fa-sign-out-alt"></i> Logout
+                        </a>
+                        <div class="dropdown-menu dropdown-menu-end" aria-labelledby="navbarDropdown">
+                            <a class="dropdown-item" href="/logout">
+                                <i class="fas fa-sign-out-alt"></i> Logout
+                            </a>
+                            <a class="dropdown-item" href="/">
+                                <i class="fas fa-home"></i> Return Home
+                            </a>
+                        </div>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </nav>
 
-  <!-- Column Toggle that hides/unhides column fields-->
-  <script>
-    document.addEventListener('DOMContentLoaded', function () {
-      const dropdown = document.getElementById('status');
-      const completedColumns = document.querySelectorAll('.completed-column');
-      const hideOnCompletedColumns = document.querySelectorAll('.hide-on-completed');
-      
-      function toggleColumns() {
-        const isCompleted = dropdown.value === 'completed';
-        
-        completedColumns.forEach(column => {
-          column.style.display = isCompleted ? '' : 'none';
-        });
-        
-        hideOnCompletedColumns.forEach(column => {
-          column.style.display = isCompleted ? 'none' : '';
-        });
-      }
-  
-      dropdown.addEventListener('change', toggleColumns);
-  
-      // Initial state
-      toggleColumns();
-    });
-  </script>
-  
-    
-
-  
-  
-  <!-- Main Content Container -->
-  <div class="container">
-    
-    <!-- Main Heading -->
-    <h1 class="text-center my-4">Event Requests</h1>
-    
-    
-    <!-- Filter Dropdown Aligned to Left -->
-    <div class="row filter-dropdown">
-      <div class="col-md-4 col-sm-6">
-        <form action="/eventRecords" method="GET">
-          <div class="input-group">
-            <label class="input-group-text" for="status">Filter by Status</label>
-            <select name="status" id="status" class="form-select" onchange="this.form.submit()">
-              <option value="all" <%= eventstatus === 'all' || !eventstatus ? 'selected' : '' %>>All</option>
-              <option value="pending" <%= eventstatus === 'pending' ? 'selected' : '' %>>Pending</option>
-              <option value="approved" <%= eventstatus === 'approved' ? 'selected' : '' %>>Approved</option>
-              <option value="planned" <%= eventstatus === 'planned' ? 'selected' : '' %>>Planned</option>
-              <option value="completed" <%= eventstatus === 'completed' ? 'selected' : '' %>>Completed</option>
-            </select>
-          </div>
-        </form>
-      </div>
+    <main style="padding-top: 70px;"></main>
+    <div class="container mt-5" style="max-width: 90%;">
+        <h2>Event Records</h2>
+        <!-- Filter Dropdown -->
+        <div class="row filter-dropdown">
+            <div class="col-md-4 col-sm-6">
+                <form>
+                    <div class="input-group">
+                        <label class="input-group-text" for="status">Filter by Status</label>
+                        <select name="status" id="status" class="form-select" onchange="window.location.href = '/eventRecords?status=' + this.value;">
+                            <option value="all" <%= eventstatus === 'all' ? 'selected' : '' %>>All</option>
+                            <option value="pending" <%= eventstatus === 'pending' ? 'selected' : '' %>>Pending</option>
+                            <option value="approved" <%= eventstatus === 'approved' ? 'selected' : '' %>>Approved</option>
+                            <option value="planned" <%= eventstatus === 'planned' ? 'selected' : '' %>>Planned</option>
+                            <option value="completed" <%= eventstatus === 'completed' ? 'selected' : '' %>>Completed</option>
+                        </select>
+                    </div>
+                </form>
+            </div>
+        </div>
+        <div class="table-responsive" style="width: 100%;">
+            <table class="table table-striped table-bordered" style="width: 100%;">
+                <thead class="thead-dark">
+                    <tr>
+                        <th>Event Status</th>
+                        <th>Event Date</th>
+                        <th class="hide-on-completed">City</th>
+                        <th class="hide-on-completed">State</th>
+                        <th class="hide-on-completed">Zip</th>
+                        <th>Contact Name</th>
+                        <th class="hide-on-completed">Event Activities</th>
+                        <th>Organization</th>
+                        <th class="completed-column">Pockets</th>
+                        <th class="completed-column">Collars</th>
+                        <th class="completed-column">Envelopes</th>
+                        <th class="completed-column">Vests</th>
+                        <th class="completed-column">Completed Products</th>
+                        <th>Actions</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <% if (events.length > 0) { %>
+                        <% events.forEach(event => { %>
+                            <tr>
+                                <td><%= event.eventstatus.charAt(0).toUpperCase() + event.eventstatus.slice(1) %></td>
+                                <td>
+                                    <%= event.eventdate 
+                                        ? new Date(event.eventdate).toLocaleDateString('en-US') 
+                                        : (event.startdaterange 
+                                            ? new Date(event.startdaterange).toLocaleDateString('en-US') 
+                                            : '') 
+                                    %>
+                                </td>
+                                <td class="hide-on-completed"><%= event.city %></td>
+                                <td class="hide-on-completed"><%= event.state %></td>
+                                <td class="hide-on-completed"><%= event.zip %></td>
+                                <td><%= event.contactname %></td>
+                                <td class="hide-on-completed"><%= event.eventactivities %></td>
+                                <td><%= event.organization %></td>
+                                <td class="completed-column"><%= event.pockets || '' %></td>
+                                <td class="completed-column"><%= event.collars || '' %></td>
+                                <td class="completed-column"><%= event.envelopes || '' %></td>
+                                <td class="completed-column"><%= event.vests || '' %></td>
+                                <td class="completed-column"><%= event.completedproducts || '' %></td>
+                                <td>
+                                    <form action="/editEventRec/<%= event.eventid %>" method="GET" style="display:inline;">
+                                        <button type="submit" class="btn btn-primary btn-sm">Edit</button>
+                                    </form>
+                                    <form action="/deleteEventRec/<%= event.eventid %>" method="POST" style="display:inline;">
+                                        <button type="submit" onclick="return confirm('Are you sure you want to delete this record?');" class="btn btn-danger btn-sm">Delete</button>
+                                    </form>
+                                </td>
+                            </tr>
+                        <% }); %>
+                    <% } else { %>
+                        <tr>
+                            <td colspan="14" class="text-center">No event records available.</td>
+                        </tr>
+                    <% } %>
+                </tbody>
+            </table>
+        </div>
+        <div class="add-event-btn text-center">
+            <form action="/eventRequest" method="GET">
+                <button type="submit" class="btn btn-success">Add Event</button>
+            </form>
+        </div>
     </div>
-    
-    <!-- Event Records Table -->
-    <div class="table-responsive">
-      <table class="table table-striped table-bordered">
-        <thead class="table-dark">
-          <tr>
-            <th>Event Status</th>
-            <th>Event Date</th>
-            <th class="hide-on-completed">City</th>
-            <th class="hide-on-completed">State</th>
-            <th class="hide-on-completed">Zip</th>
-            <th>Contact Name</th>
-            <th class="hide-on-completed">Event Activities</th>
-            <th>Organization</th>
-            <th class="completed-column">Pockets</th>
-            <th class="completed-column">Collars</th>
-            <th class="completed-column">Envelopes</th>
-            <th class="completed-column">Vests</th>
-            <th class="completed-column">Completed Products</th>
-            <th>Actions</th>
-          </tr>
-        </thead>
-        
-        <tbody>
-          <% if (events.length > 0) { %>
-            <% events.forEach(row => { %>
-              <tr>
-                <td><%= row.eventstatus.charAt(0).toUpperCase() + row.eventstatus.slice(1) %></td>
-                <td>
-                  <%= row.eventdate 
-                      ? new Date(row.eventdate).toLocaleDateString('en-US') 
-                      : (row.startdaterange 
-                          ? new Date(row.startdaterange).toLocaleDateString('en-US') 
-                          : '') 
-                  %>
-                </td>
-                <td class="hide-on-completed"><%= row.city %></td>
-                <td class="hide-on-completed"><%= row.state %></td>
-                <td class="hide-on-completed"><%= row.zip %></td>
-                <td><%= row.contactname %></td>
-                <td class="hide-on-completed"><%= row.eventactivities %></td>
-                <td><%= row.organization %></td>
-                <td class="completed-column"><%= row.pockets || '' %></td>
-                <td class="completed-column"><%= row.collars || '' %></td>
-                <td class="completed-column"><%= row.envelopes || '' %></td>
-                <td class="completed-column"><%= row.vests || '' %></td>
-                <td class="completed-column"><%= row.completedproducts || '' %></td>
-                <td>
-                  <form action="/editEventRec/<%= row.eventid %>" method="GET" class="d-inline">
-                    <button type="submit" class="btn btn-primary btn-sm">Edit</button>
-                  </form>
-                  <form action="/deleteEventRec/<%= row.eventid %>" method="POST" class="d-inline">
-                    <button type="submit" class="btn btn-danger btn-sm" onclick="return confirm('Are you sure you want to delete this record?');">Delete</button>
-                  </form>
-                </td>
-              </tr>
-            <% }) %>
-          <% } else { %>
-            <tr>
-              <td colspan="13" class="no-data">No data available</td>
-            </tr>
-          <% } %>
-        </tbody>
-        
-        
-        
-      </table>
-    </div>
-    
-    <!-- Add Event Button -->
-    <div class="add-event-btn text-center">
-      <form action="/eventRequest" method="GET">
-        <button type="submit" class="btn btn-success">Add Event</button>
-      </form>
-    </div>
-    
-  </div>
-  <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
-<script
-    src="https://cdn.jsdelivr.net/npm/popper.js@1.16.1/dist/umd/popper.min.js"></script>
-<script
-    src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
-<!-- Chart.js for charts -->
-<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.1/dist/umd/popper.min.js"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
 </body>
 </html>

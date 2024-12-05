@@ -5,7 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no" />
     <meta name="description" content="" />
     <meta name="author" content="" />
-    <title>Turtle Volunteer Records</title>
+    <title>Turtle Shelter Project - Admin Dashboard</title>
     <!-- Favicon-->
     <link rel="icon" type="image/x-icon" href="assets/favicon.ico" />
     <!-- Font Awesome icons (free version)-->
@@ -16,10 +16,58 @@
     <!-- Core theme CSS (includes Bootstrap)-->
     <link href="css/styles.css" rel="stylesheet" />
     <style>
-        .table-responsive {
+        body {
+            padding-top: 80px; /* Ensure top content isn't cut off */
+        }
+        .info-card-container {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: space-between;
+            gap: 10px;
+            margin-top: 50px;
+        }
+        .info-card {
+            flex: 1;
+            padding: 10px;
+            border-radius: 8px;
+            text-align: center;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            color: #fff;
+            max-width: 220px;
+            min-width: 150px;
+            margin-bottom: 20px;
+        }
+        .bg-pending { background-color: #ffc107; }
+        .bg-approved { background-color: #28a745; }
+        .bg-planned { background-color: #17a2b8; }
+        .bg-completed { background-color: #6c757d; }
+        .info-card h3 {
+            font-size: 17px;
+            margin-bottom: 5px;
+            margin-top: 5px;
+        }
+        .info-card p {
+            font-size: 24px;
+            font-weight: bold;
+        }
+       
+        .chart-row {
+            display: flex;
+            flex-wrap: wrap;
             margin-top: 20px;
-            max-height: 500px;
-            overflow-y: auto;
+            gap: 10px;
+        }
+        .chart-container {
+            flex: 1;
+            padding: 20px;
+            background-color: #fff;
+            border-radius: 8px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            min-width: 300px; /* Ensures charts maintain a good size */
+        }
+
+        .table-container {
+            margin-top: 20px;
         }
         .thead-dark th {
             position: sticky;
@@ -28,16 +76,12 @@
             background-color: #303030;
             color: white;
         }
-        .dropdown-menu {
-            right: 0; /* Aligns the dropdown menu with the edge of the button */
-            left: auto; /* Prevents overlap with the toggle button */
-        }
     </style>
 </head>
 <body>
-    <!-- Navigation-->
+    <!-- Navigation -->
     <nav class="navbar navbar-expand-lg navbar-dark fixed-top" id="mainNav" style="background-color: #303030;">
-        <div class="container-fluid p-0" style="background-color: #303030;">
+        <div class="container-fluid p-0">
             <a class="navbar-brand" href="/internalLanding"><img src="../assets/TSlogoLowRes.png" alt="..." />Turtle Shelter Project -- Admin</a>
             <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarResponsive" aria-controls="navbarResponsive" aria-expanded="false" aria-label="Toggle navigation">
                 Menu
@@ -50,162 +94,134 @@
                     <li class="nav-item"><a class="nav-link" href="/volunteerRecords"><i class="fas fa-users"></i> Volunteers</a></li>
                     <li class="nav-item"><a class="nav-link" href="/adminRecords"><i class="fas fa-user-cog"></i> Admins</a></li>
                     <li class="nav-item dropdown">
-                        <a 
-                            class="nav-link dropdown-toggle logout-btn" 
-                            href="#" 
-                            id="navbarDropdown" 
-                            role="button" 
-                            data-toggle="dropdown" 
-                            aria-haspopup="true" 
-                            aria-expanded="false"
-                        >
+                        <a class="nav-link dropdown-toggle logout-btn" href="#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                             <i class="fas fa-sign-out-alt"></i> Logout
                         </a>
                         <div class="dropdown-menu dropdown-menu-end" aria-labelledby="navbarDropdown">
-                            <a class="dropdown-item" href="/logout">
-                                <i class="fas fa-sign-out-alt"></i> Logout
-                            </a>
-                            <a class="dropdown-item" href="/">
-                                <i class="fas fa-home"></i> Return Home
-                            </a>
+                            <a class="dropdown-item" href="/logout"><i class="fas fa-sign-out-alt"></i> Logout</a>
+                            <a class="dropdown-item" href="/"><i class="fas fa-home"></i> Return Home</a>
                         </div>
                     </li>
-                    
                 </ul>
             </div>
         </div>
-      </nav>
+    </nav>
 
     <!-- Main content -->
-    <div class="container-fluid">
+    <div class="container-fluid mt-5">
         <!-- Header -->
-        <div
-            class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pt-3 pb-2 mb-3 border-bottom">
-            <h1 class="h2">Dashboard</h1>
-        </div>
+        <h1 class="h2">Admin Dashboard</h1>
 
-        <!-- Content here -->
-        <h2>Overview</h2>
-        <div class="row">
-            <!-- Chart or dashboard elements -->
-            <div class="col-md-6 chart-container">
-                <!-- Placeholder for a chart -->
-                <canvas class="my-4 w-100" id="myChart" width="900" height="380"></canvas>
+        <!-- Event Status Overview -->
+        <div class="info-card-container">
+            <div class="info-card bg-pending">
+                <h3>Pending Events</h3>
+                <p><%= statusCounts.pending || 0 %></p>
             </div>
-            <div class="col-md-6 chart-container">
-                <!-- Another chart or data -->
-                <canvas class="my-4 w-100" id="myChart2" width="900" height="380"></canvas>
+            <div class="info-card bg-approved">
+                <h3>Approved Events</h3>
+                <p><%= statusCounts.approved || 0 %></p>
+            </div>
+            <div class="info-card bg-planned">
+                <h3>Planned Events</h3>
+                <p><%= statusCounts.planned || 0 %></p>
+            </div>
+            <div class="info-card bg-completed">
+                <h3>Completed Events</h3>
+                <p><%= statusCounts.completed || 0 %></p>
             </div>
         </div>
 
-        <!-- Additional content -->
-        <h2>Recent Activity</h2>
-        <div class="table-responsive">
-            <!-- Placeholder for a table or other content -->
-            <table class="table table-striped table-sm">
-                <thead>
-                    <tr>
-                        <th>#</th>
-                        <th>Activity</th>
-                        <th>Date</th>
-                        <th>User</th>
-                        <th>Status</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    <!-- Table data -->
-                    <tr>
-                        <td>1</td>
-                        <td>New Event Requested</td>
-                        <td>2023-10-12</td>
-                        <td>John Doe</td>
-                        <td>Pending</td>
-                    </tr>
-                    <!-- Add more rows as needed -->
-                </tbody>
-            </table>
+        <!-- Charts -->
+        <div class="chart-row">
+            <div class="chart-container">
+                <h3>Traffic Overview</h3>
+                <canvas id="chart1"></canvas>
+            </div>
+            <div class="chart-container">
+                <h3>Sales Overview</h3>
+                <canvas id="chart2"></canvas>
+            </div>
         </div>
 
+        <!-- Planned Events Table -->
+        <div class="table-container">
+            <h2>Planned Events</h2>
+            <div class="table-responsive">
+                <table class="table table-striped table-bordered">
+                    <thead class="thead-dark">
+                        <tr>
+                            <th>Event Status</th>
+                            <th>Event Date</th>
+                            <th>Start Time</th>
+                            <th>City</th>
+                            <th>State</th>
+                            <th>Zip</th>
+                            <th>Contact Name</th>
+                            <th>Event Activities</th>
+                            <th>Organization</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <% if (events && events.length > 0) { %>
+                            <% events.forEach(function(event) { %>
+                                <tr>
+                                    <td><%= event.eventstatus %></td>
+                                    <td><%= event.eventdate ? new Date(event.eventdate).toLocaleDateString('en-US') : 'N/A' %></td>
+                                    <td><%= event.starttime || 'N/A' %></td>
+                                    <td><%= event.city || 'N/A' %></td>
+                                    <td><%= event.state || 'N/A' %></td>
+                                    <td><%= event.zip || 'N/A' %></td>
+                                    <td><%= event.contactname || 'N/A' %></td>
+                                    <td><%= event.eventactivities || 'N/A' %></td>
+                                    <td><%= event.organization || 'N/A' %></td>
+                                </tr>
+                            <% }); %>
+                        <% } else { %>
+                            <tr>
+                                <td colspan="9" class="text-center">No planned events available.</td>
+                            </tr>
+                        <% } %>
+                    </tbody>
+                </table>
+            </div>
+        </div>
     </div>
 
-    <!-- Bootstrap JS and dependencies (Popper.js and jQuery) -->
+    <!-- Bootstrap JS and Chart.js -->
     <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
-    <script
-        src="https://cdn.jsdelivr.net/npm/popper.js@1.16.1/dist/umd/popper.min.js"></script>
-    <script
-        src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
-    <!-- Chart.js for charts -->
+    <script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.1/dist/umd/popper.min.js"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-    <!-- Custom scripts for this template -->
     <script>
-        // Sample data for Chart 1
-        var ctx = document.getElementById('myChart').getContext('2d');
-        var myChart = new Chart(ctx, {
-            type: 'line', // Chart type
+        // Chart.js Example Configurations
+        const ctx1 = document.getElementById('chart1').getContext('2d');
+        const chart1 = new Chart(ctx1, {
+            type: 'line',
             data: {
-                labels: ['January', 'February', 'March', 'April', 'May', 'June', 'July'],
+                labels: ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'],
                 datasets: [{
-                    label: 'Volunteer Sign-ups',
-                    data: [3, 5, 2, 8, 7, 10, 6],
-                    backgroundColor: 'rgba(117, 184, 79, 0.5)', // Turtle green with opacity
-                    borderColor: 'rgba(117, 184, 79, 1)', // Turtle green
-                    fill: false,
-                    lineTension: 0
+                    label: 'Traffic Overview',
+                    data: [1140, 1160, 1150, 1180, 1130, 1190, 1185, 1170, 1200, 1220, 1250, 1300],
+                    backgroundColor: 'rgba(54, 162, 235, 0.5)',
+                    borderColor: 'rgba(54, 162, 235, 1)',
+                    fill: true
                 }]
-            },
-            options: {
-                responsive: true,
-                title: {
-                    display: true,
-                    text: 'Monthly Volunteer Sign-ups'
-                },
-                scales: {
-                    yAxes: [{
-                        ticks: {
-                            beginAtZero: true,
-                            precision: 0
-                        }
-                    }]
-                }
             }
         });
 
-        // Sample data for Chart 2
-        var ctx2 = document.getElementById('myChart2').getContext('2d');
-        var myChart2 = new Chart(ctx2, {
-            type: 'bar', // Chart type
+        const ctx2 = document.getElementById('chart2').getContext('2d');
+        const chart2 = new Chart(ctx2, {
+            type: 'bar',
             data: {
-                labels: ['Events', 'Volunteers', 'Admins'],
+                labels: ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'],
                 datasets: [{
-                    label: 'Total Count',
-                    data: [12, 50, 5],
-                    backgroundColor: [
-                        'rgba(117, 184, 79, 0.7)', // Turtle green
-                        'rgba(54, 162, 235, 0.7)', // Blue
-                        'rgba(255, 206, 86, 0.7)'  // Yellow
-                    ],
-                    borderColor: [
-                        'rgba(117, 184, 79, 1)',
-                        'rgba(54,162,235,1)',
-                        'rgba(255,206,86,1)'
-                    ],
+                    label: 'Sales Overview',
+                    data: [200, 300, 400, 500, 600, 700, 800, 900, 1000, 1100, 1200, 1300],
+                    backgroundColor: 'rgba(75, 192, 192, 0.7)',
+                    borderColor: 'rgba(75, 192, 192, 1)',
                     borderWidth: 1
                 }]
-            },
-            options: {
-                responsive: true,
-                title: {
-                    display: true,
-                    text: 'Current Totals'
-                },
-                scales: {
-                    yAxes: [{
-                        ticks: {
-                            beginAtZero: true,
-                            precision: 0
-                        }
-                    }]
-                }
             }
         });
     </script>
