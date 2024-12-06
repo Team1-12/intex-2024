@@ -10,6 +10,9 @@ const port = process.env.PORT || 5001
 
 const session = require('express-session'); 
 
+const { SESClient, SendEmailCommand } = require('@aws-sdk/client-ses');
+
+
 app.use(express.urlencoded( {extended: true} )) //determines how html is received from forms. This allows us to grab stuff out of the HTML form
 
 app.set("view engine", "ejs") //shows what view engine we are using 
@@ -17,7 +20,7 @@ app.set("view engine", "ejs") //shows what view engine we are using
 app.set("views", path.join(__dirname, "../frontend/views")) //This is telling the server that we are going to start using certain views
 
 app.use(express.urlencoded({extended: true})); //allows us to get data out of the request.body
-
+app.use(express.json());
 
 // Session middleware setup
 app.use(session({
@@ -81,6 +84,101 @@ app.get('/donate', (req, res) => {
 
 });
 
+// Route to volunteer page
+app.get('/volunteerPage', isAuthenticated, isVolunteer, (req, res) => {
+  const volunteerId = req.session.volunteerid; // Retrieve volunteerid from the session
+
+  if (!volunteerId) {
+    return res.status(403).send('Forbidden');
+  }
+
+  // Query events the volunteer has NOT signed up for
+  knex('event')
+    .whereIn('eventstatus', ['approved', 'planned']) // Only approved or planned events
+    .whereNotIn('eventid', function () {
+      // Subquery to get event IDs the volunteer has signed up for
+      this.select('eventid')
+        .from('volunteer_events')
+        .where('volunteerid', volunteerId);
+    })
+    .orderBy('eventdate', 'asc')
+    .orderBy('startdaterange', 'asc')
+    .then(events => {
+      res.render('volunteerPage', { events }); // Pass events to the view
+    })
+    .catch(error => {
+      console.error('Error fetching events for volunteer:', error);
+      res.status(500).send('Internal Server Error');
+    });
+});
+
+// Route to add volunteer to an event
+app.post('/eventSignup', isAuthenticated, isVolunteer, (req, res) => {
+  const { eventid } = req.body;
+  const volunteerid = req.session.volunteerid; // Get the volunteerid from the session
+
+  if (!eventid || !volunteerid) {
+    return res.status(400).json({ message: 'Event ID and Volunteer ID are required.' });
+  }
+
+  knex('volunteer_events')
+    .insert({ eventid, volunteerid })
+    .then(() => {
+      res.redirect('/volunteerPage'); // Redirect to volunteerPage for volunteers
+    })
+    .catch(error => {
+      console.error('Error adding volunteer to event:', error);
+      res.status(500).json({ message: 'Internal Server Error' });
+    });
+});
+
+
+// To load the events that the volunteer is signed up for
+// Route to show events the volunteer is signed up for
+app.get('/volunteerMain', isAuthenticated, isVolunteer, (req, res) => {
+  const volunteerId = req.session.volunteerid; // Retrieve volunteer ID from the session
+
+  if (!volunteerId) {
+    return res.status(403).send('Forbidden');
+  }
+
+  // Query events the volunteer is signed up for
+  knex('event')
+    .join('volunteer_events', 'event.eventid', 'volunteer_events.eventid') // Join event table with volunteer_events table
+    .select('event.*') // Select all event details
+    .where('volunteer_events.volunteerid', volunteerId) // Filter for events signed up by this volunteer
+    .orderBy('eventdate', 'asc')
+    .orderBy('startdaterange', 'asc')
+    .then(events => {
+      res.render('volunteerMain', { events }); // Render the 'myEvents' view and pass the events
+    })
+    .catch(error => {
+      console.error('Error fetching signed-up events:', error);
+      res.status(500).send('Internal Server Error');
+    });
+});
+
+
+// Remove the volunteer from the event
+app.post('/removeSignup', isAuthenticated, (req, res) => {
+  const { eventid } = req.body; // Extract eventid from the request body
+  const volunteerid = req.session.volunteerid; // Get volunteerid from the session
+
+  if (!eventid || !volunteerid) {
+    return res.status(400).send('Missing event or volunteer ID.');
+  }
+
+  knex('volunteer_events')
+    .where({ eventid, volunteerid })
+    .del()
+    .then(() => {
+      res.redirect('/volunteerMain'); // Redirect to volunteerMain for volunteers
+    })
+    .catch(error => {
+      console.error('Error removing volunteer from event:', error);
+      res.status(500).send('Internal Server Error');
+    });
+});
 
 //Route to volunteer form page
 app.get('/volunteerForm', (req, res) => {
@@ -92,12 +190,23 @@ app.get('/volunteerForm', (req, res) => {
 app.get('/addAdmin', isAuthenticated, (req, res) => {
   res.render('adminForm'); 
 
-});
+});  
 
 app.get('/login', (req, res) => {
-  res.render('login'); 
+  // Check if the user is already authenticated
+  if (req.session && req.session.isAuthenticated) {
+    // Redirect based on the user's role
+    if (req.session.userRole === 'admin') {
+      return res.redirect('/internalLanding');
+    } else if (req.session.userRole === 'volunteer') {
+      return res.redirect('/volunteerMain');
+    }
+  }
 
+  // If not authenticated, render the login page
+  res.render('login');
 });
+ 
 
 app.post('/login', (req, res) => {
   const { username, password } = req.body;
@@ -106,33 +215,42 @@ app.post('/login', (req, res) => {
     return res.render('login', { error: 'Username and password are required.' });
   }
 
-   // Query the database to check if the username and password exist
-   knex('admin')
-   .select('*')
-   .where({ username, password }) // Note: Storing plaintext passwords is insecure
-   .first()
-   .then(user => {
-     if (user) {
-       // Set session variable
-       req.session.isAuthenticated = true;
-       req.session.save(err => {
-         if (err) {
-           console.error('Session save error:', err);
-           return res.status(500).send('Internal Server Error');
-         }
-         // Redirect to internal landing page if login is successful
-         res.redirect('/internalLanding');
-       });
-     } else {
-       // Render login page with error if invalid credentials
-       res.render('login', { error: 'Invalid username or password.' });
-     }
-   })
-   .catch(err => {
-     console.error('Database error:', err);
-     res.status(500).send('Internal Server Error');
-   });
+  // Query the database to check if the username and password exist
+  knex('admin')
+    .select('*')
+    .where({ username, password }) // Note: Storing plaintext passwords is insecure
+    .first()
+    .then(user => {
+      if (user) {
+        // Set session variables
+        req.session.isAuthenticated = true;
+        req.session.userRole = user.role; // Assuming the `role` column specifies the user's role (e.g., 'admin' or 'volunteer')
+        req.session.volunteerid = user.volunteerid; // Store volunteerid in the session
+
+        req.session.save(err => {
+          if (err) {
+            console.error('Session save error:', err);
+            return res.status(500).send('Internal Server Error');
+          }
+
+          // Redirect based on the user's role
+          if (user.role === 'admin') {
+            res.redirect('/internalLanding'); // Redirect to internalLanding for admin
+          } else if (user.role === 'volunteer') {
+            res.redirect('/volunteerMain'); // Redirect to volunteerPage for volunteers
+          }
+        });
+      } else {
+        // Render login page with error if invalid credentials
+        res.render('login', { error: 'Invalid username or password.' });
+      }
+    })
+    .catch(err => {
+      console.error('Database error:', err);
+      res.status(500).send('Internal Server Error');
+    });
 });
+
 
 // Authentication middleware
 function isAuthenticated(req, res, next) {
@@ -142,6 +260,24 @@ function isAuthenticated(req, res, next) {
   } else {
     // User is not authenticated, redirect to login page
     res.redirect('/login');
+  }
+}
+
+// Authorization middleware for admin users
+function isAdmin(req, res, next) {
+  if (req.session && req.session.userRole === 'admin') {
+    return next();
+  } else {
+    res.status(403).send('Access denied. Admins only.');
+  }
+}
+
+// Authorization middleware for regular users
+function isVolunteer(req, res, next) {
+  if (req.session && (req.session.userRole === 'volunteer' || req.session.userRole === 'admin')) {
+    return next();
+  } else {
+    res.status(403).send('Access denied.');
   }
 }
 
@@ -159,7 +295,7 @@ app.get('/logout', (req, res) => {
 });
 
 // Protected routes using the authentication middleware
-app.get('/internalLanding', isAuthenticated, (req, res) => {
+app.get('/internalLanding', isAuthenticated, isVolunteer, (req, res) => {
   const eventStatusCounts = knex('event')
     .select('eventstatus')
     .count('eventid as count')
@@ -175,10 +311,15 @@ app.get('/internalLanding', isAuthenticated, (req, res) => {
       'zip',
       'starttime',
       'contactname',
-      'organization'
+      'organization',
+      'startdaterange',
+      'contactname',
+      'contactphone',
+      'contactemail'
     )
     .where('eventstatus', 'planned')
-    .orderBy('eventdate', 'asc');
+    .orderBy('eventdate', 'asc')
+    .orderBy('startdaterange', 'asc');
 
   Promise.all([eventStatusCounts, plannedEvents])
     .then(([counts, events]) => {
@@ -196,15 +337,17 @@ app.get('/internalLanding', isAuthenticated, (req, res) => {
 });
 
 app.get('/adminRedirect', (req, res) => {
-  if (req.session && req.session.isAuthenticated) {
-    res.redirect('/internalLanding'); // Redirect to internalLanding if authenticated
+  if (req.session && req.session.isAuthenticated && req.session.isAdmin) {
+    res.redirect('/internalLanding'); // Redirect to internalLanding if authenticated as admin
+  } else if (req.session && req.session.isAuthenticated && req.session.isVolunteer) {
+    res.redirect('/volunteerPage'); // Redirect to volunteerPage if authenticated as volunteer
   } else {
     res.redirect('/login'); // Redirect to login if not authenticated
   }
-});
+}); 
 
 // To post the new admin to the database
-app.post('/submitAdminForm', (req, res) => {
+app.post('/submitAdminForm', isAuthenticated, isAdmin, (req, res) => {
   // Access each value directly from req.body
   const firstname = req.body.FirstName.toLowerCase();
   const lastname = req.body.LastName.toLowerCase();
@@ -220,6 +363,7 @@ app.post('/submitAdminForm', (req, res) => {
   const comments = req.body.Comments || 'No comments';
   const username = req.body.username;
   const password = req.body.password;
+  const role = req.body.role;
 
   // Use a transaction to ensure both inserts happen together
   knex.transaction(trx => {
@@ -249,6 +393,7 @@ app.post('/submitAdminForm', (req, res) => {
           volunteerid: volunteerId,
           username: username,
           password: password,
+          role : role,
         });
       });
   })
@@ -262,13 +407,13 @@ app.post('/submitAdminForm', (req, res) => {
 });
 
  //Route to display events with optional status filter
-app.get('/eventRecords', (req, res) => {
+app.get('/eventRecords', isAdmin, (req, res) => {
   const status = req.query.status; // Extract 'status' from query parameters
 
   const validStatuses = ['pending', 'approved', 'planned', 'completed'];
 
    //Start building the query
-  let query = knex('event').select('*');
+  let query = knex('event').select('*').orderBy('eventdate', 'asc').orderBy('startdaterange', 'asc');
 
    //Apply filter if a valid status is provided and not 'all'
   if (status && status.toLowerCase() !== 'all' && validStatuses.includes(status.toLowerCase())) {
@@ -290,7 +435,7 @@ app.get('/eventRecords', (req, res) => {
 });
 
 // Deletes a admin record
-app.post('/deleteAdmin/:volunteerid', isAuthenticated, (req, res) => {
+app.post('/deleteAdmin/:volunteerid', isAuthenticated, isAdmin, (req, res) => {
   const volunteerid = parseInt(req.params.volunteerid, 10); // Extract volunteer ID
 
   knex('admin')
@@ -309,11 +454,12 @@ app.post('/deleteAdmin/:volunteerid', isAuthenticated, (req, res) => {
 });
    
 
-// Deletes a Event
-app.post('/deleteEventRec/:eventid', isAuthenticated, (req, res) => {
-  const eventid = parseInt(req.params.eventid, 10); // Extract volunteer ID
+// Deletes an Event and any associated volunteer_event records
+app.post('/deleteEventRec/:eventid', isAuthenticated, isAdmin, (req, res) => {
+  const eventid = parseInt(req.params.eventid, 10); // Extract event ID
 
-  knex('event')
+  // Step 1: Delete associated records in volunteer_event
+  knex('volunteer_events')
     .where('eventid', eventid)
     .del()
     .then(() => {
@@ -324,12 +470,13 @@ app.post('/deleteEventRec/:eventid', isAuthenticated, (req, res) => {
       res.redirect('/eventRecords'); // Redirect after successful deletion
     })
     .catch(error => {
-      console.error('Error deleting Volunteer Record:', error);
+      console.error('Error deleting Event Record:', error);
       res.status(500).send('Internal Server Error');
     });
 });
 
-app.get('/volunteerRecords', isAuthenticated, (req, res) => {
+
+app.get('/volunteerRecords', isAuthenticated, isAdmin, (req, res) => {
   knex('volunteer')
     .select(
       'volunteerid',
@@ -346,6 +493,8 @@ app.get('/volunteerRecords', isAuthenticated, (req, res) => {
       'traveltime',
       'comments'
     )
+    .orderBy('lastname', 'asc')
+    .orderBy('firstname', 'asc')
     .then(volunteer => {
       // Render the volunteerRecords.ejs template and pass the data
       res.render('volunteerRecords', { volunteer });
@@ -357,16 +506,108 @@ app.get('/volunteerRecords', isAuthenticated, (req, res) => {
     });
 });
 
-// Deletes a volunteer and any associated admin records
-app.post('/deleteVolunteer/:volunteerid', isAuthenticated, (req, res) => {
+//Make save functionality for the volunteer records
+app.post('/saveVolunteer/:volunteerid', isAuthenticated, (req, res) => {
+  const volunteerid = parseInt(req.params.volunteerid, 10);
+  const {
+    FirstName,
+    LastName,
+    Phone,
+    Email,
+    City,
+    state,
+    HowTheyHeard,
+    SewingLevel,
+    MonthlyHrsWilling,
+    LeadWilling,
+    TravelTime,
+    Comments
+  } = req.body;
+
+  knex('volunteer')
+    .where('volunteerid', volunteerid)
+    .update({
+      firstname: FirstName.toLowerCase(),
+      lastname: LastName.toLowerCase(),
+      phone: Phone,
+      email: Email.toLowerCase(),
+      city: City.toLowerCase(),
+      state: state,
+      howtheyheard: HowTheyHeard.toLowerCase(),
+      sewinglevel: SewingLevel.toLowerCase(),
+      monthlyhrswilling: parseInt(MonthlyHrsWilling),
+      leadwilling: LeadWilling.toLowerCase(),
+      traveltime: parseInt(TravelTime),
+      comments: Comments || 'No comments'
+    })
+    .then(() => {
+      res.redirect('/volunteerRecords');
+    })
+    .catch(error => {
+      console.error('Error updating volunteer:', error);
+      res.status(500).send('Internal Server Error');
+    });
+});
+
+//Make save functionality for the admin records
+app.post('/saveAdmin/:volunteerid', isAuthenticated, async (req, res) => {
+  const volunteerid = parseInt(req.params.volunteerid, 10);
+  const {
+    FirstName,
+    LastName,
+    Phone,
+    Email,
+    City,
+    state,
+    username,
+    password,
+    role,
+  } = req.body;
+
+  try {
+    // Update admin table
+    await knex('admin')
+      .where('volunteerid', volunteerid)
+      .update({
+        username: username,
+        password: password,
+        role: role.toLowerCase(),
+      });
+
+    // Update volunteer table
+    await knex('volunteer')
+      .where('volunteerid', volunteerid)
+      .update({
+        firstname: FirstName.toLowerCase(),
+        lastname: LastName.toLowerCase(),
+        phone: Phone,
+        email: Email.toLowerCase(),
+        city: City.toLowerCase(),
+        state: state,
+      });
+
+    // Redirect after both updates are successful
+    res.redirect('/adminRecords');
+  } catch (error) {
+    console.error('Error updating admin:', error);
+    res.status(500).send('Internal Server Error');
+  }
+});
+
+// Deletes a volunteer and any associated admin and volunteer_event records
+app.post('/deleteVolunteer/:volunteerid', isAuthenticated, isAdmin, (req, res) => {
   const volunteerid = parseInt(req.params.volunteerid, 10); // Extract volunteer ID
 
-  // Step 1: Delete associated admin record first
-  knex('admin')
+  // Step 1: Delete associated records in volunteer_event
+  knex('volunteer_events')
     .where('volunteerid', volunteerid)
     .del()
     .then(() => {
-      // Step 2: Delete the volunteer record
+      // Step 2: Delete associated admin record
+      return knex('admin').where('volunteerid', volunteerid).del();
+    })
+    .then(() => {
+      // Step 3: Delete the volunteer record
       return knex('volunteer').where('volunteerid', volunteerid).del();
     })
     .then(() => {
@@ -378,7 +619,8 @@ app.post('/deleteVolunteer/:volunteerid', isAuthenticated, (req, res) => {
     });
 });
 
-app.get('/editEventRec/:eventid', (req, res) => {
+
+app.get('/editEventRec/:eventid', isAuthenticated, isAdmin, (req, res) => {
   const eventid = req.params.eventid;
 
    //Query the Event by eventid
@@ -397,7 +639,7 @@ app.get('/editEventRec/:eventid', (req, res) => {
     });
 });
 
-app.post('/editEventRec/:eventid', (req, res) => {
+app.post('/editEventRec/:eventid', isAuthenticated, isAdmin, (req, res) => {
   const eventid = req.params.eventid;
 
   // Extract all fields from the request body
@@ -516,7 +758,7 @@ app.post('/editEventRec/:eventid', (req, res) => {
 
 
 // Route to display admin records
-app.get('/adminRecords', (req, res) => {
+app.get('/adminRecords', isAuthenticated, isAdmin, (req, res) => {
   knex('admin')
     .join('volunteer', 'volunteer.volunteerid', '=', 'admin.volunteerid')
     .select(
@@ -528,7 +770,8 @@ app.get('/adminRecords', (req, res) => {
       'volunteer.city',
       'volunteer.state',
       'admin.username',
-      'admin.password'
+      'admin.password',
+      'admin.role'
     )
     .then(admin => {
       console.log(admin); // Log the data to verify structure
@@ -668,6 +911,142 @@ app.post('/EventRequest', (req, res) => {
       res.status(500).send('Internal Server Error');
     });
 });
+
+
+
+
+app.post('/EventRequest', async (req, res) => {
+  const { contactemail, contactname, organization } = req.body;
+
+  // Insert into the database as usual...
+
+  try {
+      const subject = `Event Request Confirmation for ${organization}`;
+      const body = `
+          Hi ${contactname},
+
+          Thank you for submitting an event request to the Turtle Shelter Project! We will review your request and get back to you shortly.
+
+          Best regards,
+          Turtle Shelter Project Team
+      `;
+
+      await sendEmail(contactemail, subject, body);
+      res.redirect('/'); // Redirect after successful email and DB operation
+  } catch (error) {
+      console.error('Error sending confirmation email:', error);
+      res.status(500).send('An error occurred while processing your request.');
+  }
+});
+
+// Route to handle newsletter subscription
+app.post('/subscribe', (req, res) => {
+  const { email } = req.body;
+
+  if (!email) {
+    return res.status(400).send('Email is required');
+  }
+
+  // Insert the email into the EmailList table
+  knex('emaillist')
+    .insert({ email: email.toLowerCase() })
+    .then(() => {
+      res.send('Thank you for subscribing!');
+    })
+    .catch(error => {
+      console.error('Error subscribing to newsletter:', error);
+      res.status(500).send('An error occurred. Please try again later.');
+    });
+});
+
+
+
+const sesClient = new SESClient({
+  region: 'us-east-1', // Replace with your AWS region
+  credentials: {
+    accessKeyId: 'AKIA47GB7ZC7F4JHCE57',
+    secretAccessKey: '7GVn+cXu9b7+H9Bvbtjk5+vjj93rV+a8c0Y9sRsr',
+  },
+});
+// Function to send a single email
+const sendEmail = async (to, subject, body) => {
+  const params = {
+    Source: 'noreply@turtleshelterproject.net', // Replace with your verified email
+    Destination: {
+      ToAddresses: [to],
+    },
+    Message: {
+      Subject: {
+        Data: subject,
+      },
+      Body: {
+        Text: {
+          Data: body,
+        },
+      },
+    },
+  };
+
+  try {
+    const command = new SendEmailCommand(params);
+    await sesClient.send(command);
+    console.log(`Email sent to ${to}`);
+  } catch (error) {
+    console.error(`Error sending email to ${to}:`, error);
+    throw error;
+  }
+};
+
+app.post('/sendMassEmail', async (req, res) => {
+  const { subject, message } = req.body;
+
+  if (!subject || !message) {
+    return res.status(400).json({ error: 'Subject and message are required.' });
+  }
+
+  try {
+    // Fetch all emails from the emaillist table
+    const emails = await knex('emaillist').select('email');
+
+    if (!emails || emails.length === 0) {
+      return res.status(404).json({ error: 'No email addresses found in the database.' });
+    }
+
+    // Extract email addresses into an array
+    const emailAddresses = emails.map(e => e.email);
+
+    // Send email to each address using AWS SES
+    for (const email of emailAddresses) {
+      await sendEmail(email, subject, message);
+    }
+
+    console.log('Mass email sent successfully.');
+    res.json({ message: 'Emails sent successfully.' });
+  } catch (error) {
+    console.error('Error sending mass email:', error);
+    res.status(500).json({ error: 'An error occurred while sending emails.' });
+  }
+});
+
+// Route to send an individual email
+app.post('/sendEmail', async (req, res) => {
+  const { email, subject, message } = req.body;
+
+  if (!email || !subject || !message) {
+    return res.status(400).json({ error: 'Email, subject, and message are required.' });
+  }
+
+  try {
+    // Send the email using the sendEmail function
+    await sendEmail(email, subject, message);
+    console.log(`Email sent successfully to ${email}`);
+    res.json({ message: `Email sent successfully to ${email}` });
+  } catch (error) {
+    console.error('Error sending email:', error);
+    res.status(500).json({ error: 'Failed to send email. Please try again later.' });
+  }
+});
+
 
 
 

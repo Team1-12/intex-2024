@@ -32,7 +32,7 @@
                         <li class="nav-item"><a class="nav-link" href="/">Home</a></li>
                         <li class="nav-item"><a class="nav-link" href="/howToHelp">How to Help</a></li>
                         <li class="nav-item"><a class="nav-link" href="/howToHelpIcons">Donate</a></li>
-                        <li class="nav-item"><a class="nav-link" href="/eventRequest">Event Request</a></li>
+                        <li class="nav-item"><a class="nav-link" href="/eventRequest">Request Event</a></li>
                         <li class="nav-item"><a class="nav-link" href="/adminRedirect">Admin Login</a></li>
                     </ul>
                 </div>
@@ -145,6 +145,61 @@
                     </div>
                 </div>
             </div>
+            <!-- Thank You Modal -->
+<div
+class="modal fade"
+id="thankYouModal"
+tabindex="-1"
+role="dialog"
+aria-labelledby="thankYouModalLabel"
+aria-hidden="true"
+>
+<div class="modal-dialog" role="document">
+  <div class="modal-content">
+    <div class="modal-header">
+      <h5 class="modal-title" id="thankYouModalLabel">Thank You!</h5>
+      <button
+        type="button"
+        class="close"
+        data-dismiss="modal"
+        aria-label="Close"
+      >
+        <span aria-hidden="true">&times;</span>
+      </button>
+    </div>
+    <div class="modal-body">
+      Thank you for subscribing to our newsletter!
+    </div>
+    <div class="modal-footer">
+      <button
+        type="button"
+        class="btn btn-secondary"
+        data-dismiss="modal"
+      >
+        Close
+      </button>
+    </div>
+  </div>
+</div>
+</div>
+<div class="newsletter-subscribe" style="position: relative; margin-bottom: 50px;">
+    <h3>Subscribe to our Newsletter</h3>
+    <form id="subscribeForm">
+      <div class="form-group">
+        <label for="email">Enter your email:</label>
+        <input
+          type="email"
+          id="email"
+          name="email"
+          class="form-control"
+          placeholder="Your email address"
+          required
+        />
+      </div>
+      <button type="submit" class="btn btn-primary mt-2">Subscribe</button>
+    </form>
+  </div>
+            
         </section>
         <!-- Footer-->
         <footer class="footer py-4" style="background-color: #303030; position: absolute; bottom: 0; width: 100%; height: 30 px;">
@@ -163,7 +218,11 @@
             </div>
         </footer>
         <!-- Bootstrap core JS-->
-        <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/js/bootstrap.bundle.min.js"></script>
+<!-- jQuery first, then Popper.js, then Bootstrap JS -->
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.1/dist/umd/popper.min.js"></script>
+<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+
         <!-- Core theme JS-->
         <script src="../../backend/scripts.js"></script>
     <!-- AI chatbot -->
@@ -179,5 +238,34 @@
         domain="www.chatbase.co"
         defer>
     </script>
+    <!-- jQuery and Bootstrap JS -->
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+
+<!-- Custom Script -->
+<script>
+  $(document).ready(function () {
+    $('#subscribeForm').on('submit', function (e) {
+      e.preventDefault(); // Prevent page redirect
+
+      const email = $('#email').val().trim();
+
+      $.ajax({
+        url: '/subscribe',
+        method: 'POST',
+        contentType: 'application/json',
+        data: JSON.stringify({ email: email }),
+        success: function () {
+          $('#subscribeForm')[0].reset(); // Optional: Reset the form
+          $('#thankYouModal').modal('show'); // Show the thank you modal
+        },
+        error: function () {
+          alert('There was an error subscribing. Please try again.');
+        },
+      });
+    });
+  });
+</script>
+
     </body>
 </html>

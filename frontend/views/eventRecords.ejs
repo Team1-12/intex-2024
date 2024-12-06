@@ -15,31 +15,6 @@
     <link href="https://fonts.googleapis.com/css?family=Roboto+Slab:400,100,300,700" rel="stylesheet" type="text/css" />
     <!-- Core theme CSS (includes Bootstrap)-->
     <link href="css/styles.css" rel="stylesheet" />
-    <style>
-        .table-responsive {
-            margin-top: 20px;
-            max-height: 500px;
-            overflow-y: auto;
-            overflow-x: auto; /* Enable horizontal scrolling */
-        }
-        .thead-dark th {
-            position: sticky;
-            top: 0;
-            z-index: 1;
-            background-color: #303030;
-            color: white;
-        }
-        .dropdown-menu {
-            right: 0; /* Aligns the dropdown menu with the edge of the button */
-            left: auto; /* Prevents overlap with the toggle button */
-        }
-        .hide-on-completed {
-            display: table-cell;
-        }
-        .completed-column {
-            display: none;
-        }
-    </style>
 </head>
 <body>
     <!-- Navigation-->
@@ -114,11 +89,6 @@
                         <th>Contact Name</th>
                         <th class="hide-on-completed">Event Activities</th>
                         <th>Organization</th>
-                        <th class="completed-column">Pockets</th>
-                        <th class="completed-column">Collars</th>
-                        <th class="completed-column">Envelopes</th>
-                        <th class="completed-column">Vests</th>
-                        <th class="completed-column">Completed Products</th>
                         <th>Actions</th>
                     </tr>
                 </thead>
@@ -141,18 +111,17 @@
                                 <td><%= event.contactname %></td>
                                 <td class="hide-on-completed"><%= event.eventactivities %></td>
                                 <td><%= event.organization %></td>
-                                <td class="completed-column"><%= event.pockets || '' %></td>
-                                <td class="completed-column"><%= event.collars || '' %></td>
-                                <td class="completed-column"><%= event.envelopes || '' %></td>
-                                <td class="completed-column"><%= event.vests || '' %></td>
-                                <td class="completed-column"><%= event.completedproducts || '' %></td>
                                 <td>
-                                    <form action="/editEventRec/<%= event.eventid %>" method="GET" style="display:inline;">
-                                        <button type="submit" class="btn btn-primary btn-sm">Edit</button>
-                                    </form>
-                                    <form action="/deleteEventRec/<%= event.eventid %>" method="POST" style="display:inline;">
-                                        <button type="submit" onclick="return confirm('Are you sure you want to delete this record?');" class="btn btn-danger btn-sm">Delete</button>
-                                    </form>
+                                    <div>
+                                        <form action="/deleteEventRec/<%= event.eventid %>" method="POST" style="display:inline;">
+                                            <button type="submit" onclick="return confirm('Are you sure you want to delete this record?');" class="btn btn-danger btn-sm">Delete</button>
+                                        </form>
+                                    </div>
+                                    <div style="padding-top: 10px;">
+                                        <form action="/editEventRec/<%= event.eventid %>" method="GET" style="display:inline;">
+                                            <button type="submit" class="btn btn-primary btn-sm">Edit</button>
+                                        </form>
+                                    </div>
                                 </td>
                             </tr>
                         <% }); %>
