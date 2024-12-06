@@ -12,7 +12,7 @@
     <link href="https://fonts.googleapis.com/css?family=Montserrat:400,700" rel="stylesheet" />
     <link href="https://fonts.googleapis.com/css?family=Roboto+Slab:400,100,300,700" rel="stylesheet" />
     <!-- Core theme CSS (includes Bootstrap) -->
-    <link href="css/styles.css" rel="stylesheet" />
+    <link href="../css/styles.css" rel="stylesheet" />
 </head>
 <body id="page-top">
     <!-- Navigation -->
@@ -47,35 +47,75 @@
     <!-- Main Content -->
     <section>
         <div class="container">
-          <h2>Edit Event</h2>
+          <div>
+            <div>
           <form id="editEventForm" method="post" action="/editEventRec/<%= event.eventid %>">
-            <div class="form-row">
-      
-              <!-- Contact Information -->
-              <h3>Contact Information</h3>
-              <div class="row">
-                <div class="form-group col-md-3">
-                  <label for="contactname">Contact Name *</label>
-                  <p>Enter the full name of the primary contact person for the event.</p>
-                  <input class="form-control" type="text" name="contactname" id="contactname" value="<%= event.contactname%>" required />
-                </div>
-                <div class="form-group col-md-3">
-                  <label for="organization">Organization</label>
-                  <p>Enter the name of the organization or group hosting the event.</p>
-                  <input class="form-control" type="text" name="organization" id="organization" value="<%= event.organization%>" required/>
-                </div>
-                <div class="form-group col-md-3">
-                  <label for="contactemail">Contact Email</label>
-                  <p>Provide the email address of the event organizer.</p>
-                  <input class="form-control" type="email" name="contactemail" id="contactemail" value="<%= event.contactemail%>" required/>
-                </div>
-                <div class="form-group col-md-3">
-                  <label for="contactphone">Contact Phone</label>
-                  <p>Enter the phone number for the main event contact person.</p>
-                  <input class="form-control" type="tel" name="contactphone" id="contactphone" value="<%= event.contactphone%>" required/>
+          <div style="padding-bottom: 50px;">
+            <div class="form-row row align-items-center">
+              <div class="col-md-3"><h2>Edit Event</h2></div>
+              <div class="col-md-3"></div>
+              <div class="col-md-3"></div>
+              <div class="col-md-3">
+                <div class="form-group">
+                  <label for="eventstatus">Event Status</label>
+                  <select class="form-control" name="eventstatus" id="eventstatus" required>
+                    <option value="pending" <%= event.eventstatus === "pending" || !event.eventstatus ? "selected" : "" %>>Pending</option>
+                    <option value="approved" <%= event.eventstatus === "approved" ? "selected" : "" %>>Approved</option>
+                    <option value="planned" <%= event.eventstatus === "planned" ? "selected" : "" %>>Planned</option>
+                    <option value="completed" <%= event.eventstatus === "completed" ? "selected" : "" %>>Completed</option>
+                  </select>
                 </div>
               </div>
-      
+            </div>
+          </div>
+
+              <!-- Contact Information Accordion -->
+              <div class="accordion mb-4" id="contactInfoAccordion">
+                <div class="accordion-item">
+                  <h2 class="accordion-header" style="background-color: 759145;" id="headingContactInfo">
+                    <button class="accordion-button collapsed" data-bs-toggle="collapse" data-bs-target="#collapseContactInfo" aria-expanded="false" aria-controls="collapseContactInfo">
+                      Contact Information
+                    </button>
+                  </h2>
+                  <div id="collapseContactInfo" class="accordion-collapse collapse" aria-labelledby="headingContactInfo" data-bs-parent="#contactInfoAccordion">
+                    <div class="accordion-body">
+                      <div class="row">
+                        <div class="form-group col-md-3">
+                          <label for="contactname">Contact Name *</label>
+                          <p>Enter the full name of the primary contact person for the event.</p>
+                          <input class="form-control" type="text" name="contactname" id="contactname" value="<%= event.contactname %>" required />
+                        </div>
+                        <div class="form-group col-md-3">
+                          <label for="organization">Organization</label>
+                          <p>Enter the name of the organization or group hosting the event.</p>
+                          <input class="form-control" type="text" name="organization" id="organization" value="<%= event.organization %>" required />
+                        </div>
+                        <div class="form-group col-md-3">
+                          <label for="contactemail">Contact Email</label>
+                          <p>Provide the email address of the event organizer.</p>
+                          <input class="form-control" type="email" name="contactemail" id="contactemail" value="<%= event.contactemail %>" required />
+                        </div>
+                        <div class="form-group col-md-3">
+                          <label for="contactphone">Contact Phone</label>
+                          <p>Enter the phone number for the main event contact person.</p>
+                          <input class="form-control" type="tel" name="contactphone" id="contactphone" value="<%= event.contactphone %>" required />
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+      <!-- Event Details Accordion -->
+      <div class="accordion mb-4" id="eventDetailsAccordion">
+        <div class="accordion-item">
+          <h2 class="accordion-header" id="headingEventDetails">
+            <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapseEventDetails" aria-expanded="false" aria-controls="collapseEventDetails">
+              Event Location
+            </button>
+          </h2>
+          <div id="collapseEventDetails" class="accordion-collapse collapse" aria-labelledby="headingEventDetails" data-bs-parent="#eventDetailsAccordion">
+            <div class="accordion-body">
               <!-- Address -->
               <h3>Event Location</h3>
               <div class="row">
@@ -93,6 +133,7 @@
                 </div>
                 <div class="form-group col-md-3">
                   <label for="state">State *</label>
+                  <p>Enter the state where the event will be held</p>
                   <select class="form-control" name="state" id="state" required>
                       <option value="" disabled <%= !event.state ? "selected" : "" %>>Select your state *</option>
                       <option value="ut" <%= event.state === "ut" ? "selected" : "" %>>Utah</option>
@@ -153,7 +194,22 @@
                   <input class="form-control" type="number" name="zip" id="zip" value="<%= event.zip%>" required/>
                 </div>
               </div>
+            </div>
+          </div>
+        </div>
+      </div>
       
+
+      <!-- Pre-Event Details Accordion -->
+      <div class="accordion mb-4" id="preEventDetailsAccordion">
+        <div class="accordion-item">
+          <h2 class="accordion-header" id="headingPreEventDetails">
+            <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapsePreEventDetails" aria-expanded="false" aria-controls="collapsePreEventDetails">
+              Pre-Event Details
+            </button>
+          </h2>
+          <div id="collapsePreEventDetails" class="accordion-collapse collapse" aria-labelledby="headingPreEventDetails" data-bs-parent="#preEventDetailsAccordion">
+            <div class="accordion-body">
               <!-- Event Details -->
               <h3>Event Details</h3>
               <div class="row">
@@ -175,31 +231,69 @@
               </div>
       
               <!-- Date Range -->
-              <h3>Date Range</h3>
+              <h3>Event Date</h3>
               <div class="row">
                 <div class="form-group col-md-3">
-                  <label for="startdaterange">Start Date</label>
+                  <label for="startdaterange">Suggested Start Date</label>
                   <p>Select the first available date for the event.</p>
                   <input class="form-control" type="date" name="startdaterange" id="startdaterange" value="<%= event.startdaterange.toISOString().split('T')[0]%>" required />
                 </div>
                 <div class="form-group col-md-3">
-                  <label for="enddaterange">End Date</label>
+                  <label for="enddaterange">Suggested End Date</label>
                   <p>Select the last available date for the event (if applicable).</p>
                   <input class="form-control" type="date" name="enddaterange" id="enddaterange" value="<%= event.enddaterange ? event.enddaterange.toISOString().split('T')[0] : '' %>" />
                 </div>
-              </div>
+                <!-- Planned Event Date -->
+                <div class="form-group col-md-3">
+                  <label for="eventdate">Planned Event Date</label>
+                  <p>Select the planned date for the event.</p>
+                  <input class="form-control" type="date" name="eventdate" id="eventdate" value="<%= event.eventdate ? event.eventdate.toISOString().split('T')[0] : '' %>" />
+                </div>
+              </div>              
       
               <!-- Event Activities -->
               <h3>Event Activities</h3>
-              <div class="form-group">
-                <label for="eventactivities">Type of Activities</label>
-                <p>Select the type of activities planned for the event.</p>
-                <select class="form-control" name="eventactivities" id="eventactivities">
-                  <option value="" <%= !event.eventactivities ? "selected" : "" %>>Select Activity</option>
-                  <option value="sewing" <%= event.eventactivities === "sewing" ? "selected" : "" %>>Sewing</option>
-                  <option value="non-sewing" <%= event.eventactivities === "non-sewing" ? "selected" : "" %>>Non-Sewing</option>
-                  <option value="both" <%= event.eventactivities === "both" ? "selected" : "" %>>Both</option>
-                </select>
+              <div class="form-group col-md-12">
+                <div class="row">
+                  <div class="col-md-4">
+                    <label for="eventactivities">Type of Activities</label>
+                    <p>Select the type of activities planned for the event.<br> </p>
+                    <select class="form-control" name="eventactivities" id="eventactivities">
+                      <option value="" <%= !event.eventactivities ? "selected" : "" %>>Select Activity</option>
+                      <option value="sewing" <%= event.eventactivities === "sewing" ? "selected" : "" %>>Sewing</option>
+                      <option value="non-sewing" <%= event.eventactivities === "non-sewing" ? "selected" : "" %>>Non-Sewing</option>
+                      <option value="both" <%= event.eventactivities === "both" ? "selected" : "" %>>Both</option>
+                    </select>
+                  </div>
+                  <div class="col-md-4">
+                    <label for="numsewers">Number of Sewers</label>
+                    <p>Number of sewers available for the event.</p>
+                    <input class="form-control" type="number" name="numsewers" id="numsewers" value="<%= event.numsewers || '' %>" />
+                  </div>
+                  <div class="col-md-4">
+                    <label for="nummachines">Number of Machines</label>
+                    <p>Number of sewing machines available for event.</p>
+                    <input class="form-control" type="number" name="nummachines" id="nummachines" value="<%= event.nummachines || '' %>" />
+                  </div>
+                  <div class="row" style="padding-top: 20px;">
+                    <div class="form-group col-md-3">
+                        <label for="numroundtables">Number of Round Tables</label>
+                        <input class="form-control" type="number" name="numroundtables" id="numroundtables" value="<%= event.numroundtables || '' %>" />
+                    </div>
+                    <div class="form-group col-md-3">
+                        <label for="numrectanglestables">Number of Rectangle Tables</label>
+                        <input class="form-control" type="number" name="numrectanglestables" id="numrectanglestables" value="<%= event.numrectanglestables || '' %>" />
+                    </div>
+                    <div class="form-group col-md-3">
+                        <label for="numadults">Number of Adults</label>
+                        <input class="form-control" type="number" name="numadults" id="numadults" value="<%= event.numadults || '' %>" />
+                    </div>
+                    <div class="form-group col-md-3">
+                        <label for="numchildren">Number of Children</label>
+                        <input class="form-control" type="number" name="numchildren" id="numchildren" value="<%= event.numchildren || '' %>" />
+                    </div>
+                    </div>
+                </div>
               </div>
       
               <!-- Jen Sharing Story -->
@@ -224,65 +318,33 @@
                 <p>Provide a brief description of the space available for the event.</p>
                 <textarea class="form-control" name="spacedescription" id="spacedescription"><%= event.spacedescription || '' %></textarea>
               </div>
-      
-              <!-- Equipment -->
-              <h3>Equipment Details</h3>
+            </div>
+          </div>
+        </div>
+      </div>
+      <!-- Post-Event Details Accordion -->
+      <div class="accordion mb-4" id="postEventDetailsAccordion">
+        <div class="accordion-item">
+          <h2 class="accordion-header" id="headingPostEventDetails">
+            <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapsePostEventDetails" aria-expanded="false" aria-controls="collapsePostEventDetails">
+              Post-Event Details
+            </button>
+          </h2>
+          <div id="collapsePostEventDetails" class="accordion-collapse collapse" aria-labelledby="headingPostEventDetails" data-bs-parent="#postEventDetailsAccordion">
+            <div class="accordion-body">
+              <!-- Post-Event Information -->
+              <h3>Post-Event Information</h3>
               <div class="row">
-                <div class="form-group col-md-3">
-                  <label for="numsewers">Number of Sewers</label>
-                  <p>Enter the number of sewing machines available for the event.</p>
-                  <input class="form-control" type="number" name="numsewers" id="numsewers" value="<%= event.numsewers || '' %>" />
-                </div>
-                <div class="form-group col-md-3">
-                  <label for="nummachines">Number of Machines</label>
-                  <p>Enter the total number of machines available.</p>
-                  <input class="form-control" type="number" name="nummachines" id="nummachines" value="<%= event.nummachines || '' %>" />
-                </div>
-              </div>
-      
-              <!-- Event Status -->
-              <h3>Event Status</h3>
-              <div class="form-group">
-                <label for="eventstatus">Event Status</label>
-                <p>Select the current status of the event. New records default to "Pending".</p>
-                <select class="form-control" name="eventstatus" id="eventstatus" required>
-                  <option value="pending" <%= event.eventstatus === "pending" || !event.eventstatus ? "selected" : "" %>>Pending</option>
-                  <option value="approved" <%= event.eventstatus === "approved" ? "selected" : "" %>>Approved</option>
-                  <option value="planned" <%= event.eventstatus === "planned" ? "selected" : "" %>>Planned</option>
-                  <option value="completed" <%= event.eventstatus === "completed" ? "selected" : "" %>>Completed</option>
-                </select>
-              </div>
-
-                <!-- Additional Event and Equipment Details -->
-                <fieldset class="mb-4">
-                    <legend>Additional Event and Equipment Details</legend>
-                    <div class="row">
-                        <div class="form-group col-md-3">
-                            <label for="numroundtables">Number of Round Tables</label>
-                            <input class="form-control" type="number" name="numroundtables" id="numroundtables" value="<%= event.numroundtables || '' %>" />
-                        </div>
-                        <div class="form-group col-md-3">
-                            <label for="numrectanglestables">Number of Rectangle Tables</label>
-                            <input class="form-control" type="number" name="numrectanglestables" id="numrectanglestables" value="<%= event.numrectanglestables || '' %>" />
-                        </div>
-                        <div class="form-group col-md-3">
-                            <label for="numadults">Number of Adults</label>
-                            <input class="form-control" type="number" name="numadults" id="numadults" value="<%= event.numadults || '' %>" />
-                        </div>
-                        <div class="form-group col-md-3">
-                            <label for="numchildren">Number of Children</label>
-                            <input class="form-control" type="number" name="numchildren" id="numchildren" value="<%= event.numchildren || '' %>" />
-                        </div>
-                    </div>
-                </fieldset>
-
-                <!-- Actual Duration -->
                 <div class="form-group col-md-3">
                   <label for="actualduration">Actual Duration</label>
                   <p>Enter the actual duration of the event in hours.</p>
                   <input class="form-control" type="number" name="actualduration" id="actualduration" value="<%= event.actualduration || '' %>" />
                 </div>
-
+                <div class="form-group col-md-3">
+                  <label for="actualparticipants">Actual Participants</label>
+                  <p>Enter the actual number of participants who attended.</p>
+                  <input class="form-control" type="number" name="actualparticipants" id="actualparticipants" value="<%= event.actualparticipants || '' %>" />
+                </div>
                 <!-- Event Date -->
                 <div class="form-group col-md-3">
                   <label for="eventdate">Event Date</label>
@@ -293,28 +355,51 @@
 
               <div class="row">
                 <!-- Pockets -->
-                <div class="form-group col-md-3">
+                <div class="form-group col-md-2">
                   <label for="pockets">Pockets</label>
                   <p>Enter the number of pockets produced during the event.</p>
                   <input class="form-control" type="number" name="pockets" id="pockets" value="<%= event.pockets || '' %>" />
                 </div>
 
                 <!-- Collars -->
-                <div class="form-group col-md-3">
+                <div class="form-group col-md-2">
                   <label for="collars">Collars</label>
                   <p>Enter the number of collars produced during the event.</p>
                   <input class="form-control" type="number" name="collars" id="collars" value="<%= event.collars || '' %>" />
                 </div>
 
                 <!-- Envelopes -->
-                <div class="form-group col-md-3">
+                <div class="form-group col-md-2">
                   <label for="envelopes">Envelopes</label>
                   <p>Enter the number of envelopes produced during the event.</p>
                   <input class="form-control" type="number" name="envelopes" id="envelopes" value="<%= event.envelopes || '' %>" />
                 </div>
-                
+
+                <!-- Vests -->
+                <div class="form-group col-md-2">
+                  <label for="envelopes">Vests</label>
+                  <p>Enter the number of vest pieces produced during the event.</p>
+                  <input class="form-control" type="number" name="envelopes" id="envelopes" value="<%= event.envelopes || '' %>" />
+                </div>
+
+                <!-- Completed Products -->
+                <div class="form-group col-md-2">
+                  <label for="envelopes">Completed Products</label>
+                  <p>Enter the number of completed products produced.</p>
+                  <input class="form-control" type="number" name="envelopes" id="envelopes" value="<%= event.envelopes || '' %>" />
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+        
             </form>
         </div>
     </section>
+    <!-- Bootstrap JS and dependencies -->
+<script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.7/dist/umd/popper.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.min.js"></script>
 </body>
 </html>
