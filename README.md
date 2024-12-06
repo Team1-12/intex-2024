@@ -7,10 +7,10 @@ Site URL: turtleshelterproject.net
 
 **VOLUNTEER LOGIN**
 _Volunteer login is for accessing the volunteer interface where volunteers can see and sign up for events to help out with
-username:
-password: 
+username: volunteer  
+password: password
 
 **ADMIN LOGIN**
 _Admin login is for accessing the administrative side. Here Turtle Shelter Project team members can manage events, volunteers, and admins.
-username: 
-password: 
+username: username
+password: password
