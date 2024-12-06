@@ -54,7 +54,7 @@
             <div class="form-row row align-items-center">
               <div class="col-md-3"><h2>Edit Event</h2></div>
               <div class="col-md-3"></div>
-              <div class="col-md-3"></div>
+              <div class="col-md-3"><button class="btn btn-primary" type="submit">Save Changes</button></div>
               <div class="col-md-3">
                 <div class="form-group">
                   <label for="eventstatus">Event Status</label>
@@ -73,7 +73,7 @@
               <div class="accordion mb-4" id="contactInfoAccordion">
                 <div class="accordion-item">
                   <h2 class="accordion-header" style="background-color: 759145;" id="headingContactInfo">
-                    <button class="accordion-button collapsed" data-bs-toggle="collapse" data-bs-target="#collapseContactInfo" aria-expanded="false" aria-controls="collapseContactInfo">
+                    <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapseContactInfo" aria-expanded="false" aria-controls="collapseContactInfo">
                       Contact Information
                     </button>
                   </h2>
@@ -345,12 +345,6 @@
                   <p>Enter the actual number of participants who attended.</p>
                   <input class="form-control" type="number" name="actualparticipants" id="actualparticipants" value="<%= event.actualparticipants || '' %>" />
                 </div>
-                <!-- Event Date -->
-                <div class="form-group col-md-3">
-                  <label for="eventdate">Event Date</label>
-                  <p>Select the actual date the event occurred.</p>
-                  <input class="form-control" type="date" name="eventdate" id="eventdate" value="<%= event.eventdate ? event.eventdate.toISOString().split('T')[0] : '' %>" />
-                </div>
               </div>
 
               <div class="row">
@@ -393,8 +387,12 @@
           </div>
         </div>
       </div>
-
-        
+      <div style="display: flex; justify-content: flex-end;">
+        <button class="btn btn-primary" type="submit">Save Changes</button>
+      </div>
+      
+        </div>
+      </div>  
             </form>
         </div>
     </section>
