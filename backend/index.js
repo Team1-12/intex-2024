@@ -201,7 +201,7 @@ app.get('/login', (req, res) => {
     if (req.session.userRole === 'admin') {
       return res.redirect('/internalLanding');
     } else if (req.session.userRole === 'volunteer') {
-      return res.redirect('/volunteerPage');
+      return res.redirect('/volunteerMain');
     }
   }
 
@@ -239,7 +239,7 @@ app.post('/login', (req, res) => {
           if (user.role === 'admin') {
             res.redirect('/internalLanding'); // Redirect to internalLanding for admin
           } else if (user.role === 'volunteer') {
-            res.redirect('/volunteerPage'); // Redirect to volunteerPage for volunteers
+            res.redirect('/volunteerMain'); // Redirect to volunteerPage for volunteers
           }
         });
       } else {
