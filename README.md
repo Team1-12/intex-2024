@@ -1,7 +1,7 @@
 # intex-2024
 # This is the repository for our intex project creating a website for Turtle Shelter
 
-Site URL: [turtleshelterproject.net](turtleshelterproject.net)
+Site URL: [turtleshelterproject.net](url)
 
 **If you are grading this site, please use the following username and password below.** 
 
