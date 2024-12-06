@@ -147,12 +147,16 @@
                                 <td class="completed-column"><%= event.vests || '' %></td>
                                 <td class="completed-column"><%= event.completedproducts || '' %></td>
                                 <td>
-                                    <form action="/editEventRec/<%= event.eventid %>" method="GET" style="display:inline;">
-                                        <button type="submit" class="btn btn-primary btn-sm">Edit</button>
-                                    </form>
-                                    <form action="/deleteEventRec/<%= event.eventid %>" method="POST" style="display:inline;">
-                                        <button type="submit" onclick="return confirm('Are you sure you want to delete this record?');" class="btn btn-danger btn-sm">Delete</button>
-                                    </form>
+                                    <div>
+                                        <form action="/deleteEventRec/<%= event.eventid %>" method="POST" style="display:inline;">
+                                            <button type="submit" onclick="return confirm('Are you sure you want to delete this record?');" class="btn btn-danger btn-sm">Delete</button>
+                                        </form>
+                                    </div>
+                                    <div style="padding-top: 10px;">
+                                        <form action="/editEventRec/<%= event.eventid %>" method="GET" style="display:inline;">
+                                            <button type="submit" class="btn btn-primary btn-sm">Edit</button>
+                                        </form>
+                                    </div>
                                 </td>
                             </tr>
                         <% }); %>
