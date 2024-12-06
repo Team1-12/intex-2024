@@ -180,8 +180,6 @@ app.post('/removeSignup', isAuthenticated, (req, res) => {
     });
 });
 
-
-
 //Route to volunteer form page
 app.get('/volunteerForm', isVolunteer, (req, res) => {
   res.render('volunteerForm'); 
