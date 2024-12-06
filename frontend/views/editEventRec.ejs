@@ -73,7 +73,7 @@
               <div class="accordion mb-4" id="contactInfoAccordion">
                 <div class="accordion-item">
                   <h2 class="accordion-header" style="background-color: 759145;" id="headingContactInfo">
-                    <button class="accordion-button collapsed" data-bs-toggle="collapse" data-bs-target="#collapseContactInfo" aria-expanded="false" aria-controls="collapseContactInfo">
+                    <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapseContactInfo" aria-expanded="false" aria-controls="collapseContactInfo">
                       Contact Information
                     </button>
                   </h2>
@@ -344,12 +344,6 @@
                   <label for="actualparticipants">Actual Participants</label>
                   <p>Enter the actual number of participants who attended.</p>
                   <input class="form-control" type="number" name="actualparticipants" id="actualparticipants" value="<%= event.actualparticipants || '' %>" />
-                </div>
-                <!-- Event Date -->
-                <div class="form-group col-md-3">
-                  <label for="eventdate">Event Date</label>
-                  <p>Select the actual date the event occurred.</p>
-                  <input class="form-control" type="date" name="eventdate" id="eventdate" value="<%= event.eventdate ? event.eventdate.toISOString().split('T')[0] : '' %>" />
                 </div>
               </div>
 
