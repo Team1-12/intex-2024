@@ -15,6 +15,32 @@
     <link href="https://fonts.googleapis.com/css?family=Roboto+Slab:400,100,300,700" rel="stylesheet" type="text/css" />
     <!-- Core theme CSS (includes Bootstrap)-->
     <link href="../css/styles.css" rel="stylesheet" />
+    <style>
+        .table-responsive {
+            margin-top: 20px;
+            max-height: 500px;
+            overflow-y: auto;
+        }
+        .thead-dark th {
+            position: sticky;
+            top: 0;
+            z-index: 1;
+            background-color: #303030;
+            color: white;
+        }
+        .dropdown-menu {
+            right: 0;
+            left: auto;
+        }
+        .mt-4 {
+            max-width: fit-content;
+            text-align: left;
+            padding-left: 40px;
+        }
+        .add-event-btn {
+            padding-top: 20px;
+        }
+    </style>
 </head>
 <body>
     <!-- Navigation -->
@@ -167,16 +193,136 @@
     <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.1/dist/umd/popper.min.js"></script>
     <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script>
+    $(document).ready(function () {
+        // Delegated event binding for both Edit and Save buttons
+        $(document).on('click', '.edit-btn, .save-btn', function () {
+            var button = $(this); // The clicked button
+            var row = button.closest('tr'); // The table row containing the button
+            var volunteerid = button.data('id'); // The volunteer ID from data-id attribute
+    
+            // **Edit Button Clicked**
+            if (button.hasClass('edit-btn')) {
+                console.log('Edit button clicked for volunteer ID:', volunteerid);
+    
+                // Prevent multiple edits on the same row
+                if (row.hasClass('editing')) {
+                    console.warn('Row is already in edit mode.');
+                    return;
+                }
+                row.addClass('editing'); // Mark the row as being edited
+    
+                // Convert each cell to an input field, excluding the last cell (action buttons)
+                row.find('td').not(':last').each(function (index) {
+                    var cell = $(this);
+                    var text;
+    
+                    // If the cell contains a link (e.g., Email), extract the email
+                    if (cell.find('a').length > 0) {
+                        text = cell.find('a').data('email') || cell.find('a').text().trim();
+                    } else {
+                        text = cell.text().trim();
+                    }
+    
+                    // Create and append the input element
+                    var input = $('<input>', {
+                        type: 'text',
+                        class: 'form-control',
+                        value: text
+                    });
+                    cell.empty().append(input);
+                });
+    
+                // Change the Edit button to Save
+                button.text('Save').removeClass('edit-btn btn-primary').addClass('save-btn btn-success');
+            }
+    
+            // **Save Button Clicked**
+            else if (button.hasClass('save-btn')) {
+                console.log('Save button clicked for volunteer ID:', volunteerid);
+    
+                // Gather all input values from the row
+                var inputs = row.find('input');
+                var data = {
+                    FirstName: inputs.eq(0).val(),
+                    LastName: inputs.eq(1).val(),
+                    Phone: inputs.eq(2).val(),
+                    Email: inputs.eq(3).val(),
+                    City: inputs.eq(4).val(),
+                    state: inputs.eq(5).val(),
+                    HowTheyHeard: inputs.eq(6).val(),
+                    SewingLevel: inputs.eq(7).val(),
+                    MonthlyHrsWilling: inputs.eq(8).val(),
+                    LeadWilling: inputs.eq(9).val(),
+                    TravelTime: inputs.eq(10).val(),
+                    Comments: inputs.eq(11).val(),
+                };
+    
+                console.log('Data to save:', data);
+    
+                // Perform AJAX request to save data
+                $.ajax({
+                    url: '/saveVolunteer/' + volunteerid,
+                    method: 'POST',
+                    contentType: 'application/json', // Ensure your server expects JSON
+                    data: JSON.stringify(data),
+                    success: function (response) {
+                        console.log('Save successful for volunteer ID:', volunteerid);
+                        alert('Volunteer record updated successfully!');
+    
+                        // Convert inputs back to plain text or links
+                        row.find('td').not(':last').each(function (index) {
+                            var cell = $(this);
+                            var value = inputs.eq(index).val();
+    
+                            if (index === 3) { // Email column (assuming 0-based index)
+                                cell.html(
+                                    $('<a>', {
+                                        href: '#',
+                                        class: 'email-link',
+                                        'data-toggle': 'modal',
+                                        'data-target': '#emailModal',
+                                        'data-email': value,
+                                        'data-name': data.FirstName + ' ' + data.LastName,
+                                        text: value
+                                    })
+                                );
+                            } else {
+                                cell.text(value); // Replace input with plain text
+                            }
+                        });
+    
+                        // Change the Save button back to Edit
+                        button.text('Edit').removeClass('save-btn btn-success').addClass('edit-btn btn-primary');
+                        row.removeClass('editing'); // Remove the editing state
+                    },
+                    error: function (jqXHR, textStatus, errorThrown) {
+                        console.error('Error saving data for volunteer ID:', volunteerid, textStatus, errorThrown);
+                        alert('Error saving data. Please try again.');
+                    },
+                });
+            }
+        });
+    });
+    </script>
+    
+        
+
     <script>
         // Event Listener for Email Links to populate the modal
-        document.querySelectorAll('.email-link').forEach(link => {
-            link.addEventListener('click', function () {
-                const email = this.getAttribute('data-email');
-                const name = this.getAttribute('data-name');
-                document.getElementById('recipientEmail').value = email;
-                document.getElementById('emailModalLabel').textContent = `Send Email to ${name}`;
-            });
-        });
+// Event Listener for Email Links to populate the modal
+document.querySelectorAll('.email-link').forEach(link => {
+    link.addEventListener('click', function () {
+        const email = this.getAttribute('data-email'); // Get email
+        const name = this.getAttribute('data-name');   // Get name
+        
+        // Update modal fields
+        document.getElementById('recipientEmail').value = email; // Populate email field
+        document.getElementById('emailModalLabel').textContent = `Send Email to ${name}`; // Update modal title
+    });
+});
     
         // Event Listener for Send Email Button
         document.getElementById('sendEmailButton').addEventListener('click', async () => {
@@ -205,7 +351,7 @@
                     document.getElementById('emailMessage').value = ''; // Clear message input
                 } else {
                     const error = await response.json();
-                    alert(`Error: ${error.error}`);
+                    alert('Error: ${error.error}');
                 }
             } catch (error) {
                 console.error('Error sending email:', error);
