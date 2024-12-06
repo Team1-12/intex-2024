@@ -75,7 +75,30 @@ h1 {
   width: 100%;
 }
 
-
+.table-responsive {
+  margin-top: 20px;
+  max-height: 500px;
+  overflow-y: auto;
+}
+.thead-dark th {
+  position: sticky;
+  top: 0;
+  z-index: 1;
+  background-color: #303030;
+  color: rgb(240, 240, 240);
+}
+.dropdown-menu {
+  right: 0;
+  left: auto;
+}
+.mt-4 {
+  max-width: fit-content;
+  text-align: left;
+  padding-left: 40px;
+}
+.add-event-btn {
+  padding-top: 20px;
+}
 
 /* BOOTSTRAP!! */
 
@@ -1847,6 +1870,11 @@ progress {
 }
 .table > thead {
   vertical-align: bottom;
+  background-color: #303030;
+  color: #fff;
+  position: sticky;
+  top: 0;
+  z-index: 1;
 }
 
 .table-group-divider {
@@ -2010,6 +2038,7 @@ progress {
 .table-responsive {
   overflow-x: auto;
   -webkit-overflow-scrolling: touch;
+  overflow-y: auto;
 }
 
 @media (max-width: 575.98px) {
