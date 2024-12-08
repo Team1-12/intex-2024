@@ -413,7 +413,7 @@ app.get('/eventRecords', isAdmin, (req, res) => {
   const validStatuses = ['pending', 'approved', 'planned', 'completed'];
 
    //Start building the query
-  let query = knex('event').select('*');
+  let query = knex('event').select('*').orderBy('eventdate', 'asc').orderBy('startdaterange', 'asc');
 
    //Apply filter if a valid status is provided and not 'all'
   if (status && status.toLowerCase() !== 'all' && validStatuses.includes(status.toLowerCase())) {
