@@ -960,12 +960,13 @@ app.post('/subscribe', (req, res) => {
 });
 
 
-
+// Updated this email connection by taking out the aws secred and id. I need to set up a config with the link to a .env file, 
+// otherwise email functionality will no longer work on localhost
 const sesClient = new SESClient({
   region: 'us-east-1', // Replace with your AWS region
   credentials: {
-    accessKeyId: 'AKIA47GB7ZC7F4JHCE57',
-    secretAccessKey: '7GVn+cXu9b7+H9Bvbtjk5+vjj93rV+a8c0Y9sRsr',
+    accessKeyId: process.env.AWS_ACCESS_KEY_ID || 'mykey',
+    secretAccessKey: process.env.AWS_SECRET_ACCESS_KEY || 'my secret',
   },
 });
 // Function to send a single email
